@@ -4,7 +4,7 @@
   margin: 0 auto;
   padding: 0 1rem;
   box-sizing: border-box;
-  background-color: #fcf6f0;
+  background-color: #ffffff;
 }
 
 
@@ -27,6 +27,66 @@
   gap: 2rem;
   grid-template-columns: repeat(2, 1fr);
 }
+
+.metric-container {
+  width: 100%;
+  max-width: 78rem;      /* 1248px */
+  margin: 0 auto;
+  padding: 4rem 1rem;
+}
+
+.metric-heading {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 78rem;      /* 1248px */
+  min-height: 4.375rem;  /* 70px */
+  font-weight: 700;
+  font-size: 3rem;
+  margin: 0 auto 3rem auto;
+  
+}
+
+.metric-grid {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 13rem;
+  width: 100%;
+  max-width: 77.5rem;
+  margin: 0 auto;
+}
+
+
+.prevention-description-wrapper{
+  display: flex;
+  flex-direction: column;
+  min-height: 383px;
+  justify-content: center;
+  text-align: center;
+  background-color: #fcf6f0;
+  margin: 0 auto;
+  margin-bottom: 3rem;
+}
+
+.overlay-footer{
+  min-height: 409px;
+  background-color: #FFBF01;
+}
+
+@media (max-width: 1024px) {
+  .metric-grid {
+    gap: 6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .metric-grid {
+    gap: 3rem;
+  }
+}
+
 
 /* Tablet */
 @media (max-width: 1024px) {

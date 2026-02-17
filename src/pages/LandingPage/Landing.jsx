@@ -4,6 +4,8 @@ import CheckedIcon from '../../assets/icon/circle-check.svg'
 import ChartIcon from '../../assets/icon/chart.svg'
 import UserIcon from '../../assets/icon/user.svg'
 import TrendIcon from '../../assets/icon/trend.svg'
+import MetricCard from '../../components/card/WorkingMetricCard/MetricCard'
+import FooterCard from '../../components/card/Footer/FooterCard'
 
 export default function LandingPage() {
   return (
@@ -43,6 +45,42 @@ export default function LandingPage() {
       
       </section>
 
+      <section className='metric-wrapper'>
+        <div className='metric-container'>
+          <h2 className='metric-heading'>How Smart Loss Control Works</h2>
+
+          <div className='metric-grid'>
+            <MetricCard
+            icon={CheckedIcon}
+            description="Create Your store"
+            />
+
+            <MetricCard
+            icon={CheckedIcon}
+            description="Log stock Movement"
+            />
+
+            <MetricCard
+            icon={CheckedIcon}
+            description="Get Instant Loss Alert"
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className='prevention-description-wrapper'>
+        <div className='prevention-description'>
+          <h1>Start Preventing Losses Today</h1>
+          <p>Join retail SMEs protecting their profits with data-driven loss prevention</p>
+        </div>
+      </section>
+
+      <div className='overlay-footer'></div>
+
+      <FooterCard
+      title="Supporting SDG 8: Decent Work and Economic Growth"
+      description="© 2026 Smart Loss Control - Next Gen Workforce Team 70"
+      />
     </div>
   )
 }
