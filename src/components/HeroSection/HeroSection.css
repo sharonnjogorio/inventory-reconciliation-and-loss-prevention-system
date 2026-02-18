@@ -53,4 +53,9 @@
    
 }
 
+.hero-button{
+    display: flex;
+    gap: 63px;
+}
+
 

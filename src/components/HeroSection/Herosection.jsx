@@ -2,6 +2,7 @@ import './HeroSection.css'
 import PoweroilImg from '../../assets/image/poweroil.svg?react'
 import MamadorImg from '../../assets/image/mamador.svg?react'
 import { Link } from 'react-router-dom'
+import Button from '../ui/button/button'
 export const HeroSection = ()=>{
     return(
        <div className="hero-section">
@@ -14,8 +15,15 @@ export const HeroSection = ()=>{
           to reduce preventable losses.
         </p>
       </div>
-
-      <Link to={"/owner/register"}><button>Get Started</button></Link>
+        <div className='hero-button'>
+            <div>
+                <Link to={"/owner/register"}><Button>Register My Shop</Button></Link>
+            </div>
+            <div>
+                <Link to={"/owner/register"}><Button>Learn More</Button></Link>
+            </div>
+        </div>
+      
     </div>
 
     <div className="hero-images">

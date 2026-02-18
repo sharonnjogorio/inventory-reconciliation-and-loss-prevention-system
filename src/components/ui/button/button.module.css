@@ -37,10 +37,11 @@
 .primary {
   background-color: var(--color-primary);
   color: var(--color-text-light);
+
 }
 
 .primary:hover {
-  background-color: #e6a800;
+  background-color: #e6a767;
 }
 
 .outline {

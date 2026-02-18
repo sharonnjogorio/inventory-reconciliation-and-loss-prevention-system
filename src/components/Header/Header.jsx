@@ -1,6 +1,7 @@
 import './Header.css'
 import SmartLogo from '../../assets/image/smartlogo.svg?react'
 import { HeaderItem } from './HeaderItem'
+import Button from '../ui/button/button'
 
 export default function Header(){
     return(
@@ -17,7 +18,10 @@ export default function Header(){
                 <HeaderItem to="/contact">Contact</HeaderItem>
             </ul>
 
-                <button>Staff Login</button>
+                <Button 
+                className='header-button'
+                variant='primary'>
+                     Staff Login</Button>
             
             </div>
         </div>

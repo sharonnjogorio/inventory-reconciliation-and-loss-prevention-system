@@ -1,10 +1,10 @@
 .header-wrapper{
     display: flex;
     justify-content: space-between;
+    align-items: stretch;   /* important */
     max-width: 1294px;
-    min-height: 63px;
+    height: 63px;          
     margin: 0 auto;
-    
 }
 .header-nav{
     display: flex;
@@ -14,4 +14,14 @@
     display: flex;
     align-items: center;
     gap: 41px;
+}
+
+.header-button{
+    display: flex;
+    align-items: stretch;
+}
+
+.header-button .button{
+    height: 100%;
+    padding: 0 24px;   
 }
