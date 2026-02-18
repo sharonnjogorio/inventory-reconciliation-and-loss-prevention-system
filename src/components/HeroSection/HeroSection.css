@@ -1,0 +1,56 @@
+.hero-section {
+    display: flex;
+    gap: 69px;
+
+     /* Fixed dimensions from design */
+    width: 1336px;
+    max-width: 100%;               /* ensure it doesn’t overflow screen */
+    height: 411px;
+
+    /* Positioning */
+    margin: 244px auto 0 auto;     /* top spacing 244px, horizontally centered */
+    opacity: 1;
+    transform: rotate(0deg); 
+}
+
+
+
+.hero-text {
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.hero-text h1 {
+    font-size: 48px;
+    line-height: 70px;
+    font-weight: 700;
+    
+}
+
+.hero-text p {
+    font-size: 20px;
+    line-height: 1.6;
+    color: #4A5565;
+    max-width: 517px;
+}
+
+.hero-text button {
+    width: fit-content;
+    padding: 12px 24px;
+    border-radius: 4px;
+    border: none;
+    background-color: #e6a767;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+
+.hero-images {
+    display: flex;
+    align-items: center;
+    width: 676.3px;
+   
+}
+
+

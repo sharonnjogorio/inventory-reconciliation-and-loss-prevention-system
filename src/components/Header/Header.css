@@ -1,0 +1,17 @@
+.header-wrapper{
+    display: flex;
+    justify-content: space-between;
+    max-width: 1294px;
+    min-height: 63px;
+    margin: 0 auto;
+    
+}
+.header-nav{
+    display: flex;
+    gap: 106px;
+}
+.header-list{
+    display: flex;
+    align-items: center;
+    gap: 41px;
+}

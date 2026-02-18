@@ -6,10 +6,17 @@ import UserIcon from '../../assets/icon/user.svg'
 import TrendIcon from '../../assets/icon/trend.svg'
 import MetricCard from '../../components/card/WorkingMetricCard/MetricCard'
 import FooterCard from '../../components/card/Footer/FooterCard'
+import Header from '../../components/Header/Header'
+import { HeroSection } from '../../components/HeroSection/Herosection'
 
 export default function LandingPage() {
   return (
     <div className='landing-wrapper'>
+
+      <Header/>
+      <section>
+        <HeroSection/>
+      </section>
 
       <section className='features-wrapper'>
         <div className='features-container'>
@@ -84,3 +91,4 @@ export default function LandingPage() {
     </div>
   )
 }
+
