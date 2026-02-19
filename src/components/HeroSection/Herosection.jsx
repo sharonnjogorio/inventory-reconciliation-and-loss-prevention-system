@@ -1,6 +1,5 @@
 import './HeroSection.css'
-import PoweroilImg from '../../assets/image/poweroil.svg?react'
-import MamadorImg from '../../assets/image/mamador.svg?react'
+import Group from '../../assets/image/Group.png'
 import { Link } from 'react-router-dom'
 import Button from '../ui/button/button'
 export const HeroSection = ()=>{
@@ -20,15 +19,14 @@ export const HeroSection = ()=>{
                 <Link to={"/owner/register"}><Button>Register My Shop</Button></Link>
             </div>
             <div>
-                <Link to={"/owner/register"}><Button>Learn More</Button></Link>
+                <Link to={"/owner/register"}><Button variant="outline">Learn More</Button></Link>
             </div>
         </div>
       
     </div>
 
     <div className="hero-images">
-      <PoweroilImg className="poweroil img"/>
-      <MamadorImg  className="mamador img"/>
+      <img src={Group} alt="Group" />
     </div>
   </div>
     )

@@ -11,8 +11,15 @@
 .features-container {
   width: 100%;
   max-width: 1088px;
-  margin: 0 auto;
-  padding: 0 1rem 3rem;
+
+
+  margin: 6rem auto 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 1.5625rem;
+
+  padding: 1rem;
 }
 
 .features-heading {
@@ -30,7 +37,8 @@
 
 .metric-container {
   width: 100%;
-  max-width: 78rem;      /* 1248px */
+  max-width: 78rem;
+  /* 1248px */
   margin: 0 auto;
   padding: 4rem 1rem;
 }
@@ -40,12 +48,14 @@
   flex-direction: column;
   justify-content: flex-start;
   width: 100%;
-  max-width: 78rem;      /* 1248px */
-  min-height: 4.375rem;  /* 70px */
+  max-width: 78rem;
+  /* 1248px */
+  min-height: 4.375rem;
+  /* 70px */
   font-weight: 700;
   font-size: 3rem;
   margin: 0 auto 3rem auto;
-  
+
 }
 
 .metric-grid {
@@ -59,18 +69,49 @@
 }
 
 
-.prevention-description-wrapper{
+.prevention-description-wrapper {
+  font-family: inherit;
+  Width: 1418px;
+
+  Height: 445px;
+  margin: 4rem auto;
+  padding: 1.625rem;
+
   display: flex;
   flex-direction: column;
-  min-height: 383px;
   justify-content: center;
+  align-items: center;
   text-align: center;
+  gap: 1.675rem;
   background-color: #fcf6f0;
-  margin: 0 auto;
-  margin-bottom: 3rem;
 }
 
-.overlay-footer{
+.prevention-description>h1 {
+  width: 669px;
+  width: 100%;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 4.375rem;
+
+}
+
+.prevention-description>p {
+  width: 32.3125rem;
+  width: 100%;
+  font-weight: 400;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  opacity: 1;
+}
+
+.prevention-description-wrapper button{
+  width: 12rem;
+  border-radius: none;
+}
+
+
+
+.overlay-footer {
   min-height: 409px;
   background-color: #FFBF01;
 }
@@ -116,4 +157,3 @@
     padding: 0 1rem;
   }
 }
-

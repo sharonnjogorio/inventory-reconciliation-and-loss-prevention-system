@@ -1,9 +1,8 @@
-/* flex items-center text-text-primary font-sora leading-8 text-[17px] font-normal
-flex items-center gap-1 px-1 py-1 rounded-xl border border-transparent transition-colors duration-300 hover:border-primary */
+
 .header-items{
     display: flex;
     align-items: center;
-    font-family: "Roboto, san-serif";
+    font-family: inherit;
     font-size: 20px;
     font-weight: 400;
 }

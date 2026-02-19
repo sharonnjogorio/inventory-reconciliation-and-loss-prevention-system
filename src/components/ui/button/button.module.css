@@ -2,13 +2,14 @@
   font-family: inherit;
   font-size: 1rem;
   font-weight: 600;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-sm);
   cursor: pointer;
   border: none;
   padding: 14px 24px;
   transition: opacity var(--transition-fast),
               transform var(--transition-fast),
               background-color var(--transition-fast);
+              
 }
 
 /* Hover + Active */
