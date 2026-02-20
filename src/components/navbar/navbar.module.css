@@ -1,0 +1,77 @@
+/* ── Navbar Container ───────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px 48px;
+  background-color: #FFFFFF; 
+  height:59px;
+  max-width: 1294px;
+  margin: 0 auto;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+/* ── Logo Section ───────────────────────────────────────── */
+.logoSection {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.logoSection:hover {
+  opacity: 0.8;
+}
+
+.logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* ── Navigation Links ───────────────────────────────────── */
+.navLinks {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  margin-left: auto;  /* Push to the right */
+}
+
+.link {
+  color: #666666;
+  text-decoration: none;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.link:hover {
+  color: #E29A5C;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .navbar {
+    padding: 16px 24px;
+  }
+
+  .navLinks {
+    gap: 24px;
+  }
+
+  .link {
+    font-size: 0.875rem;
+  }
+
+  .logo {
+    height: 36px;
+  }
+}
+
+@media (max-width: 640px) {
+  .navLinks {
+    display: none;
+  }
+}

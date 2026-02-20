@@ -1,0 +1,106 @@
+/* ── Container ──────────────────────────────────────────── */
+.container {
+  min-height: calc(100vh - 80px - 100px); /* viewport - navbar - footer */
+  display: flex;
+  flex-direction: column;
+  background-color: #FAFAFA;
+}
+
+/* ── Header Section ─────────────────────────────────────── */
+.header {
+  padding: 24px 32px;
+  background-color: #FFFFFF;
+  border-bottom: 1px solid #E5E5E5;
+  flex-shrink: 0;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: color 150ms ease;
+}
+
+.backButton:hover {
+  color: #E29A5C;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ── Keypad Wrapper ─────────────────────────────────────── */
+.keypadWrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px; /* More padding */
+  min-height: 500px; /* Ensure minimum height */
+  overflow-y: auto; 
+}
+
+/* ── Validating State ───────────────────────────────────── */
+.validating {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  background-color: #FFFFFF;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+}
+
+.validating p {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #E5E5E5;
+  border-top-color: #E29A5C;
+  border-radius: 50%;
+  animation: spin 800ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 24px;
+  }
+  
+  .title {
+    font-size: 1.5rem;
+  }
+  
+  .keypadWrapper {
+    padding: 40px 16px;
+    min-height: 400px;
+  }
+}
