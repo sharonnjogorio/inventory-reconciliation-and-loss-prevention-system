@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { registerBackgroundSync } from '../../../services/syncServise'
-import useAuthStore from '../../../store/useAuthStore'
-import db from '../../../services/db'
-import ProductTile from '../components/ProductTile/ProductTile'
-import QuickCountOverlay from '../components/QuickCountOverlay/QuickCountOverlay'
-import heroOil1 from '../../../assets/hero-oil-1.png'  // Mamador
-import heroOil2 from '../../../assets/hero-oil-2.png'  // King's
-import heroOil3 from '../../../assets/hero-oil-3.png'  // Golden Terra
+import { registerBackgroundSync } from '../../../../services/syncService'
+import useAuthStore from '../../../../store/useAuthStore'
+import db from '../../../../services/db'
+import ProductTile from '../../components/ProductTile/ProductTile'
+import QuickCountOverlay from '../../components/QuickCountOverlay/QuickCountOverlay'
+import heroOil1 from '../../../../assets/hero-oil-1.png'  // Mamador
+import heroOil2 from '../../../../assets/hero-oil-2.png'  // King's
+import heroOil3 from '../../../../assets/hero-oil-3.png'  // Golden Terra
 import styles from './SalesDashboard.module.css'
 
 

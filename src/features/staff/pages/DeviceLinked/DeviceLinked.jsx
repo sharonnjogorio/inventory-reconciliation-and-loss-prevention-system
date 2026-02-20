@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import db from '../../services/db'
+import db from '../../../../services/db'
 import styles from './DeviceLinked.module.css'
 
 /**

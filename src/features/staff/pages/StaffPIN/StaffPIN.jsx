@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../../../store/useAuthStore'
 import db from '../../../../services/db'
 import styles from './StaffPIN.module.css'
-import keypadStyles from '../components/PINKeypad/PINKeypad.module.css'
+import keypadStyles from '../../components/PINKeypad/PINKeypad.module.css'
 
 function StaffPIN() {
   const navigate = useNavigate()

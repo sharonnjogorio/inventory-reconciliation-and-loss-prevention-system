@@ -1,20 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './BulkDecant.module.css'
-import db from '../../../services/db'
-import useAuthStore from '../../../store/useAuthStore'
+import db from '../../../../services/db'
+import useAuthStore from '../../../../store/useAuthStore'
 
-/**
- * Bulk-to-Retail Conversion (Carton Break)
- * 
- * Allows staff to:
- * - Select a product brand and size
- * - Input number of cartons to break
- * - Convert cartons to individual bottles
- * - PRD: 1 Carton = 12 Bottles
- * 
- * PRD: Section 5.3 Story #2
- */
 
 // Same products from Sales Dashboard
 const PRODUCTS = [
