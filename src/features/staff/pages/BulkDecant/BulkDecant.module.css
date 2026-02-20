@@ -1,0 +1,384 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FAFAFA;
+}
+
+/* Header */
+.header {
+  background-color: #FFFFFF;
+  padding: 24px 32px;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: color 150ms ease;
+}
+
+.backButton:hover {
+  color: #E29A5C;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* Content */
+.content {
+  flex: 1;
+  padding: 40px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Section */
+.section {
+  margin-bottom: 32px;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 8px;
+}
+
+.select {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1A1A1A;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #E29A5C;
+  background-color: #FFF8F0;
+}
+
+/* Counter */
+.counterWrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  max-width: 300px;
+}
+
+.counterBtn {
+  width: 48px;
+  height: 48px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counterBtn:hover {
+  background-color: #D4894A;
+  transform: scale(1.05);
+}
+
+.counterBtn:active {
+  transform: scale(0.95);
+}
+
+.counterInput {
+  flex: 1;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  padding: 12px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  font-family: var(--font-mono, monospace);
+}
+
+.counterInput:focus {
+  outline: none;
+  border-color: #E29A5C;
+}
+
+/* Conversion Card */
+.conversionCard {
+  background-color: #FFFFFF;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 32px;
+}
+
+.conversionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+  text-align: center;
+}
+
+.conversionFlow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.conversionBox {
+  background-color: #F5F5F5;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  min-width: 160px;
+}
+
+.conversionBox.conversionResult {
+  background-color: #E8F5E9;
+  border-color: #50C878;
+}
+
+.conversionLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 8px 0;
+}
+
+.conversionValue {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.conversionResult .conversionValue {
+  color: #50C878;
+}
+
+.conversionUnit {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+}
+
+.arrow {
+  font-size: 2rem;
+  color: #E29A5C;
+  font-weight: 700;
+}
+
+.formula {
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px solid #E5E5E5;
+  font-family: var(--font-mono, monospace);
+}
+
+/* Break Button */
+.breakButton {
+  width: 100%;
+  padding: 18px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.breakButton:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* Placeholder */
+.placeholder {
+  text-align: center;
+  padding: 80px 24px;
+  color: #999999;
+}
+
+.placeholder svg {
+  margin-bottom: 24px;
+  opacity: 0.3;
+}
+
+.placeholder p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 200ms ease;
+}
+
+.modal {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 300ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.modalText {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 24px 0;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.modalText strong {
+  color: #1A1A1A;
+}
+
+.modalDetails {
+  background-color: #E8F5E9;
+  border: 1px solid #50C878;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modalDetails p {
+  margin: 0;
+  font-size: 1rem;
+  color: #1A1A1A;
+}
+
+.modalDetails strong {
+  color: #50C878;
+  font-family: var(--font-mono, monospace);
+  font-size: 1.125rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.cancelBtn {
+  background-color: #F5F5F5;
+  color: #666666;
+}
+
+.cancelBtn:hover {
+  background-color: #E5E5E5;
+}
+
+.confirmBtn {
+  background-color: #50C878;
+  color: #FFFFFF;
+}
+
+.confirmBtn:hover {
+  background-color: #45B368;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .content {
+    padding: 24px 16px;
+  }
+
+  .conversionFlow {
+    flex-direction: column;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
+}
