@@ -1,6 +1,6 @@
 :root {
   
-  --color-primary: #FFBF01;
+  --color-primary:#E6A767;
   --color-danger: #DC143C;
   --color-success: #50C878;
 
@@ -15,7 +15,7 @@
 }
 
 body {
-  font-family: Inter, sans-serif;
+  font-family: Roboto, sans-serif;
   background: var(--color-bg-light);
   color: var(--color-text-dark);
 }
