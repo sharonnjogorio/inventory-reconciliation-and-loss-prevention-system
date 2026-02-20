@@ -1,0 +1,221 @@
+/* ── PIN Keypad Container ───────────────────────────────── */
+.keypadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 40px 24px;
+  max-width: 400px;
+  margin: 0 auto;
+  background-color: #FFFFFF;
+}
+
+/* ── User Icon ──────────────────────────────────────────── */
+.userIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666666;
+}
+
+/* ── Instruction Text ───────────────────────────────────── */
+.instruction {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ── Welcome Message ────────────────────────────────────── */
+.welcome {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+/* ── PIN Dots Display ───────────────────────────────────── */
+.pinDots {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 8px 0;
+}
+
+.dot {
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background-color: #F5F5F5;
+  border: 2px solid #E5E5E5;
+  transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot.filled {
+  background-color: #E29A5C; /* Amber/orange from design */
+  border-color: #E29A5C;
+  animation: fillDot 200ms ease;
+}
+
+.dot.filled::after {
+  content: '•';
+  color: #FFFFFF;
+  font-size: 2rem;
+  line-height: 1;
+}
+
+@keyframes fillDot {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Error Message ──────────────────────────────────────── */
+.error {
+  color: #DC143C;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  animation: shake 400ms ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ── Keypad Grid ────────────────────────────────────────── */
+.keypad {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.keypadRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+/* ── Individual Key Buttons ─────────────────────────────── */
+.key {
+  width: 70px;
+  height: 60px;
+  border-radius: 8px;
+  background-color: #E29A5C; /* Amber/orange */
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+  
+  /* PRD: 48x48dp minimum - exceeds requirement ✓ */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+}
+
+.key:active {
+  transform: scale(0.95);
+}
+
+.key:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Delete Key (Bottom Left - Dark) ────────────────────── */
+.keyDelete {
+  background-color: #2D2D2D; /* Dark gray/black */
+  color: #FFFFFF;
+  font-size: 1.75rem;
+}
+
+.keyDelete:hover:not(:disabled) {
+  background-color: #3D3D3D;
+}
+
+.keyDelete:disabled {
+  background-color: #4D4D4D;
+}
+
+/* ── Submit Key (Bottom Right - Green Checkmark) ─────────── */
+.keySubmit {
+  background-color: #4CAF50; /* Green */
+  font-size: 2rem;
+}
+
+.keySubmit:hover:not(:disabled) {
+  background-color: #45A049;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.keySubmit:disabled {
+  background-color: #A5D6A7;
+}
+
+/* ── Forgot PIN Text ────────────────────────────────────── */
+.forgotPin {
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.link {
+  color: #E29A5C;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: #D4894A;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 480px) {
+  .keypadContainer {
+    padding: 24px 16px;
+  }
+  
+  .key {
+    width: 60px;
+    height: 55px;
+    font-size: 1.25rem;
+  }
+  
+  .dot {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .welcome {
+    font-size: 1.25rem;
+  }
+}
