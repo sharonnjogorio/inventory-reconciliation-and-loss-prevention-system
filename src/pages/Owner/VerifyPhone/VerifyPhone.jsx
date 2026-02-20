@@ -72,7 +72,6 @@ const VerifyPhone = () => {
   return (
     <div className={styles.container}>
       <div className={styles.verifyWrapper}>
-        <div className={styles.overlayVerify}></div>
         <div className={styles.verifyForm}>
           {/* Progress Steps */}
           <div className={styles.progress}>

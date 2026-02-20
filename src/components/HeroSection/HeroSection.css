@@ -3,8 +3,8 @@
     gap: 69px;
 
      /* Fixed dimensions from design */
-    width: 1336px;
-    max-width: 100%;               /* ensure it doesn’t overflow screen */
+    max-width: 1336px;
+    width: 100%;               /* ensure it doesn’t overflow screen */
     height: 411px;
 
     /* Positioning */
