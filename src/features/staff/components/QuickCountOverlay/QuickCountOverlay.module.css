@@ -1,0 +1,272 @@
+/* Full Screen Overlay - Crimson Red */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(220, 20, 60, 0.97); /* Crimson */
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 300ms ease;
+  padding: 24px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Modal Card */
+.modal {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  padding: 40px;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: slideUp 400ms ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Lock Icon */
+.lockIcon {
+  color: #DC143C;
+  margin-bottom: 24px;
+  animation: shake 500ms ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
+}
+
+/* Title */
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 12px 0;
+}
+
+.prompt {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+/* Product Card */
+.productCard {
+  background-color: #F5F5F5;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.productImage {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.productInfo {
+  text-align: left;
+  flex: 1;
+}
+
+.productName {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.productSize {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* Instruction */
+.instruction {
+  font-size: 1rem;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+  line-height: 1.6;
+}
+
+.instruction strong {
+  color: #DC143C;
+}
+
+/* Input */
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  font-family: var(--font-mono, monospace);
+  margin-bottom: 20px;
+  transition: all 150ms ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #DC143C;
+  background-color: #FFF5F5;
+}
+
+/* Submit Button */
+.submitButton {
+  width: 100%;
+  padding: 16px;
+  background-color: #DC143C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #B01030;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(220, 20, 60, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Note */
+.note {
+  font-size: 0.875rem;
+  color: #DC143C;
+  margin: 16px 0 0 0;
+  font-weight: 600;
+}
+
+/* Result Section */
+.resultSection {
+  animation: fadeIn 400ms ease;
+}
+
+.resultIcon {
+  margin-bottom: 24px;
+  display: inline-block;
+  animation: scaleIn 400ms ease;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+.resultTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+}
+
+.resultTitle {
+  color: #1A1A1A;
+}
+
+.resultText {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+.resultDetails {
+  background-color: #F5F5F5;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.resultDetails p {
+  margin: 8px 0;
+  font-size: 1rem;
+  color: #666666;
+}
+
+.resultDetails strong {
+  color: #1A1A1A;
+  font-family: var(--font-mono, monospace);
+  font-size: 1.125rem;
+}
+
+.resultMatch {
+  color: #50C878 !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  margin-top: 12px !important;
+}
+
+.resultMismatch {
+  color: #DC143C !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  margin-top: 12px !important;
+}
+
+.valueImpact {
+  color: #DC143C !important;
+  font-weight: 700 !important;
+  font-family: var(--font-mono, monospace) !important;
+  font-size: 1.25rem !important;
+}
+
+.alertSent {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+  font-style: italic;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .modal {
+    padding: 24px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .input {
+    font-size: 1.25rem;
+  }
+}
