@@ -1,11 +1,11 @@
-import Navbar from '../components/navbar/navbar'
+// import Navbar from '../components/navbar/navbar'
 import Hero from '../components/hero/hero'
 // import Landing from './Landing/Landing'
 
 function Welcome() {
   return (
     <>
-      <Navbar />          {/* Your navbar */}
+      {/* <Navbar /> */}          {/* Your navbar */}
       <Hero />            {/* Your hero */}
       {/* <Landing /> */}  {/* Nafisat's features section */}
     </>

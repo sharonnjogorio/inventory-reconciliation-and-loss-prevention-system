@@ -5,111 +5,115 @@
   background-color: #F5F5F5;
 }
 
-/* Top Stats Bar */
-.statsBar {
-  background: linear-gradient(135deg, #1A365D 0%, #2D3748 100%);
+/* ── Staff Info Bar (Orange) ────────────────────────────── */
+.staffBar {
+  background-color: #E29A5C;
   color: #FFFFFF;
-  padding: 24px 32px;
+  padding: 16px 48px;
   display: flex;
-  gap: 32px;
+  justify-content: space-between;
   align-items: center;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.stat {
+.staffInfo {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.statValue {
-  font-size: 1.5rem;
-  font-weight: 700;
-  font-family: var(--font-mono, monospace);
-}
-
-.statLabel {
+.loggedInText {
   font-size: 0.75rem;
-  opacity: 0.8;
+  opacity: 0.9;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.actions {
-  margin-left: auto;
+.staffName {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.staffActions {
   display: flex;
   gap: 12px;
 }
 
-.actionBtn,
+.statusBtn,
 .syncBtn {
-  padding: 10px 20px;
+  padding: 8px 16px;
   border: none;
-  border-radius: 8px;
-  font-weight: 600;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.actionBtn {
-  background-color: rgba(255, 255, 255, 0.2);
+.statusBtn {
+  background-color: rgba(0, 0, 0, 0.2);
   color: #FFFFFF;
 }
 
-.actionBtn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+.statusBtn.online {
+  background-color: rgba(80, 200, 120, 0.3);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #50C878;
 }
 
 .syncBtn {
-  background-color: #E29A5C;
+  background-color: rgba(0, 0, 0, 0.2);
   color: #FFFFFF;
 }
 
-.syncBtn:hover {
-  background-color: #D4894A;
+/* ── Stats Bar (Dark Teal) ──────────────────────────────── */
+.statsBar {
+  background-color: #002E27;
+  color: #FFFFFF;
+  padding: 32px 48px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 48px;
 }
 
-/* Staff Info */
-.staffInfo {
-  background-color: #FFFFFF;
-  padding: 16px 32px;
+.stat {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid #E5E5E5;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.staffInfo p {
-  margin: 0;
-  font-size: 0.875rem;
-  color: #666666;
-}
-
-.staffInfo strong {
-  color: #1A1A1A;
-}
-
-.statusBadge {
-  padding: 6px 12px;
-  border-radius: 20px;
+.statLabel {
   font-size: 0.75rem;
   font-weight: 600;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
-.statusBadge.online {
-  background-color: #D1FAE5;
-  color: #059669;
+.statValue {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
+  line-height: 1;
 }
 
-.statusBadge.offline {
-  background-color: #FEE2E2;
-  color: #DC2626;
+.statSub {
+  font-size: 0.875rem;
+  opacity: 0.7;
 }
 
-/* Content Area */
+/* ── Content Area ───────────────────────────────────────── */
 .content {
   flex: 1;
-  padding: 32px;
+  padding: 32px 48px;
   overflow-y: auto;
 }
 
@@ -120,7 +124,7 @@
   margin: 0 0 24px 0;
 }
 
-/* Product Grid */
+/* ── Product Grid ───────────────────────────────────────── */
 .productGrid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -128,10 +132,10 @@
   max-width: 1200px;
 }
 
-/* Bottom Action Bar */
+/* ── Bottom Action Bar ──────────────────────────────────── */
 .bottomBar {
   background-color: #FFFFFF;
-  padding: 20px 32px;
+  padding: 20px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -153,8 +157,8 @@
 
 .totalAmount {
   font-size: 2rem;
-  font-weight: 700;
-  font-family: var(--font-mono, monospace);
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
   color: #1A1A1A;
 }
 
@@ -182,17 +186,29 @@
   transform: none;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
   .statsBar {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    gap: 24px;
   }
 
-  .actions {
-    width: 100%;
-    margin-left: 0;
+  .statValue {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .staffBar,
+  .statsBar,
+  .content,
+  .bottomBar {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .statsBar {
+    grid-template-columns: 1fr;
+    gap: 24px;
   }
 
   .productGrid {
@@ -208,4 +224,202 @@
   .recordButton {
     width: 100%;
   }
+}
+/* ── Action Buttons Section ─────────────────────────────── */
+.actionButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 32px 0;
+  padding: 24px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actionBtn {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid #E5E5E5;
+  background-color: #FFFFFF;
+  color: #666666;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.actionBtn:hover {
+  border-color: #E29A5C;
+  color: #E29A5C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.2);
+}
+
+.actionBtn svg {
+  flex-shrink: 0;
+}
+
+.actionBtn.endShift {
+  background-color: #DC143C;
+  border-color: #DC143C;
+  color: #FFFFFF;
+}
+
+.actionBtn.endShift:hover {
+  background-color: #B01030;
+  border-color: #B01030;
+  color: #FFFFFF;
+}
+
+/* ── Conversion Badge ───────────────────────────────────── */
+.conversionBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background-color: #2196F3;
+  color: #FFFFFF;
+  border-radius: 8px;
+  max-width: 300px;
+  margin: 0 auto 24px;
+  font-weight: 700;
+}
+
+.conversionAmount {
+  font-size: 1.25rem;
+  font-family: 'Arial Black', sans-serif;
+}
+
+.conversionIcon {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.conversionBottles {
+  font-size: 1.25rem;
+  font-family: 'Arial Black', sans-serif;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionBtn {
+    width: 100%;
+  }
+
+  .conversionBadge {
+    max-width: 100%;
+  }
+/* ── Action Buttons Section ─────────────────────────────── */
+.actionButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin: 32px 0;
+  padding: 24px;
+  background-color: #FFFFFF;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.actionBtn {
+  flex: 1;
+  padding: 14px 20px;
+  border: 2px solid #E5E5E5;
+  background-color: #FFFFFF;
+  color: #666666;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.actionBtn:hover {
+  border-color: #E29A5C;
+  color: #E29A5C;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.2);
+}
+
+.actionBtn svg {
+  flex-shrink: 0;
+}
+
+.actionBtn.endShift {
+  background-color: #DC143C;
+  border-color: #DC143C;
+  color: #FFFFFF;
+}
+
+.actionBtn.endShift:hover {
+  background-color: #B01030;
+  border-color: #B01030;
+  color: #FFFFFF;
+}
+
+/* ── Conversion Badge ───────────────────────────────────── */
+.conversionBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 12px 24px;
+  background-color: #2196F3;
+  color: #FFFFFF;
+  border-radius: 8px;
+  max-width: 300px;
+  margin: 0 auto 24px;
+  font-weight: 700;
+}
+
+.conversionAmount {
+  font-size: 1.25rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+.conversionIcon {
+  font-size: 1.5rem;
+  opacity: 0.8;
+}
+
+.conversionBottles {
+  font-size: 1.25rem;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .actionButtons {
+    flex-direction: column;
+  }
+
+  .actionBtn {
+    width: 100%;
+  }
+
+  .conversionBadge {
+    max-width: 100%;
+  }
+}
 }

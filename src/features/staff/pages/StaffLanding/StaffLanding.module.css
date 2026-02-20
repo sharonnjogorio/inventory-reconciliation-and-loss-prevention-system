@@ -5,10 +5,20 @@
   background-color: #FAFAFA;
 }
 
+/* ── Header Section ─────────────────────────────────────── */
 .header {
-  padding: 24px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 48px;
   background-color: #FFFFFF;
-  border-bottom: 1px solid #E5E5E5;
+  border-bottom: 0.5px solid #00574A;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .backButton {
@@ -17,9 +27,12 @@
   color: #666666;
   font-size: 0.875rem;
   cursor: pointer;
-  padding: 8px 0;
-  margin-bottom: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
   transition: color 150ms ease;
+  align-self: flex-start;
 }
 
 .backButton:hover {
@@ -27,10 +40,10 @@
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 2rem;
   font-weight: 700;
   color: #1A1A1A;
-  margin: 0 0 8px 0;
+  margin: 8px 0 0 0;
 }
 
 .subtitle {
@@ -39,24 +52,48 @@
   margin: 0;
 }
 
+.getStartedButton {
+  padding: 14px 32px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.getStartedButton:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Content Area ───────────────────────────────────────── */
 .content {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
-  gap: 48px;
+  padding: 60px 24px;
+  gap: 40px;
 }
 
-.logoSection {
+
+
+/* ── Branding Section ───────────────────────────────────── */
+.brandingSection {
   text-align: center;
 }
 
 .brandName {
   font-size: 2rem;
   font-weight: 700;
-  color: #E29A5C;
+  color: #E6A767;
   margin: 0 0 8px 0;
 }
 
@@ -66,81 +103,85 @@
   margin: 0;
 }
 
+/* ── Action Buttons ─────────────────────────────────────── */
 .actions {
   display: flex;
-  gap: 24px;
-  flex-wrap: wrap;
-  justify-content: center;
-  max-width: 600px;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 300px;
 }
 
 .actionButton {
-  background: #FFFFFF;
-  border: 2px solid #E5E5E5;
-  border-radius: 12px;
-  padding: 32px 24px;
-  min-width: 220px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
+  padding: 16px 32px;
+  background-color:#FFFFFF;
+  border-color: 2px solid #E6A767;
+  color:000000;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 200ms ease;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .actionButton:hover {
-  border-color: #E29A5C;
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(226, 154, 92, 0.15);
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
 }
 
-.iconWrapper {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  background-color: #FFF8F0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #E29A5C;
-}
-
-.actionButton span {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #1A1A1A;
-}
-
-.actionDesc {
-  font-size: 0.875rem;
-  color: #999999;
-  margin: 0;
-  text-align: center;
-}
-
-.footer {
-  padding: 24px 32px;
+.actionButtonSecondary {
+  padding: 16px 32px;
   background-color: #E29A5C;
-  text-align: center;
   color: #FFFFFF;
-  font-size: 0.875rem;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
-.footer p {
-  margin: 4px 0;
+.actionButtonSecondary:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
 }
 
-.copyright {
-  opacity: 0.8;
-}
-
-@media (max-width: 640px) {
-  .actions {
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
     flex-direction: column;
+    gap: 20px;
+    padding: 24px;
   }
-  
-  .actionButton {
+
+  .getStartedButton {
+    align-self: stretch;
     width: 100%;
-    max-width: 300px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .content {
+    padding: 40px 16px;
+  }
+
+  .conversionBadge {
+    padding: 12px 24px;
+  }
+
+  .conversionAmount,
+  .conversionBottles {
+    font-size: 1.5rem;
+  }
+
+  .brandName {
+    font-size: 1.5rem;
   }
 }

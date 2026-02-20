@@ -28,12 +28,7 @@ function StaffPIN() {
       const newPin = pin + digit
       setPin(newPin)
       
-      if (newPin.length === 4) {
-        setTimeout(() => {
-          handlePINComplete(newPin)
-          setPin('')
-        }, 100)
-      }
+      
     }
   }
 
@@ -145,7 +140,7 @@ function StaffPIN() {
                         onClick={handleDelete}
                         disabled={pin.length === 0}
                       >
-                        -
+                        ←
                       </button>
                     )
                   }

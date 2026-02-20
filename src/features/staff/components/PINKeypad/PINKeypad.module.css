@@ -3,9 +3,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 24px;
+  gap: 32px;  /* Gap between sections */
   padding: 40px 24px;
-  max-width: 400px;
+  width: 672px;
   margin: 0 auto;
   background-color: #FFFFFF;
 }
@@ -36,20 +36,23 @@
   font-weight: 700;
   color: #1A1A1A;
   margin: 0;
+  text-align: center;
 }
 
 /* ── PIN Dots Display ───────────────────────────────────── */
 .pinDots {
   display: flex;
-  gap: 16px;
+  gap: 32px;  /* Figma: gap 32px */
   justify-content: center;
-  margin: 8px 0;
+  width: 672px;  /* Figma: width 672px */
+  height: 128px;  /* Figma: height 128px */
+  align-items: center;
 }
 
 .dot {
-  width: 50px;
-  height: 50px;
-  border-radius: 8px;
+  width: 112px;  /* Calculated: (672 - 3*32) / 4 = 144px */
+  height: 128px;  /* Proportional to container height */
+  border-radius: 0px;
   background-color: #F5F5F5;
   border: 2px solid #E5E5E5;
   transition: all 200ms ease;
@@ -59,15 +62,15 @@
 }
 
 .dot.filled {
-  background-color: #E29A5C; /* Amber/orange from design */
-  border-color: #E29A5C;
+  background-color: #E6A767;
+  border-color: #E6A767;
   animation: fillDot 200ms ease;
 }
 
 .dot.filled::after {
   content: '•';
   color: #FFFFFF;
-  font-size: 2rem;
+  font-size: 6rem;
   line-height: 1;
 }
 
@@ -103,32 +106,32 @@
 
 /* ── Keypad Grid ────────────────────────────────────────── */
 .keypad {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(3, 160px);  
+  grid-template-rows: repeat(4, 112px);     
+  gap: 16px;  
+  width: 512px;
+  height: 496px;  
+ margin: 0 auto;
+ justify-self: center; 
 }
 
 .keypadRow {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
+  display: contents;  /* Makes children part of the grid */
 }
 
 /* ── Individual Key Buttons ─────────────────────────────── */
 .key {
-  width: 70px;
-  height: 60px;
-  border-radius: 8px;
-  background-color: #E29A5C; /* Amber/orange */
+  width: 160px;  /* Calculated from grid */
+  height: 112px;  /* Calculated from grid */
+  border-radius: 0px;  /* Adjust to match Figma if different */
+  background-color: #E6A767;
   color: #FFFFFF;
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 150ms ease;
-  
-  /* PRD: 48x48dp minimum - exceeds requirement ✓ */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -151,9 +154,10 @@
 
 /* ── Delete Key (Bottom Left - Dark) ────────────────────── */
 .keyDelete {
-  background-color: #2D2D2D; /* Dark gray/black */
+  background-color: #1E2939;
   color: #FFFFFF;
-  font-size: 1.75rem;
+  font-size: 2.5rem;
+  border-color: #E6A767;
 }
 
 .keyDelete:hover:not(:disabled) {
@@ -166,8 +170,9 @@
 
 /* ── Submit Key (Bottom Right - Green Checkmark) ─────────── */
 .keySubmit {
-  background-color: #4CAF50; /* Green */
-  font-size: 2rem;
+  background-color: #00A63E;
+  font-size: 3rem;
+  border-color:#00C950 ;
 }
 
 .keySubmit:hover:not(:disabled) {
@@ -182,13 +187,13 @@
 /* ── Forgot PIN Text ────────────────────────────────────── */
 .forgotPin {
   font-size: 0.875rem;
-  color: #666666;
+  color:#FF5E4D ;
   text-align: center;
   margin-top: 16px;
 }
 
 .link {
-  color: #E29A5C;
+  color:#FF5E4D;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
@@ -199,23 +204,37 @@
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 480px) {
+@media (max-width: 768px) {
   .keypadContainer {
+    width: 100%;
+    max-width: 672px;
     padding: 24px 16px;
   }
-  
-  .key {
-    width: 60px;
-    height: 55px;
-    font-size: 1.25rem;
+
+  .pinDots {
+    width: 100%;
+    max-width: 672px;
+    height: auto;
+    gap: 16px;
   }
-  
+
   .dot {
-    width: 45px;
-    height: 45px;
+    width: calc((100% - 48px) / 4);
+    height: 60px;
   }
-  
-  .welcome {
-    font-size: 1.25rem;
+
+  .keypad {
+    width: 100%;
+    max-width: 512px;
+    height: auto;
+    margin-left: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 90px);
+  }
+
+  .key {
+    width: 100%;
+    height: 90px;
+    font-size: 1.5rem;
   }
 }

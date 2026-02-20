@@ -1,6 +1,6 @@
 /* ── Container ──────────────────────────────────────────── */
 .container {
-  min-height: 100vh;
+  min-height: calc(100vh - 80px - 100px); /* viewport - navbar - footer */
   display: flex;
   flex-direction: column;
   background-color: #FAFAFA;
@@ -11,6 +11,7 @@
   padding: 24px 32px;
   background-color: #FFFFFF;
   border-bottom: 1px solid #E5E5E5;
+  flex-shrink: 0;
 }
 
 .backButton {
@@ -47,7 +48,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
+  padding: 60px 24px; /* More padding */
+  min-height: 500px; /* Ensure minimum height */
+  overflow-y: auto; 
 }
 
 /* ── Validating State ───────────────────────────────────── */
@@ -97,6 +100,7 @@
   }
   
   .keypadWrapper {
-    padding: 24px 16px;
+    padding: 40px 16px;
+    min-height: 400px;
   }
 }

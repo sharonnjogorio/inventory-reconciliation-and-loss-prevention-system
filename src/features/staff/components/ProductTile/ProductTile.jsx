@@ -1,44 +1,87 @@
 import styles from './ProductTile.module.css'
 
 function ProductTile({ product, quantity, onTap }) {
+  const getStockStatus = (stock = 34) => {
+    if (stock <= 5) {
+      return { level: 'critical', text: `! Critical: ${stock} units`, color: '#DC143C' }
+    } else if (stock <= 12) {
+      return { level: 'low', text: `⚠ Low: ${stock} units`, color: '#FFA500' }
+    } else {
+      return { level: 'normal', text: `Stock: ${stock} units`, color: '#718096' }
+    }
+  }
+
+  // Create subtle background tint (10% opacity of brand color)
+  const getSubtleBackground = (brandColor) => {
+    // Convert hex to RGB and add alpha
+    const hex = brandColor.replace('#', '')
+    const r = parseInt(hex.substr(0, 2), 16)
+    const g = parseInt(hex.substr(2, 2), 16)
+    const b = parseInt(hex.substr(4, 2), 16)
+    return `rgba(${r}, ${g}, ${b}, 0.08)` // Very subtle 8% opacity
+  }
+
+  const stockStatus = getStockStatus(34)
+  const subtleBackground = getSubtleBackground(product.color)
+
   return (
-    <div className={styles.tile} onClick={onTap}>
-      {/* Top Section - Brand Color */}
-      <div 
-        className={styles.brandSection}
-        style={{ 
-          backgroundColor: product.color,
-          color: product.textColor
-        }}
-      >
-        {/* Quantity Badge - Shows when item selected */}
-        {quantity > 0 && (
-          <div className={styles.badge}>
-            {quantity}
-          </div>
-        )}
-        
-        {/* Product Image */}
-        <div className={styles.imageWrapper}>
+    <div 
+      className={styles.tile} 
+      onClick={onTap}
+      style={{ 
+        borderColor: product.color,
+        backgroundColor: subtleBackground // Subtle brand color tint
+      }}
+    >
+      {/* Quantity Badge */}
+      {quantity > 0 && (
+        <div className={styles.badge}>
+          {quantity}
+        </div>
+      )}
+
+      {/* Image Section with White Frame */}
+      <div className={styles.imageSection}>
+        <div className={styles.imageFrame}>
           {product.image ? (
             <img 
               src={product.image} 
-              alt={`${product.name} ${product.size}`}  
+              alt={`${product.name} ${product.size}`}
               className={styles.productImage}
             />
           ) : (
-            <svg width="80" height="80" viewBox="0 0 24 24" fill="currentColor" opacity="0.3">
-              <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" strokeWidth="1">
+              <rect x="3" y="3" width="18" height="18" rx="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <path d="M21 15l-5-5L5 21"/>
             </svg>
           )}
         </div>
       </div>
 
-      {/* Bottom Section - Product Info */}
+      {/* Product Info Section */}
       <div className={styles.infoSection}>
-        <p className={styles.brandName}>{product.name}</p>
-        <p className={styles.size}>{product.size}</p>
-        <p className={styles.price}>₦{product.price.toLocaleString()}</p>
+        <h3 
+          className={styles.brandName}
+          style={{ color: product.color }} // Brand color on name
+        >
+          {product.name}
+        </h3>
+        <p 
+          className={styles.size}
+          style={{ color: product.color }} // Brand color on size
+        >
+          {product.size}
+        </p>
+        <p className={styles.price}>
+          ${product.price.toFixed(2)}
+        </p>
+        <p 
+          className={styles.stock}
+          style={{ color: stockStatus.color }}
+        >
+          {stockStatus.text}
+        </p>
       </div>
     </div>
   )

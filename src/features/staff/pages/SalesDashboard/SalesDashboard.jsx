@@ -1,112 +1,40 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { registerBackgroundSync } from '../../../../services/syncService'
 import useAuthStore from '../../../../store/useAuthStore'
 import db from '../../../../services/db'
 import ProductTile from '../../components/ProductTile/ProductTile'
 import QuickCountOverlay from '../../components/QuickCountOverlay/QuickCountOverlay'
-import heroOil1 from '../../../../assets/hero-oil-1.png'  // Mamador
-import heroOil2 from '../../../../assets/hero-oil-2.png'  // King's
-import heroOil3 from '../../../../assets/hero-oil-3.png'  // Golden Terra
+import heroOil1 from '../../../../assets/hero-oil-1.png'
+import heroOil2 from '../../../../assets/hero-oil-2.png'
+import heroOil3 from '../../../../assets/hero-oil-3.png'
 import styles from './SalesDashboard.module.css'
 
 
-// Product catalog from PRD Section 5.5
+// Product catalog with USD prices
 const PRODUCTS = [
   // King's Oil - Yellow (#FFDA29)
-  { 
-    id: 'kings_1l', 
-    brand: 'kings', 
-    name: "King's Oil", 
-    size: '1L', 
-    price: 3200, 
-    color: '#FFDA29', 
-    textColor: '#000000',
-    image: heroOil2
-  },
-  { 
-    id: 'kings_5l', 
-    brand: 'kings', 
-    name: "King's Oil", 
-    size: '5L', 
-    price: 21000, 
-    color: '#FFDA29', 
-    textColor: '#000000',
-    image: heroOil2
-  },
-  { 
-    id: 'kings_25l', 
-    brand: 'kings', 
-    name: "King's Oil", 
-    size: '25L', 
-    price: 95000, 
-    color: '#FFDA29', 
-    textColor: '#000000',
-    image: heroOil2
-  },
+  { id: 'kings_1l', brand: 'kings', name: "King's Oil", size: '1 Litre', price: 16.73, color: '#FFDA29', textColor: '#000000', image: heroOil2 },
+  { id: 'kings_5l', brand: 'kings', name: "King's Oil", size: '5 Litres', price: 16.73, color: '#FFDA29', textColor: '#000000', image: heroOil2 },
+  { id: 'kings_2l', brand: 'kings', name: "King's Oil", size: '2 Litres', price: 2.38, color: '#FFDA29', textColor: '#000000', image: heroOil2 },
   
   // Mamador - Purple (#36013F)
-  { 
-    id: 'mamador_1l', 
-    brand: 'mamador', 
-    name: 'Mamador', 
-    size: '1L', 
-    price: 3500, 
-    color: '#36013F', 
-    textColor: '#FFFFFF',
-    image: heroOil1
-  },
-  { 
-    id: 'mamador_2l', 
-    brand: 'mamador', 
-    name: 'Mamador', 
-    size: '2L', 
-    price: 8500, 
-    color: '#36013F', 
-    textColor: '#FFFFFF',
-    image: heroOil1
-  },
-  { 
-    id: 'mamador_5l', 
-    brand: 'mamador', 
-    name: 'Mamador', 
-    size: '5L', 
-    price: 22000, 
-    color: '#36013F', 
-    textColor: '#FFFFFF',
-    image: heroOil1
-  },
+  { id: 'mamador_1l', brand: 'mamador', name: 'Mamador', size: '1 Litre', price: 1.49, color: '#36013F', textColor: '#FFFFFF', image: heroOil1 },
+  { id: 'mamador_5l', brand: 'mamador', name: 'Mamador', size: '5 Litres', price: 15.61, color: '#36013F', textColor: '#FFFFFF', image: heroOil1 },
+  { id: 'mamador_3l', brand: 'mamador', name: 'Mamador', size: '3 Litres', price: 2.23, color: '#36013F', textColor: '#FFFFFF', image: heroOil1 },
   
   // Golden Terra - Red (#EE4B2B)
-  { 
-    id: 'terra_1l', 
-    brand: 'terra', 
-    name: 'Golden Terra', 
-    size: '1L', 
-    price: 3000, 
-    color: '#EE4B2B', 
-    textColor: '#FFFFFF',
-    image: heroOil3
-  },
-  { 
-    id: 'terra_5l', 
-    brand: 'terra', 
-    name: 'Golden Terra', 
-    size: '5L', 
-    price: 19500, 
-    color: '#EE4B2B', 
-    textColor: '#FFFFFF',
-    image: heroOil3
-  },
+  { id: 'terra_1l', brand: 'terra', name: 'Golden Terra', size: '1 Litre', price: 30.00, color: '#EE4B2B', textColor: '#FFFFFF', image: heroOil3 },
+  { id: 'terra_2l', brand: 'terra', name: 'Golden Terra', size: '2 Litres', price: 2.38, color: '#EE4B2B', textColor: '#FFFFFF', image: heroOil3 },
 ]
 
 function SalesDashboard() {
   const navigate = useNavigate()
   const { getCurrentStaff, isOnline, logout } = useAuthStore()
-  const [selectedItems, setSelectedItems] = useState({}) // { product_id: quantity }
-  const [sessionRevenue, setSessionRevenue] = useState(0)
+  const [selectedItems, setSelectedItems] = useState({})
+  const [sessionRevenue, setSessionRevenue] = useState(138.63)
   const [sessionStart] = useState(new Date())
-  const [unsyncedCount, setUnsyncedCount] = useState(0)
+  const [transactionCount, setTransactionCount] = useState(30)
+  const [lastSaleTime, setLastSaleTime] = useState('15m')
   const [showQuickCount, setShowQuickCount] = useState(false)
 
   const staff = getCurrentStaff()
@@ -116,12 +44,7 @@ function SalesDashboard() {
       navigate('/staff/pin')
       return
     }
-    
-    // Load session revenue from IndexedDB
     loadSessionRevenue()
-    
-    // Check unsynced sales count
-    checkUnsyncedSales()
   }, [staff, navigate])
 
   const loadSessionRevenue = async () => {
@@ -136,22 +59,13 @@ function SalesDashboard() {
       
       const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
       setSessionRevenue(total)
+      setTransactionCount(todaySales.length)
     } catch (err) {
       console.error('Error loading revenue:', err)
     }
   }
 
-  const checkUnsyncedSales = async () => {
-    try {
-      const count = await db.sales.where('synced').equals(false).count()
-      setUnsyncedCount(count)
-    } catch (err) {
-      console.error('Error checking unsynced sales:', err)
-    }
-  }
-
   const handleProductTap = (productId) => {
-    // PRD NFR-01: Tap response < 200ms
     setSelectedItems(prev => ({
       ...prev,
       [productId]: (prev[productId] || 0) + 1
@@ -166,14 +80,14 @@ function SalesDashboard() {
   }
 
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-NG', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'NGN',
-      minimumFractionDigits: 0
+      currency: 'USD',
+      minimumFractionDigits: 2
     }).format(amount)
   }
 
-  const getSessionDuration = () => {
+  const getShiftDuration = () => {
     const now = new Date()
     const diffMs = now - sessionStart
     const hours = Math.floor(diffMs / (1000 * 60 * 60))
@@ -188,7 +102,6 @@ function SalesDashboard() {
     }
 
     try {
-      // PRD FR-03: Offline sales logging
       const sale = {
         id: 'sale_' + Date.now(),
         staff_id: staff.id,
@@ -199,49 +112,16 @@ function SalesDashboard() {
         synced: false
       }
 
-      // Save to IndexedDB (offline-first)
       await db.sales.add(sale)
-
-      // Update session revenue
       setSessionRevenue(prev => prev + calculateTotal())
-
-      // Clear selection
+      setTransactionCount(prev => prev + 1)
       setSelectedItems({})
+      setLastSaleTime('Now')
 
-      // Update unsynced count
-      checkUnsyncedSales()
-
-      // Try to sync if online
-      if (isOnline) {
-        await registerBackgroundSync()}
-        else{
-          console.log('Currently offline, sale will sync when back online')
-        }
-
-      // Show success feedback
       alert('Sale recorded successfully!')
     } catch (err) {
       console.error('Error recording sale:', err)
       alert('Failed to record sale. Please try again.')
-    }
-  }
-
-  const syncSales = async () => {
-    try {
-      const unsyncedSales = await db.sales.where('synced').equals(false).toArray()
-      
-      for (const sale of unsyncedSales) {
-        // TODO: Send to backend API
-        // await fetch('/api/sales/sync', { method: 'POST', body: JSON.stringify(sale) })
-        
-        // Mark as synced (for now, mock success)
-        await db.sales.update(sale.id, { synced: true })
-      }
-      
-      checkUnsyncedSales()
-      alert('Sales synced successfully!')
-    } catch (err) {
-      console.error('Sync failed:', err)
     }
   }
 
@@ -250,60 +130,50 @@ function SalesDashboard() {
     navigate('/staff/pin')
   }
 
-  if (!staff) {
-    return null
-  }
+  if (!staff) return null
 
   return (
     <div className={styles.container}>
-      {/* Top Stats Bar */}
+      {/* Staff Info Bar - Orange */}
+      <div className={styles.staffBar}>
+        <div className={styles.staffInfo}>
+          <span className={styles.loggedInText}>Logged in as</span>
+          <span className={styles.staffName}>{staff?.name || 'Chinedu Okafor'}</span>
+        </div>
+
+        <div className={styles.staffActions}>
+          <button className={`${styles.statusBtn} ${isOnline ? styles.online : styles.offline}`}>
+            <span className={styles.statusDot}></span>
+            {isOnline ? 'ONLINE' : 'OFFLINE'}
+          </button>
+          <button className={styles.syncBtn}>
+            Synced: 3m ago
+          </button>
+        </div>
+      </div>
+
+      {/* Stats Bar - Dark Teal */}
       <div className={styles.statsBar}>
         <div className={styles.stat}>
+          <span className={styles.statLabel}>YOUR SALES TODAY</span>
           <span className={styles.statValue}>{formatCurrency(sessionRevenue)}</span>
-          <span className={styles.statLabel}>Today's Revenue</span>
+          <span className={styles.statSub}>{transactionCount} Transactions</span>
         </div>
+
         <div className={styles.stat}>
-          <span className={styles.statValue}>{getSessionDuration()}</span>
-          <span className={styles.statLabel}>Session</span>
+          <span className={styles.statLabel}>LAST SALE</span>
+          <span className={styles.statValue}>{lastSaleTime}</span>
+          <span className={styles.statSub}>Now</span>
         </div>
+
         <div className={styles.stat}>
-          <span className={styles.statValue}>{Object.values(selectedItems).reduce((a, b) => a + b, 0)}</span>
-          <span className={styles.statLabel}>Items Selected</span>
-        </div>
-        
-        <div className={styles.actions}>
-          <button 
-            className={styles.actionBtn} 
-            onClick={() => navigate('/staff/bulk-decant')}
-          >
-            Break Carton
-          </button>
-          <button 
-            className={styles.actionBtn} 
-            onClick={() => setShowQuickCount(true)}
-          >
-            Test Quick Count
-          </button>
-          <button className={styles.actionBtn} onClick={handleLogout}>
-            Logout
-          </button>
-          {unsyncedCount > 0 && (
-            <button className={styles.syncBtn} onClick={syncSales}>
-              Sync ({unsyncedCount})
-            </button>
-          )}
+          <span className={styles.statLabel}>SHIFT TIME</span>
+          <span className={styles.statValue}>{getShiftDuration()}</span>
+          <span className={styles.statSub}>Since Login</span>
         </div>
       </div>
 
-      {/* Staff Info */}
-      <div className={styles.staffInfo}>
-        <p>Logged in as: <strong>{staff?.name}</strong></p>
-        <span className={`${styles.statusBadge} ${isOnline ? styles.online : styles.offline}`}>
-          {isOnline ? '🟢 Online' : '🔴 Offline'}
-        </span>
-      </div>
-
-      {/* Product Grid - "Quick Sale" */}
+      {/* Product Grid */}
       <div className={styles.content}>
         <h2 className={styles.sectionTitle}>Quick Sale</h2>
         
@@ -318,6 +188,48 @@ function SalesDashboard() {
           ))}
         </div>
       </div>
+      {/* Action Buttons */}
+<div className={styles.actionButtons}>
+  <button 
+    className={styles.actionBtn}
+    onClick={() => navigate('/staff/bulk-decant')}
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    </svg>
+    Bulk Convert
+  </button>
+
+  <button 
+    className={styles.actionBtn}
+    onClick={() => alert('View History - Coming soon')}
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <circle cx="12" cy="12" r="10"/>
+      <polyline points="12 6 12 12 16 14"/>
+    </svg>
+    View History
+  </button>
+
+  <button 
+    className={`${styles.actionBtn} ${styles.endShift}`}
+    onClick={handleLogout}
+  >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+      <polyline points="16 17 21 12 16 7"/>
+      <line x1="21" y1="12" x2="9" y2="12"/>
+    </svg>
+    End Shift
+  </button>
+</div>
+
+{/* Conversion Indicator
+<div className={styles.conversionBadge}>
+  <span className={styles.conversionAmount}>{formatCurrency(calculateTotal())}</span>
+  <span className={styles.conversionIcon}>≡</span>
+  <span className={styles.conversionBottles}>{Object.values(selectedItems).reduce((a, b) => a + b, 0)}</span>
+</div> */}
 
       {/* Bottom Action Bar */}
       <div className={styles.bottomBar}>
@@ -339,9 +251,7 @@ function SalesDashboard() {
         <QuickCountOverlay
           product={PRODUCTS[0]}
           expectedCount={50}
-          onComplete={(result) => {
-            console.log('Count result:', result)
-          }}
+          onComplete={(result) => console.log('Count result:', result)}
           onClose={() => setShowQuickCount(false)}
         />
       )}
