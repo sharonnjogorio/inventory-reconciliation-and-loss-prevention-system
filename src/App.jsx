@@ -19,6 +19,8 @@ import Settings from './pages/Owner/Settings/Settings'
 import AddStock from './pages/Owner/AddStock/AddStock'
 import Alerts from './pages/Owner/Alerts/Alerts'
 
+import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
+import Report from "./pages/Owner/Report/Report"
 
 // Staff Pages 
 import StaffLanding from './features/staff/pages/StaffLanding/StaffLanding'
@@ -34,6 +36,7 @@ import Footer from './components/footer/footer'
 import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
 import { CartProvider } from "./components/context/CartProvider";
+
 
 function App() {
   const location = useLocation()
@@ -81,6 +84,8 @@ function App() {
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
+         <Route path="/owner/analytics" element={<AnalyticDashboard />} />
+         <Route path="/owner/reports/" element={<Report/>} />
       </Routes>
       
       <Footer />

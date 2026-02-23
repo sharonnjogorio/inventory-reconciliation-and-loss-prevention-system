@@ -1,0 +1,142 @@
+
+
+.page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.analyticLink{
+    max-width: 1432.89px;
+  margin: 40px auto 40px;
+  padding: 0 16px;
+}
+
+.main {
+  max-width: 1280px;
+  margin: 40px auto 40px;
+  padding: 0px 16px;
+}
+
+.breadcrumb {
+  font-size: 18px;
+  color: #4A5565;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.breadcrumbLink{
+    text-decoration: none;
+}
+
+.headerRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.subtitle {
+  margin: 4px 0 0;
+  font-size: 18px;
+  font-weight: 400;
+  color: #4A5565;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rangeSelect {
+  border: 1px solid #E6A767;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+  background-color: #ffffff;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.primaryButton {
+  border: none;
+  background: #E6A767;
+  color: white;
+  padding: 8px 16px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primaryButton:hover {
+  opacity: 0.95;
+}
+
+.cardsRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.chartsRow {
+  display: grid;
+  grid-template-columns: 2fr 1.3fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.bottomRow {
+  display: grid;
+  grid-template-columns: 1.4fr 1.6fr;
+  gap: 16px;
+}
+
+.bottomCard {
+  background: #ffffff;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  margin: 0 auto;
+  margin-top: 40px;
+}
+
+
+
+/* Responsive */
+
+@media (max-width: 1024px) {
+  .cardsRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .chartsRow,
+  .bottomRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .headerRow {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .controls {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .topNav {
+    padding-inline: 16px;
+  }
+}

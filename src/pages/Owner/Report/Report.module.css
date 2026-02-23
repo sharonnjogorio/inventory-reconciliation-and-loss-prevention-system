@@ -1,0 +1,438 @@
+.page {
+  min-height: 100vh;
+  background-color: #ffffff;
+  font-family: inherit;
+}
+
+.backLink {
+  max-width: 1432px;
+  margin: 20px auto;
+  padding: 0 16px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4a5565;
+  cursor: pointer;
+}
+
+.backLinkLink {
+  text-decoration: none;
+}
+
+.backLink:hover {
+  color: #111827;
+}
+
+.header {
+  max-width: 1432px;
+  margin: 0 auto 30px;
+  padding: 0 16px;
+}
+
+.pageTitle {
+  margin: 0;
+  font-size: 42px;
+  font-weight: 700;
+  color: #1e2939;
+}
+
+/* Main card */
+
+.card {
+  max-width: 896px;
+  margin: 40px auto;
+  padding: 28px 32px 24px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  border: 1px solid #e6a767;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+}
+
+.reportHeader {
+  text-align: center;
+}
+
+.title {
+  font-size: 42px;
+  font-weight: 700;
+  color: #1e2939;
+}
+
+.subtitle {
+  font-size: 18px;
+  font-weight: 400;
+  color: #6b7280;
+  margin: 0 0 16px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 60px;
+}
+
+/* Section */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  max-width: 728px;
+  width: 100%;
+}
+
+.sectionLabel {
+  font-size: 18px;
+  font-weight: 700;
+  color: #364153;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+/* Report type cards */
+
+.reportGrid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.reportCard {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 30px;
+  border: 4px solid #99a1af;
+  background-color: #ffffff;
+  cursor: pointer;
+  text-align: left;
+  height: 219px;
+  /* width removed so grid can control width */
+}
+
+.reportCardSelected {
+  border-color: #000000;
+  background-color: #000000;
+  color: #ffffff;
+}
+
+.reportColorBlock {
+  width: 64px;
+  height: 64px;
+  border-radius: 1.78px;
+  background-color: #d1d5dc;
+  border: 1.78px solid #4a5565;
+}
+
+.reportColorDefault {
+  background-color: #d1d5db;
+}
+
+.reportColorSelected {
+  background-color: #364153;
+}
+
+.reportTextBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reportTitle {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.reportSubtitle {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5565;
+}
+
+.reportCardSelected .reportSubtitle {
+  color: #d1d5dc;
+}
+
+/* Date range */
+
+.dataRangeSection {
+  margin-top: 30px;
+}
+
+.dateInputsRow {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+
+.dateField {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.inputLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5565;
+}
+
+.input {
+  border: 4px solid #99a1af;
+  padding: 7px 10px;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1e2939;
+  background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.2);
+}
+
+/* Quick range chips */
+
+.quickRangeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.chipButton {
+  border: 1.78px solid #d1d5dc;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f3f4f6;
+  cursor: pointer;
+  color: #1e2939;
+}
+
+.chipButtonActive {
+  background-color: #000000;
+  border-color: #000000;
+  color: #f9fafb;
+}
+
+/* Formats */
+
+.formatRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.formatCard {
+  height: 112px;
+  /* width removed for responsiveness */
+  border: 4px solid #99a1af;
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  cursor: pointer;
+  background-color: #ffffff;
+  text-align: center;
+  justify-content: center;
+  color: #1e2939;
+  margin-bottom: 30px;
+}
+
+.formatCardSelected {
+  background-color: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff;
+}
+
+.formatLabel {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.formatSubtitle {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Preview card */
+
+.previewCard {
+  border: 4px solid #51a2ff;
+  min-height: 176px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background-color: #eff6ff;
+}
+
+.previewHead {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e2939;
+  margin-bottom: 24px;
+}
+
+.previewLabel {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+  text-transform: uppercase;
+}
+
+.previewMetaLabel {
+  font-size: 14px;
+  font-weight: 400;
+  color: #4a5565;
+}
+
+.previewMetaValue {
+  font-size: 24px;
+  font-weight: 700;
+  color: #101828;
+}
+
+/* Actions */
+
+.actionsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 25px;
+  min-height: 80px;
+  margin-top: 25px;
+}
+
+.cancelButton {
+  flex: 1;
+  border: 4px solid #99a1af;
+  background-color: #ffffff;
+  padding: 10px 0;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.submitButton {
+  flex: 1;
+  border-radius: 4px;
+  border: none;
+  background-color: #000000;
+  color: #f9fafb;
+  padding: 10px 0;
+  font-size: 20px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.submitButton:disabled,
+.cancelButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+.submitMessage {
+  margin-top: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  color: #16a34a;
+}
+
+/* ---------- Responsive breakpoints ---------- */
+
+/* Tablet */
+@media (max-width: 1024px) {
+  .card {
+    margin: 24px auto;
+    padding: 24px 24px 20px;
+  }
+
+  .form {
+    padding: 32px 16px;
+  }
+
+  .pageTitle {
+    font-size: 32px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .reportGrid,
+  .formatRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .backLink,
+  .header {
+    padding: 0 12px;
+  }
+
+  .pageTitle {
+    font-size: 28px;
+  }
+
+  .card {
+    margin: 16px 8px 24px;
+    padding: 20px 16px;
+  }
+
+  .form {
+    padding: 24px 0;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .sectionLabel {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .reportGrid,
+  .dateInputsRow,
+  .formatRow {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .reportCard {
+    height: auto;
+    padding: 20px;
+  }
+
+  .previewCard {
+    padding: 20px;
+  }
+
+  .previewLabel {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .actionsRow {
+    flex-direction: column-reverse;
+    gap: 12px;
+    min-height: auto;
+  }
+
+  .cancelButton,
+  .submitButton {
+    font-size: 16px;
+  }
+}

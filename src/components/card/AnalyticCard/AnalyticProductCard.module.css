@@ -1,0 +1,151 @@
+
+.card {
+  background-color: #ffffff;
+  border-radius: 6px;
+  border: 1px solid #d1d5e0;
+  padding: 18px 20px;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.header {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1E2939;
+  margin: 0;
+}
+
+/* Controls */
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+
+.select {
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background-color: #ffffff;
+}
+
+.minUnitsWrapper {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.minUnitsLabel {
+  font-size: 0.7rem;
+  color: #6b7280;
+}
+
+.minUnitsInput {
+  width: 60px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  padding: 3px 4px;
+  font-size: 0.75rem;
+}
+
+.resetButton {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-size: 0.7rem;
+  padding: 2px 4px;
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  text-decoration: underline;
+}
+
+/* Product list */
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.row {
+  position: relative;
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.thumbnail {
+  width: 40px;
+  height: 40px;
+  border-radius: 4px;
+  background-color: #d1d5db;
+}
+
+.textBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.name {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+.subtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.right {
+  margin-left: 12px;
+}
+
+.revenue {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+.divider {
+  position: absolute;
+  left: 50px;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: #e5e7eb;
+}
+
+.row:hover .name {
+  color: #1d4ed8;
+}
+
+/* Empty state */
+
+.emptyState {
+  padding-top: 10px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
