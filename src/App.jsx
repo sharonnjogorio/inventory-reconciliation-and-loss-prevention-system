@@ -14,6 +14,8 @@ import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
 import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
 import ManageStaff from './pages/Owner/ManageStaff/ManageStaff'
 import StaffQRCode from './pages/Owner/StaffQRCode/StaffQRCode'
+import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
+import Report from "./pages/Owner/Report/Report"
 
 // Staff Pages 
 import StaffLanding from './features/staff/pages/StaffLanding/StaffLanding'
@@ -29,8 +31,7 @@ import Footer from './components/footer/footer'
 import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
 import { CartProvider } from "./components/context/CartContext";
-import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
-import Report from "./pages/Owner/Report/Report"
+
 
 function App() {
   const location = useLocation()
@@ -73,8 +74,8 @@ function App() {
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
-         <Route path="/owner/analytic/dashboard" element={<AnalyticDashboard />} />
-         <Route path="/owner/report/" element={<Report/>} />
+         <Route path="/owner/analytics" element={<AnalyticDashboard />} />
+         <Route path="/owner/reports/" element={<Report/>} />
       </Routes>
       
       <Footer />
