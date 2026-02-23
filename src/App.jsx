@@ -73,8 +73,8 @@ function App() {
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
-         <Route path="/analytic/dashboard" element={<AnalyticDashboard />} />
-         <Route path="/report/" element={<Report/>} />
+         <Route path="/owner/analytic/dashboard" element={<AnalyticDashboard />} />
+         <Route path="/owner/report/" element={<Report/>} />
       </Routes>
       
       <Footer />
