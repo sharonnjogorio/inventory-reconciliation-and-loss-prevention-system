@@ -25,6 +25,10 @@
   margin-bottom: 8px;
 }
 
+.breadcrumbLink{
+    text-decoration: none;
+}
+
 .headerRow {
   display: flex;
   align-items: flex-end;

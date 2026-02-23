@@ -122,7 +122,7 @@ const AnalyticDashboard = () => {
   return (
     <div className={styles.page}>
         <div className={styles.analyticLink}>
-            <Link to="/owner/dashboard"><div className={styles.breadcrumb}>{"< Back to Dashboard"}</div></Link>
+            <Link to="/owner/dashboard" className={styles.breadcrumbLink}><div className={styles.breadcrumb}>{"< Back to Dashboard"}</div></Link>
 
         <div className={styles.headerRow}>
           <div>
