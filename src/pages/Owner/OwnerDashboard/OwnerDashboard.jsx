@@ -118,7 +118,10 @@ function OwnerDashboard() {
           <div className={styles.alertsSection}>
             <div className={styles.sectionHeader}>
               <h2>Recent Alerts</h2>
-              <button className={styles.viewAll}>View all</button>
+              <button 
+              className={styles.viewAll}
+              onClick={() => navigate('/owner/alerts')}
+              >View all</button>
             </div>
             <div className={styles.alertsList}>
               {recentAlerts.map(alert => (

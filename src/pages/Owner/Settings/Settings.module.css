@@ -1,0 +1,229 @@
+.container {
+  min-height: calc(100vh - 70px);
+  background-color: #F5F7FA;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background-color: #FFFFFF;
+  padding: 24px 48px;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ── Content ────────────────────────────────────────────── */
+.content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+/* ── Sections ───────────────────────────────────────────── */
+.section {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 20px 0;
+}
+
+/* ── Info Rows (Shop Information) ───────────────────────── */
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.labelText {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.labelSubtext {
+  font-size: 0.85rem;
+  color: #666666;
+}
+
+.editBtn {
+  padding: 6px 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.editBtn:hover {
+  border-color: #E29A5C;
+  color: #E29A5C;
+}
+
+/* ── Toggle Rows (Alert Preferences) ────────────────────── */
+.toggleRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  border-bottom: 1px solid #F5F5F5;
+}
+
+.toggleRow:last-child {
+  border-bottom: none;
+}
+
+.toggleInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.toggleLabel {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.toggleSubtext {
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+/* ── Toggle Switch ──────────────────────────────────────── */
+.toggle {
+  width: 52px;
+  height: 28px;
+  background-color: #CCCCCC;
+  border: none;
+  border-radius: 14px;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 300ms ease;
+}
+
+.toggleOn {
+  background-color: #10B981;
+}
+
+.toggleSwitch {
+  width: 22px;
+  height: 22px;
+  background-color: #FFFFFF;
+  border-radius: 50%;
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  transition: transform 300ms ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.toggleOn .toggleSwitch {
+  transform: translateX(24px);
+}
+
+/* ── Action Buttons (Security & Privacy) ────────────────── */
+.actionBtn {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  cursor: pointer;
+  transition: all 200ms ease;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.actionBtn:last-child {
+  margin-bottom: 0;
+}
+
+.actionBtn:hover {
+  border-color: #E29A5C;
+  background-color: #FFF8F0;
+}
+
+.actionBtnDanger {
+  color: #EF4444;
+  border-color: #FEE2E2;
+}
+
+.actionBtnDanger:hover {
+  border-color: #EF4444;
+  background-color: #FEF2F2;
+}
+
+.arrow {
+  font-size: 1.25rem;
+  opacity: 0.5;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 24px;
+  }
+
+  .content {
+    padding: 24px 16px;
+  }
+
+  .section {
+    padding: 20px 16px;
+  }
+
+  .infoRow,
+  .toggleRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .editBtn {
+    width: 100%;
+  }
+
+  .toggle {
+    align-self: flex-end;
+  }
+}
