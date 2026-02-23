@@ -1,0 +1,694 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #F5F5F5;
+}
+
+/* ── Staff Bar (Orange) ─────────────────────────────────── */
+.staffBar {
+  background-color: #E6A767;
+  color: #FFFFFF;
+  padding: 16px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.staffInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.loggedInText {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.staffName {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.staffActions {
+  display: flex;
+  gap: 12px;
+}
+
+.statusBtn,
+.syncBtn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.statusBtn {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #FFFFFF;
+}
+
+.statusBtn.online {
+  background-color: rgba(80, 200, 120, 0.3);
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #50C878;
+}
+
+.syncBtn {
+  background-color: rgba(0, 0, 0, 0.2);
+  color: #FFFFFF;
+}
+
+/* ── Header Section (Dark Teal) ─────────────────────────── */
+.header {
+  background-color: #002E27;
+  color: #FFFFFF;
+  padding: 32px 48px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  margin: 0;
+  opacity: 0.9;
+}
+
+/* ── Content Area ───────────────────────────────────────── */
+.content {
+  flex: 1;
+  padding: 32px 48px;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ── Section ────────────────────────────────────────────── */
+.section {
+  background-color: #FFFFFF;
+  border-color:#E6A767 ;
+ 
+  padding: 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+}
+
+/* ── Select Product ─────────────────────────────────────── */
+.selectRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.selectGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.select {
+  padding: 14px 16px;
+  border: 0.5px solid #E5E5E5;
+  font-size: 1rem;
+  color: #1A1A1A;
+  background-color: #FFFFFF;
+  cursor: pointer;
+  transition: all 150ms ease;
+  font-weight: 600;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #E6A767;
+  background-color: #FFF8F0;
+}
+
+/* ── Stock Boxes ────────────────────────────────────────── */
+.stockBoxes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.stockBox {
+  background-color: #FFF8F0;
+  border: 2px solid #E29A5C;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.stockLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #E29A5C;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stockValue {
+  font-size: 1.25rem;
+  font-weight: 900;
+  color: #1A1A1A;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ── Conversion Flow ────────────────────────────────────── */
+.conversionFlow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 32px;
+}
+
+.conversionColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+  max-width: 250px;
+}
+
+.conversionLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.conversionBox {
+  width: 100%;
+  aspect-ratio: 1;
+  background-color: #E2E8F0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+}
+
+.conversionBox.toBox {
+  background-color: #D1FAE5;
+}
+
+.iconBox {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #4A5568;
+}
+
+.iconBoxGreen {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #10B981;
+}
+
+.iconLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #4A5568;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.iconLabelGreen {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #10B981;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Counter ────────────────────────────────────────────── */
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  background-color: #FFFFFF;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.counterBtn {
+  width: 60px;
+  height: 60px;
+  background-color: #E2E8F0;
+  color: #1A1A1A;
+  border: none;
+  font-size: 1.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.counterBtn:hover:not(:disabled) {
+  background-color: #CBD5E1;
+}
+
+.counterBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.counterValue {
+  width: 80px;
+  height: 60px;
+  background-color: #1A1A1A;
+  color: #FFFFFF;
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bottleCountBig {
+  width: 100%;
+  height: 60px;
+  background-color: #10B981;
+  color: #FFFFFF;
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.conversionDesc {
+  font-size: 0.875rem;
+  color: #666666;
+  text-align: center;
+}
+
+.conversionDescGreen {
+  font-size: 0.875rem;
+  color: #10B981;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* ── Arrow ──────────────────────────────────────────────── */
+.arrow {
+  font-size: 3rem;
+  color: #CBD5E1;
+  font-weight: 300;
+}
+
+/* ── Formula ────────────────────────────────────────────── */
+.formula {
+  background-color: #EFF6FF;
+  border-left: 4px solid #3B82F6;
+  padding: 20px 24px;
+  border-radius: 4px;
+}
+
+.formulaText {
+  margin: 0 0 8px 0;
+  font-size: 0.875rem;
+  color: #1A1A1A;
+}
+
+.formulaText strong {
+  font-weight: 700;
+}
+
+.formulaCalc {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #3B82F6;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+/* ── Preview Section ────────────────────────────────────── */
+.previewSection {
+  background-color: #FFFBEB;
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  border: 2px solid #FDE68A;
+}
+
+.previewTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 24px 0;
+}
+
+.previewGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+.previewGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.previewGroupLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.previewFlow {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.previewBoxCurrent,
+.previewBoxNew,
+.previewBoxNewGreen {
+  flex: 1;
+  background-color: #FFFFFF;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.previewBoxNew {
+  background-color: #1A1A1A;
+  border-color: #1A1A1A;
+}
+
+.previewBoxNew .previewBoxLabel {
+  color: #A0AEC0;
+}
+
+.previewBoxNew .previewBoxValue {
+  color: #FFFFFF;
+}
+
+.previewBoxNewGreen {
+  background-color: #10B981;
+  border-color: #10B981;
+}
+
+.previewBoxNewGreen .previewBoxLabel,
+.previewBoxNewGreen .previewBoxValue {
+  color: #FFFFFF;
+}
+
+.previewBoxLabel {
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: #999999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.previewBoxValue {
+  font-size: 2rem;
+  font-weight: 900;
+  font-family: 'Arial Black', sans-serif;
+  color: #1A1A1A;
+}
+
+.previewArrow {
+  font-size: 1.5rem;
+  color: #CBD5E1;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .conversionFlow {
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
+
+  .previewGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Action Buttons ─────────────────────────────────────── */
+.actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.cancelBtn,
+.confirmBtn {
+  flex: 1;
+  max-width: 250px;
+  padding: 16px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.cancelBtn {
+  background-color: #F5F5F5;
+  color: #666666;
+  border: 2px solid #E5E5E5;
+}
+
+.cancelBtn:hover {
+  background-color: #E5E5E5;
+}
+
+.confirmBtn {
+  background-color: #E29A5C;
+  color: #FFFFFF;
+}
+
+.confirmBtn:hover:not(:disabled) {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.confirmBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Modal ──────────────────────────────────────────────── */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  animation: fadeIn 200ms ease;
+}
+
+.modal {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  padding: 32px;
+  max-width: 500px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 300ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modalTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+  text-align: center;
+}
+
+.modalText {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 24px 0;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.modalText strong {
+  color: #1A1A1A;
+}
+
+.modalDetails {
+  background-color: #E8F5E9;
+  border: 1px solid #50C878;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.modalDetails p {
+  margin: 0;
+  font-size: 1rem;
+  color: #1A1A1A;
+}
+
+.modalDetails strong {
+  color: #50C878;
+  font-family: 'Arial Black', sans-serif;
+  font-size: 1.125rem;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+}
+
+.modalCancelBtn,
+.modalConfirmBtn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.modalCancelBtn {
+  background-color: #F5F5F5;
+  color: #666666;
+}
+
+.modalCancelBtn:hover {
+  background-color: #E5E5E5;
+}
+
+.modalConfirmBtn {
+  background-color: #50C878;
+  color: #FFFFFF;
+}
+
+.modalConfirmBtn:hover {
+  background-color: #45B368;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .staffBar,
+  .header,
+  .content {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .section {
+    padding: 24px;
+  }
+
+  .selectRow {
+    grid-template-columns: 1fr;
+  }
+
+  .conversionFlow {
+    flex-direction: column;
+  }
+
+  .arrow {
+    transform: rotate(90deg);
+  }
+
+  .previewBoxes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .actions {
+    flex-direction: column;
+  }
+
+  .cancelBtn,
+  .confirmBtn {
+    max-width: 100%;
+  }
+}

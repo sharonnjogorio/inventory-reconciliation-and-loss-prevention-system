@@ -9,7 +9,7 @@
 }
 .header-nav{
     display: flex;
-    gap: 106px;
+    gap: 50px;
 }
 .header-list{
     display: flex;

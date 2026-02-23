@@ -1,0 +1,240 @@
+/* ── PIN Keypad Container ───────────────────────────────── */
+.keypadContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;  /* Gap between sections */
+  padding: 40px 24px;
+  width: 672px;
+  margin: 0 auto;
+  background-color: #FFFFFF;
+}
+
+/* ── User Icon ──────────────────────────────────────────── */
+.userIcon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #F5F5F5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #666666;
+}
+
+/* ── Instruction Text ───────────────────────────────────── */
+.instruction {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0;
+  font-weight: 400;
+}
+
+/* ── Welcome Message ────────────────────────────────────── */
+.welcome {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+  text-align: center;
+}
+
+/* ── PIN Dots Display ───────────────────────────────────── */
+.pinDots {
+  display: flex;
+  gap: 32px;  /* Figma: gap 32px */
+  justify-content: center;
+  width: 672px;  /* Figma: width 672px */
+  height: 128px;  /* Figma: height 128px */
+  align-items: center;
+}
+
+.dot {
+  width: 80px;  /* Calculated: (672 - 3*32) / 4 = 144px */
+  height: 100px;  /* Proportional to container height */
+  border-radius: 0px;
+  background-color: #F5F5F5;
+  border: 2px solid #E5E5E5;
+  transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dot.filled {
+  background-color: #E6A767;
+  border-color: #E6A767;
+  animation: fillDot 200ms ease;
+}
+
+.dot.filled::after {
+  content: '•';
+  color: #FFFFFF;
+  font-size: 4rem;
+  line-height: 1;
+}
+
+@keyframes fillDot {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* ── Error Message ──────────────────────────────────────── */
+.error {
+  color: #DC143C;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  animation: shake 400ms ease;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+/* ── Keypad Grid ────────────────────────────────────────── */
+.keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 100px);  
+  grid-template-rows: repeat(4, 80px);     
+  gap: 16px;  
+  width: 324px;
+  height: 344px;  
+ margin: 0 auto;
+ justify-self: center; 
+}
+
+.keypadRow {
+  display: contents;  /* Makes children part of the grid */
+}
+
+/* ── Individual Key Buttons ─────────────────────────────── */
+.key {
+  width: 100px;  /* Calculated from grid */
+  height: 80px;  /* Calculated from grid */
+  border-radius: 0px;  /* Adjust to match Figma if different */
+  background-color: #E6A767;
+  color: #FFFFFF;
+  font-size: 1.5rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 150ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.key:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+}
+
+.key:active {
+  transform: scale(0.95);
+}
+
+.key:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Delete Key (Bottom Left - Dark) ────────────────────── */
+.keyDelete {
+  background-color: #1E2939;
+  color: #FFFFFF;
+  font-size: 2.5rem;
+  border-color: #E6A767;
+}
+
+.keyDelete:hover:not(:disabled) {
+  background-color: #3D3D3D;
+}
+
+.keyDelete:disabled {
+  background-color: #4D4D4D;
+}
+
+/* ── Submit Key (Bottom Right - Green Checkmark) ─────────── */
+.keySubmit {
+  background-color: #00A63E;
+  font-size: 3rem;
+  border-color:#00C950 ;
+}
+
+.keySubmit:hover:not(:disabled) {
+  background-color: #45A049;
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+}
+
+.keySubmit:disabled {
+  background-color: #A5D6A7;
+}
+
+/* ── Forgot PIN Text ────────────────────────────────────── */
+.forgotPin {
+  font-size: 0.875rem;
+  color:#FF5E4D ;
+  text-align: center;
+  margin-top: 16px;
+}
+
+.link {
+  color:#FF5E4D;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.link:hover {
+  color: #D4894A;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .keypadContainer {
+    width: 100%;
+    max-width: 672px;
+    padding: 24px 16px;
+  }
+
+  .pinDots {
+    width: 100%;
+    max-width: 672px;
+    height: auto;
+    gap: 16px;
+  }
+
+  .dot {
+    width: calc((100% - 48px) / 4);
+    height: 60px;
+  }
+
+  .keypad {
+    width: 100%;
+    max-width: 512px;
+    height: auto;
+    margin-left: 30px;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 90px);
+  }
+
+  .key {
+    width: 100%;
+    height: 90px;
+    font-size: 1.5rem;
+  }
+}

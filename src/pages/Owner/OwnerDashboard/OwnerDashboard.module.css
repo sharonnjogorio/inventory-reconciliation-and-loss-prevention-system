@@ -1,0 +1,398 @@
+.container {
+  min-height: calc(100vh - 59px);
+  background-color: #FAFAFA;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background-color: #FFFFFF;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.pageTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.welcomeBtn {
+  padding: 10px 24px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.welcomeBtn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+}
+
+/* ── Content ────────────────────────────────────────────── */
+.content {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 32px 48px;
+}
+
+/* ── Top Section (Health Score + Stats) ─────────────────── */
+.topSection {
+  display: grid;
+  grid-template-columns: 300px 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+/* Health Score Circle */
+.healthCard {
+  background: #FFFFFF;
+  border-radius: 0px;
+  padding: 32px 24px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.circleWrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 16px auto;
+}
+
+.circle {
+  width: 100%;
+  height: 100%;
+  color: #00A63E;
+}
+
+.scoreValue {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3.5rem;
+  font-weight: 900;
+  font-family: 'Roboto', sans-serif;
+  color: #00A63E;
+}
+
+.healthLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* Stats Columns */
+.statsColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.statCard,
+.alertCard,
+.syncCard {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  flex: 1;
+}
+
+.statCard h3,
+.alertCard h3,
+.syncCard h3 {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #999999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 12px 0;
+}
+
+.statAmount {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Roboto', sans-serif;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.alertCard {
+  background-color: #FEF2F2;
+  border: 2px solid #EC221F;
+}
+
+.alertValue {
+  font-size: 2.5rem;
+  font-weight: 900;
+  font-family: 'Roboto', sans-serif;
+  color: #EC221F;
+  margin: 0;
+}
+
+.syncCard {
+  background-color: #F0FDF4;
+}
+
+.syncValue {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #00A63E;
+  margin: 0;
+}
+
+/* ── Middle Section (Alerts + Top Selling) ──────────────── */
+.middleSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.alertsSection,
+.topSellingSection {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.sectionHeader h2,
+.sectionTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+}
+
+.viewAll {
+  background: none;
+  border: none;
+  color: #E29A5C;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
+/* Alerts List */
+.alertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.alertItem {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background-color: #F0FDF4;
+  border-radius: 8px;
+  border: 1px solid #14AE5C;
+}
+
+.alertIcon {
+  width: 40px;
+  height: 40px;
+  background-color: #14AE5C;
+  color: #FFFFFF;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+}
+
+.alertContent h4 {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.alertContent p {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* Top Selling Products */
+.productsList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.productItem {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 12px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+}
+
+.productImage {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+.productInfo h4 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.productInfo p {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ── CTA Section ────────────────────────────────────────── */
+.ctaSection {
+  background-color: #FFFBF0;
+  border-radius: 12px;
+  padding: 48px 32px;
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.ctaSection h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 12px 0;
+}
+
+.ctaSection p {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+.ctaBtn {
+  padding: 14px 48px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ctaBtn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Quick Actions ──────────────────────────────────────── */
+.quickActions {
+  background: #FFFBF0;
+  border-radius: 12px;
+  padding: 32px;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.actionCard {
+  background: #FFFFFF;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 32px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 200ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.actionCard:hover {
+  border-color: #E29A5C;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.actionIcon {
+  font-size: 2.5rem;
+}
+
+.actionCard span {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1200px) {
+  .topSection {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .healthCard {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 16px;
+    padding: 20px 24px;
+  }
+
+  .content {
+    padding: 24px;
+  }
+
+  .topSection,
+  .middleSection {
+    grid-template-columns: 1fr;
+  }
+
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .pageTitle {
+    font-size: 1.25rem;
+  }
+}

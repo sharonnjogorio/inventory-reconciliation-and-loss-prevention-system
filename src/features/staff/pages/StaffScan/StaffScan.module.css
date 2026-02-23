@@ -1,0 +1,180 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+}
+
+.header {
+  padding: 24px;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #FFFFFF;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 8px 0;
+  margin-bottom: 16px;
+  transition: opacity 150ms ease;
+}
+
+.backButton:hover {
+  opacity: 0.8;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #E6A767;
+  margin: 0;
+}
+
+.scannerWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  gap: 24px;
+}
+
+.scanner {
+  position: relative;
+  width: 320px;
+  height: 320px;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanFrame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 240px;
+  height: 240px;
+  border: 3px solid #4CAF50;
+  border-radius: 8px;
+  pointer-events: none;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.05);
+  }
+}
+
+.corner {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #4CAF50;
+}
+
+.corner:nth-child(1) {
+  border-right: none;
+  border-bottom: none;
+  border-top-left-radius: 8px;
+}
+
+.corner:nth-child(2) {
+  border-left: none;
+  border-bottom: none;
+  border-top-right-radius: 8px;
+}
+
+.corner:nth-child(3) {
+  border-right: none;
+  border-top: none;
+  border-bottom-left-radius: 8px;
+}
+
+.corner:nth-child(4) {
+  border-left: none;
+  border-top: none;
+  border-bottom-right-radius: 8px;
+}
+
+.errorBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(220, 20, 60, 0.9);
+  padding: 24px;
+  border-radius: 8px;
+  text-align: center;
+  color: #FFFFFF;
+}
+
+.retryButton {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background-color: #FFFFFF;
+  color: #DC143C;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.instruction {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color:#E29A5C;
+  margin: 0;
+  text-align: center;
+}
+
+.subtext {
+  font-size: 0.875rem;
+  color: #4CAF50;
+  margin: 0;
+  text-align: center;
+}
+
+.mockButton {
+  margin-top: 32px;
+  padding: 12px 24px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.mockButton:hover {
+  background-color: #D4894A;
+}
+
+@media (max-width: 480px) {
+  .scanner {
+    width: 280px;
+    height: 280px;
+  }
+  
+  .scanFrame {
+    width: 200px;
+    height: 200px;
+  }
+}

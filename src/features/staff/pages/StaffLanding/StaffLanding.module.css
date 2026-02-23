@@ -1,0 +1,189 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FAFAFA;
+}
+
+/* ── Header Section ─────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 48px;
+  background-color: #FFFFFF;
+  border-bottom: 0.5px solid #00574A;
+}
+
+.headerLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  color: #666666;
+  font-size: 0.875rem;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 150ms ease;
+  align-self: flex-start;
+}
+
+.backButton:hover {
+  color: #E29A5C;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 8px 0 0 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.getStartedButton {
+  padding: 14px 32px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.getStartedButton:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Content Area ───────────────────────────────────────── */
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  gap: 40px;
+}
+
+
+
+/* ── Branding Section ───────────────────────────────────── */
+.brandingSection {
+  margin-top:160px;
+  text-align: center;
+}
+
+.brandName {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #E6A767;
+  margin: 0 0 8px 0;
+}
+
+.tagline {
+  font-size: 1rem;
+  color: #999999;
+  margin: 0;
+}
+
+/* ── Action Buttons ─────────────────────────────────────── */
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 160px;
+}
+
+.actionButton {
+  padding: 16px 32px;
+  background-color:#E6A767;
+  border:none;
+  color: #FFFFFF;
+  border-color: 0.5px solid #E6A767;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actionButton:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.actionButtonSecondary {
+  padding: 16px 32px;
+  background-color: #E6A767;
+  color: #FFFFFF;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actionButtonSecondary:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    gap: 20px;
+    padding: 24px;
+  }
+
+  .getStartedButton {
+    align-self: stretch;
+    width: 100%;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .content {
+    padding: 40px 16px;
+  }
+
+  .conversionBadge {
+    padding: 12px 24px;
+  }
+
+  .conversionAmount,
+  .conversionBottles {
+    font-size: 1.5rem;
+  }
+
+  .brandName {
+    font-size: 1.5rem;
+  }
+}

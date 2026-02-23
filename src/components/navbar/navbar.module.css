@@ -1,0 +1,115 @@
+/* ── Navbar Container ───────────────────────────────────── */
+.navbar {
+ background-color: #FFFFFF;
+ border-bottom: 1px solid #E5E5E5;
+ position: sticky;
+ top: 0;
+ z-index: 100;
+}
+
+.container {
+ max-width: 1294px;
+ height: 59px;
+ margin: 0 auto;
+ padding: 0 48px;
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+}
+
+/* ── Logo Section ───────────────────────────────────────── */
+.logoSection {
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+}
+
+.logo {
+ height: 40px;
+ width: auto;
+}
+
+/* ── Right Side (Links + Button) ────────────────────────── */
+.navRight {
+ display: flex;
+ align-items: center;
+ gap: 32px;
+}
+
+/* ── Nav Links ──────────────────────────────────────────── */
+.navLinks {
+ display: flex;
+ gap: 32px;
+ align-items: center;
+}
+
+.link {
+ color: #666666;
+ text-decoration: none;
+ font-size: 0.95rem;
+ font-weight: 500;
+ transition: color 150ms ease;
+}
+
+.link:hover {
+ color: #E29A5C;
+}
+/* ── Login Button (was staffLoginBtn) ───────────────────── */
+.loginBtn {
+  background-color: #2196F3;  /* Changed to blue */
+  color: #FFFFFF;
+  padding: 10px 24px;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+  white-space: nowrap;
+}
+
+.loginBtn:hover {
+  background-color: #1976D2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+.loginBtn:active {
+  transform: translateY(0);
+}
+
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+ .container {
+   padding: 0 24px;
+ }
+
+ .navRight {
+   gap: 16px;
+ }
+
+ .navLinks {
+   gap: 16px;
+ }
+
+ .link {
+   font-size: 0.875rem;
+ }
+
+ .staffLoginBtn {
+   padding: 8px 16px;
+   font-size: 0.875rem;
+ }
+}
+
+@media (max-width: 640px) {
+ .navLinks {
+   display: none; /* Hide links on very small screens */
+ }
+
+ .navRight {
+   width: 100%;
+   justify-content: flex-end;
+ }
+}

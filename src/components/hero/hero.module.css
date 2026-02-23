@@ -1,0 +1,142 @@
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 48px;
+  background-color: #FFFFFF;
+  gap: 40px;
+  min-height: calc(100vh - 72px);
+}
+
+.heroLeft {
+  flex: 0 0 45%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.headline {
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 700;
+  color: #1A1A1A;
+  line-height: 1.2;
+}
+
+.subtext {
+  font-size: 1rem;
+  color: #555555;
+  line-height: 1.7;
+}
+
+.heroCta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+
+.heroRight {
+  flex: 0 0 50%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0;
+}
+
+.heroImage:first-child {
+  width: 180px;
+  height: 411px;
+  object-fit: contain;
+  object-position: right;
+  margin-right: -30px;
+  z-index: 1;
+}
+
+.heroImage:last-child {
+  width: 320px;
+  height: 411px;
+  object-fit: contain;
+  object-position: left;
+  z-index: 2;
+}
+/* ── Hero Buttons ───────────────────────────────────────── */
+.hero-button {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.hero-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.register-btn {
+  background-color: #E29A5C;
+  color: #FFFFFF;
+}
+
+.register-btn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.login-btn {
+  background-color: #2196F3;
+  color: #FFFFFF;
+}
+
+.login-btn:hover {
+  background-color: #1976D2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
+
+@media (max-width: 768px) {
+  .hero {
+    flex-direction: column;
+    padding: 40px 24px;
+  }
+
+  .heroLeft {
+    flex: none;
+    width: 100%;
+    align-items: center;
+    text-align: center;
+  }
+
+  .heroCta {
+    justify-content: center;
+  }
+
+  .heroRight {
+    flex: none;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .heroImage:first-child {
+    width: 140px;
+    height: 180px;
+  }
+
+  .heroImage:last-child {
+    width: 180px;
+    height: 160px;
+  }
+   .hero-button {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-btn {
+    width: 100%;
+  }
+}

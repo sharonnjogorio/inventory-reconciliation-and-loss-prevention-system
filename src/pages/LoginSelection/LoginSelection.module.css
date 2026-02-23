@@ -1,0 +1,137 @@
+.container {
+  min-height: calc(100vh - 59px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
+  padding: 40px 20px;
+}
+
+.content {
+  max-width: 900px;
+  width: 100%;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 12px 0;
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: #666666;
+  margin: 0 0 48px 0;
+}
+
+/* ── Options Grid ───────────────────────────────────────── */
+.options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 32px;
+  margin-top: 48px;
+  margin-bottom: 120px;
+}
+
+.optionCard {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 48px 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: all 300ms ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.optionCard:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.iconWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.svgIcon {
+  width: 100px;
+  height: 100px;
+  transition: transform 300ms ease;
+}
+
+.optionCard:hover .svgIcon {
+  transform: scale(1.1);
+}
+
+.optionCard h2 {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.optionCard p {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #666666;
+  margin: 0 0 24px 0;
+}
+
+.optionBtn {
+  width: 100%;
+  padding: 14px 32px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 3px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.optionBtn:hover {
+  background-color: #E6A767;
+  transform: translateY(-2px);
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .options {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .optionCard {
+    padding: 36px 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .icon {
+    font-size: 3rem;
+  }
+
+  .optionCard h2 {
+    font-size: 1.25rem;
+  }
+}
