@@ -27,6 +27,7 @@ function Register() {
     setLoading(true)
     setError('')
 
+    // Validation
     if (!formData.fullName || !formData.shopName || !formData.phoneNumber) {
       setError('Please fill in all required fields')
       setLoading(false)
@@ -40,9 +41,23 @@ function Register() {
     }
 
     try {
-      const response = await authAPI.registerOwner(formData)
+      const payload = {
+        name: formData.fullName.trim(),
+        shop_name: formData.shopName.trim(),
+        phone_number: formData.phoneNumber.trim(),
+        country: formData.countryCode.toUpperCase(),
+        city: formData.city.trim()
+      }
+
+      console.log('📤 Registration payload:', payload)
+
+      const response = await authAPI.registerOwner(payload)
       
       console.log('✅ Registration successful:', response)
+      
+      // Store phone for OTP page
+      localStorage.setItem('phoneNumber', formData.phoneNumber)
+      localStorage.setItem('shopName', formData.shopName)
       
       navigate('/owner/verify', { 
         state: { 
@@ -54,7 +69,12 @@ function Register() {
       
     } catch (err) {
       console.error('❌ Registration failed:', err)
-      setError(err.response?.data?.error || err.response?.data?.message || 'Registration failed. Please try again.')
+      console.error('Error details:', err.response?.data)
+      setError(
+        err.response?.data?.error || 
+        err.response?.data?.message || 
+        'Registration failed. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -62,122 +82,153 @@ function Register() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.header}>
-          <h1 className={styles.title}>Register Your Shop</h1>
-          <p className={styles.subtitle}>Get started with Smart Loss Control</p>
+      {/* Left Pane - Branding */}
+      <div className={styles.leftPane}>
+        <div className={styles.overlay}>
+          <h1>Smart Loss Control</h1>
+          <h2>Stop Revenue Leaks</h2>
+          <p>Track every drop, save every naira</p>
         </div>
+      </div>
 
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {error && (
-            <div className={styles.errorBox}>
-              <span className={styles.errorIcon}>⚠️</span>
-              <span>{error}</span>
-            </div>
-          )}
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Full Name <span className={styles.required}>*</span>
-            </label>
-            <input
-              type="text"
-              name="fullName"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="e.g., Amina Yusuf"
-              className={styles.input}
-              required
-            />
+      {/* Right Pane - Form */}
+      <div className={styles.rightPane}>
+        <div className={styles.innerBox}>
+          <div className={styles.logo}>
+            {/* Add your logo here if you have one */}
+            <h2>Register Your Shop</h2>
           </div>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Shop Name <span className={styles.required}>*</span>
-            </label>
-            <input
-              type="text"
-              name="shopName"
-              value={formData.shopName}
-              onChange={handleChange}
-              placeholder="e.g., Amina's Store"
-              className={styles.input}
-              required
-            />
-          </div>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <p className={styles.subTitle}>Get started with Smart Loss Control</p>
 
-          <div className={styles.formGroup}>
-            <label className={styles.label}>
-              Phone Number <span className={styles.required}>*</span>
-            </label>
-            <input
-              type="tel"
-              name="phoneNumber"
-              value={formData.phoneNumber}
-              onChange={handleChange}
-              placeholder="+234 800 000 0000"
-              className={styles.input}
-              required
-            />
-            <span className={styles.hint}>Include country code (e.g., +234 for Nigeria)</span>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>Country</label>
-            <select
-              name="countryCode"
-              value={formData.countryCode}
-              onChange={handleChange}
-              className={styles.select}
-            >
-              <option value="NG">🇳🇬 Nigeria</option>
-              <option value="KE">🇰🇪 Kenya</option>
-              <option value="GH">🇬🇭 Ghana</option>
-              <option value="ZA">🇿🇦 South Africa</option>
-              <option value="ET">🇪🇹 Ethiopia</option>
-              <option value="UG">🇺🇬 Uganda</option>
-              <option value="TZ">🇹🇿 Tanzania</option>
-              <option value="CM">🇨🇲 Cameroon</option>
-              <option value="CI">🇨🇮 Ivory Coast</option>
-              <option value="SN">🇸🇳 Senegal</option>
-              <option value="RW">🇷🇼 Rwanda</option>
-              <option value="ZM">🇿🇲 Zambia</option>
-              <option value="ZW">🇿🇼 Zimbabwe</option>
-              <option value="BW">🇧🇼 Botswana</option>
-              <option value="MW">🇲🇼 Malawi</option>
-            </select>
-          </div>
-
-          <div className={styles.formGroup}>
-            <label className={styles.label}>City</label>
-            <input
-              type="text"
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              placeholder="e.g., Lagos"
-              className={styles.input}
-            />
-          </div>
-
-          <button type="submit" className={styles.submitBtn} disabled={loading}>
-            {loading ? (
-              <span className={styles.loadingText}>
-                <span className={styles.spinner}></span>
-                Sending OTP...
-              </span>
-            ) : (
-              'Register My Shop'
+            {error && (
+              <div className={styles.errorBox}>
+                <span className={styles.errorIcon}>⚠️</span>
+                <span>{error}</span>
+              </div>
             )}
-          </button>
 
-          <div className={styles.footer}>
-            <p>Already have an account? <a href="/login">Login here</a></p>
+            {/* Full Name */}
+            <div>
+              <label>
+                Full Name <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="text"
+                name="fullName"
+                value={formData.fullName}
+                onChange={handleChange}
+                placeholder="e.g., Amina Yusuf"
+                required
+              />
+            </div>
+
+            {/* Shop Name */}
+            <div>
+              <label>
+                Shop Name <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="text"
+                name="shopName"
+                value={formData.shopName}
+                onChange={handleChange}
+                placeholder="e.g., Amina's Store"
+                required
+              />
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label>
+                Phone Number <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                placeholder="+234 800 000 0000"
+                required
+              />
+              <span className={styles.hint}>
+                Include country code (e.g., +234 for Nigeria)
+              </span>
+            </div>
+
+            {/* Country */}
+            <div>
+              <label>Country</label>
+              <select
+                name="countryCode"
+                value={formData.countryCode}
+                onChange={handleChange}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.6rem 0.75rem', 
+                  borderRadius: '8px', 
+                  border: '0.89px solid #E6EAED', 
+                  marginTop: '0.4rem',
+                  fontSize: '0.9rem'
+                }}
+              >
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="KE">🇰🇪 Kenya</option>
+                <option value="GH">🇬🇭 Ghana</option>
+                <option value="ZA">🇿🇦 South Africa</option>
+                <option value="ET">🇪🇹 Ethiopia</option>
+                <option value="UG">🇺🇬 Uganda</option>
+                <option value="TZ">🇹🇿 Tanzania</option>
+                <option value="CM">🇨🇲 Cameroon</option>
+                <option value="CI">🇨🇮 Ivory Coast</option>
+                <option value="SN">🇸🇳 Senegal</option>
+                <option value="RW">🇷🇼 Rwanda</option>
+                <option value="ZM">🇿🇲 Zambia</option>
+                <option value="ZW">🇿🇼 Zimbabwe</option>
+                <option value="BW">🇧🇼 Botswana</option>
+                <option value="MW">🇲🇼 Malawi</option>
+              </select>
+            </div>
+
+            {/* City */}
+            <div>
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="e.g., Lagos"
+              />
+            </div>
+
+            {/* Submit Button */}
+            <button 
+              type="submit" 
+              className={styles.submitButton} 
+              disabled={loading}
+            >
+              {loading ? (
+                <span className={styles.loadingText}>
+                  <span className={styles.spinner}></span>
+                  Sending OTP...
+                </span>
+              ) : (
+                'Register My Shop'
+              )}
+            </button>
+
+            {/* Footer */}
+            <div className={styles.footer}>
+              <p>Already have an account? <a href="/owner/login">Login here</a></p>
+            </div>
+          </form>
+
+          {/* Dev Note */}
+          <div className={styles.devNote}>
+            <strong>Development Mode:</strong> OTP will be <strong>1234</strong>
           </div>
-        </form>
-
-        <div className={styles.devNote}>
-          <strong>Development Mode:</strong> OTP will be <strong>1234</strong>
         </div>
       </div>
     </div>
