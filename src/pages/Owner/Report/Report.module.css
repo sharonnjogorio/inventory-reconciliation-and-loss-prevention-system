@@ -1,18 +1,21 @@
-
-
 .page {
   min-height: 100vh;
-  background-color: #f3f4f6;
+  background-color: #ffffff;
   font-family: inherit;
 }
 
 .backLink {
-  max-width: 960px;
-  margin: 16px auto 4px;
+  max-width: 1432px;
+  margin: 20px auto;
   padding: 0 16px;
-  font-size: 0.8rem;
-  color: #6b7280;
+  font-size: 18px;
+  font-weight: 500;
+  color: #4a5565;
   cursor: pointer;
+}
+
+.backLinkLink {
+  text-decoration: none;
 }
 
 .backLink:hover {
@@ -20,39 +23,43 @@
 }
 
 .header {
-  max-width: 960px;
-  margin: 0 auto 12px;
+  max-width: 1432px;
+  margin: 0 auto 30px;
   padding: 0 16px;
 }
 
 .pageTitle {
   margin: 0;
-  font-size: 1.3rem;
+  font-size: 42px;
   font-weight: 700;
-  color: #111827;
+  color: #1e2939;
 }
 
 /* Main card */
 
 .card {
-  max-width: 640px;
-  margin: 16px auto 40px;
+  max-width: 896px;
+  margin: 40px auto;
   padding: 28px 32px 24px;
   background-color: #ffffff;
   border-radius: 10px;
-  border: 1px solid #faccaa;
+  border: 1px solid #e6a767;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
 }
 
+.reportHeader {
+  text-align: center;
+}
+
 .title {
-  font-size: 1.25rem;
+  font-size: 42px;
   font-weight: 700;
-  color: #111827;
-  margin: 0 0 4px;
+  color: #1e2939;
 }
 
 .subtitle {
-  font-size: 0.85rem;
+  font-size: 18px;
+  font-weight: 400;
   color: #6b7280;
   margin: 0 0 16px;
 }
@@ -61,6 +68,7 @@
   display: flex;
   flex-direction: column;
   gap: 18px;
+  padding: 60px;
 }
 
 /* Section */
@@ -68,46 +76,54 @@
 .section {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 20px;
+  max-width: 728px;
+  width: 100%;
 }
 
 .sectionLabel {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #4b5563;
+  font-size: 18px;
+  font-weight: 700;
+  color: #364153;
   text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
 /* Report type cards */
 
 .reportGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
 }
 
 .reportCard {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 10px 12px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background-color: #f9fafb;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
+  padding: 30px;
+  border: 4px solid #99a1af;
+  background-color: #ffffff;
   cursor: pointer;
   text-align: left;
+  height: 219px;
+  /* width removed so grid can control width */
 }
 
 .reportCardSelected {
-  border-color: #111827;
-  background-color: #111827;
-  color: #f9fafb;
+  border-color: #000000;
+  background-color: #000000;
+  color: #ffffff;
 }
 
 .reportColorBlock {
-  width: 34px;
-  height: 34px;
-  border-radius: 4px;
+  width: 64px;
+  height: 64px;
+  border-radius: 1.78px;
+  background-color: #d1d5dc;
+  border: 1.78px solid #4a5565;
 }
 
 .reportColorDefault {
@@ -115,34 +131,39 @@
 }
 
 .reportColorSelected {
-  background-color: #111827;
+  background-color: #364153;
 }
 
 .reportTextBlock {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 8px;
 }
 
 .reportTitle {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .reportSubtitle {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5565;
 }
 
 .reportCardSelected .reportSubtitle {
-  color: #e5e7eb;
+  color: #d1d5dc;
 }
 
 /* Date range */
 
+.dataRangeSection {
+  margin-top: 30px;
+}
+
 .dateInputsRow {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 10px;
 }
 
@@ -153,16 +174,20 @@
 }
 
 .inputLabel {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4a5565;
 }
 
 .input {
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+  border: 4px solid #99a1af;
   padding: 7px 10px;
-  font-size: 0.8rem;
+  font-size: 18px;
+  font-weight: 400;
+  color: #1e2939;
   background-color: #ffffff;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .input:focus {
@@ -176,23 +201,23 @@
 .quickRangeRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 4px;
+  gap: 12px;
+  margin: 20px 0;
 }
 
 .chipButton {
-  border-radius: 999px;
-  border: 1px solid #d1d5db;
+  border: 1.78px solid #d1d5dc;
   padding: 4px 12px;
-  font-size: 0.75rem;
-  background-color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  background-color: #f3f4f6;
   cursor: pointer;
-  color: #4b5563;
+  color: #1e2939;
 }
 
 .chipButtonActive {
-  background-color: #111827;
-  border-color: #111827;
+  background-color: #000000;
+  border-color: #000000;
   color: #f9fafb;
 }
 
@@ -200,87 +225,78 @@
 
 .formatRow {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(3, 1fr);
   gap: 10px;
 }
 
 .formatCard {
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+  height: 112px;
+  /* width removed for responsiveness */
+  border: 4px solid #99a1af;
   padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 12px;
   cursor: pointer;
   background-color: #ffffff;
-  text-align: left;
+  text-align: center;
+  justify-content: center;
+  color: #1e2939;
+  margin-bottom: 30px;
 }
 
 .formatCardSelected {
-  box-shadow: 0 0 0 1px #111827;
-}
-
-.formatCSV {
   background-color: #16a34a;
   border-color: #16a34a;
-  color: #f9fafb;
-}
-
-.formatPDF {
-  background-color: #111827;
-  border-color: #111827;
-  color: #f9fafb;
-}
-
-.formatJSON {
-  background-color: #f9fafb;
-  color: #111827;
+  color: #ffffff;
 }
 
 .formatLabel {
-  font-size: 0.85rem;
+  font-size: 20px;
   font-weight: 700;
 }
 
 .formatSubtitle {
-  font-size: 0.7rem;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 /* Preview card */
 
 .previewCard {
-  border-radius: 6px;
-  border: 1px solid #2563eb;
-  padding: 10px 12px;
+  border: 4px solid #51a2ff;
+  min-height: 176px;
+  padding: 30px;
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
+  flex-direction: column;
+  gap: 12px;
   background-color: #eff6ff;
 }
 
-.previewLeft,
-.previewRight {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+.previewHead {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1e2939;
+  margin-bottom: 24px;
 }
 
 .previewLabel {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #1d4ed8;
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
   text-transform: uppercase;
 }
 
 .previewMetaLabel {
-  font-size: 0.75rem;
-  color: #6b7280;
+  font-size: 14px;
+  font-weight: 400;
+  color: #4a5565;
 }
 
 .previewMetaValue {
-  font-size: 0.95rem;
+  font-size: 24px;
   font-weight: 700;
-  color: #111827;
+  color: #101828;
 }
 
 /* Actions */
@@ -288,17 +304,17 @@
 .actionsRow {
   display: flex;
   justify-content: space-between;
-  gap: 10px;
-  margin-top: 2px;
+  gap: 25px;
+  min-height: 80px;
+  margin-top: 25px;
 }
 
 .cancelButton {
   flex: 1;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
+  border: 4px solid #99a1af;
   background-color: #ffffff;
   padding: 10px 0;
-  font-size: 0.85rem;
+  font-size: 18px;
   font-weight: 500;
   cursor: pointer;
 }
@@ -307,11 +323,11 @@
   flex: 1;
   border-radius: 4px;
   border: none;
-  background-color: #111827;
+  background-color: #000000;
   color: #f9fafb;
   padding: 10px 0;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 20px;
+  font-weight: 700;
   cursor: pointer;
 }
 
@@ -323,16 +339,70 @@
 
 .submitMessage {
   margin-top: 8px;
-  font-size: 0.8rem;
+  font-size: 16px;
+  font-weight: 500;
   color: #16a34a;
 }
 
-/* Responsive */
+/* ---------- Responsive breakpoints ---------- */
 
-@media (max-width: 640px) {
+/* Tablet */
+@media (max-width: 1024px) {
   .card {
-    margin-inline: 12px;
-    padding-inline: 16px;
+    margin: 24px auto;
+    padding: 24px 24px 20px;
+  }
+
+  .form {
+    padding: 32px 16px;
+  }
+
+  .pageTitle {
+    font-size: 32px;
+  }
+
+  .title {
+    font-size: 32px;
+  }
+
+  .reportGrid,
+  .formatRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .backLink,
+  .header {
+    padding: 0 12px;
+  }
+
+  .pageTitle {
+    font-size: 28px;
+  }
+
+  .card {
+    margin: 16px 8px 24px;
+    padding: 20px 16px;
+  }
+
+  .form {
+    padding: 24px 0;
+    gap: 16px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+  }
+
+  .sectionLabel {
+    font-size: 14px;
+    margin-bottom: 12px;
   }
 
   .reportGrid,
@@ -341,7 +411,28 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
+  .reportCard {
+    height: auto;
+    padding: 20px;
+  }
+
+  .previewCard {
+    padding: 20px;
+  }
+
+  .previewLabel {
+    flex-direction: column;
+    gap: 12px;
+  }
+
   .actionsRow {
     flex-direction: column-reverse;
+    gap: 12px;
+    min-height: auto;
+  }
+
+  .cancelButton,
+  .submitButton {
+    font-size: 16px;
   }
 }
