@@ -1,159 +1,259 @@
 .landing-wrapper {
-  width: 100%;
-  max-width: 1440px;
-  margin: 0 auto;
-  padding: 0 1rem;
-  box-sizing: border-box;
-  background-color: #ffffff;
+ width: 100%;
+ max-width: 1440px;
+ margin: 0 auto;
+ padding: 0px 1rem 0 1rem;
+ box-sizing: border-box;
+ background-color: #ffffff;
+ overflow-x: hidden;
 }
 
+/* ── Features Section ───────────────────────────────────── */
+.features-wrapper {
+ margin: 4rem 0;  /* Reduced from 6rem */
+}
 
 .features-container {
-  width: 100%;
-  max-width: 1088px;
-
-
-  margin: 6rem auto 0;
-
-  display: flex;
-  flex-direction: column;
-  gap: 1.5625rem;
-
-  padding: 1rem;
+ width: 100%;
+ max-width: 1088px;
+ margin: 0 auto;
+ display: flex;
+ flex-direction: column;
+ gap: 1.5rem;
+ padding: 1rem;
 }
 
 .features-heading {
-  text-align: center;
-  font-size: 2rem;
-  font-weight: 700;
-  margin-bottom: 3rem;
+ text-align: center;
+ font-size: 2rem;
+ font-weight: 700;
+ margin-bottom: 2rem;  /* Reduced from 3rem */
 }
 
 .features-grid {
-  display: grid;
-  gap: 2rem;
-  grid-template-columns: repeat(2, 1fr);
+ display: grid;
+ gap: 2rem;
+ grid-template-columns: repeat(2, 1fr);
+ width: 100%;
+}
+
+/* ── Metric Section (How Smart Loss Control Works) ─────── */
+.metric-wrapper {
+ margin: 4rem 0;  /* Reduced padding */
 }
 
 .metric-container {
-  width: 100%;
-  max-width: 78rem;
-  /* 1248px */
-  margin: 0 auto;
-  padding: 4rem 1rem;
+ width: 100%;
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 2rem 1rem;  /* Reduced from 4rem */
 }
 
 .metric-heading {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  width: 100%;
-  max-width: 78rem;
-  /* 1248px */
-  min-height: 4.375rem;
-  /* 70px */
-  font-weight: 700;
-  font-size: 3rem;
-  margin: 0 auto 3rem auto;
-
+ width: 100%;
+ max-width: 1200px;
+ font-weight: 700;
+ font-size: 2rem;
+ margin: 0 auto 2rem auto;  /* Reduced from 3rem */
+ text-align: center;
 }
 
 .metric-grid {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 13rem;
-  width: 100%;
-  max-width: 77.5rem;
-  margin: 0 auto;
+ display: flex;
+ flex-direction: row;  /* HORIZONTAL layout */
+ align-items: flex-start;
+ justify-content: center;
+ gap: 4rem;  /* Space between cards */
+ width: 100%;
+ margin: 0 auto;
 }
 
-
+/* ── CTA Section ────────────────────────────────────────── */
 .prevention-description-wrapper {
-  font-family: inherit;
-  Width: 1418px;
-
-  Height: 445px;
-  margin: 4rem auto;
-  padding: 1.625rem;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 1.675rem;
-  background-color: #fcf6f0;
+ font-family: inherit;
+ width: 100%;
+ max-width: 100%;
+ min-height: auto;  /* Changed from 445px */
+ margin: 4rem 0;
+ padding: 3rem 1.625rem;  /* Reduced from 4rem */
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ text-align: center;
+ gap: 1.5rem;
+ background-color: #fcf6f0;
 }
 
-.prevention-description>h1 {
-  width: 669px;
-  width: 100%;
-  font-weight: 700;
-  font-size: 3rem;
-  line-height: 4.375rem;
-
+.prevention-description {
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ gap: 1rem;
+ width: 100%;
+ max-width: 800px;
 }
 
-.prevention-description>p {
-  width: 32.3125rem;
-  width: 100%;
-  font-weight: 400;
-  font-size: 1.25rem;
-  line-height: 1.75rem;
-  opacity: 1;
+.prevention-description > h1 {
+ width: 100%;
+ max-width: 800px;
+ font-weight: 700;
+ font-size: 2rem;
+ line-height: 1.3;
+ margin: 0;
 }
 
-.prevention-description-wrapper button{
-  width: 12rem;
-  border-radius: none;
+.prevention-description > p {
+ width: 100%;
+ max-width: 32.3125rem;
+ font-weight: 400;
+ font-size: 1rem;
+ line-height: 1.5;
+ opacity: 0.8;
+ margin: 0;
 }
 
-
-
-.overlay-footer {
-  min-height: 409px;
-  background-color: #FFBF01;
+/* ── CTA Buttons ────────────────────────────────────────── */
+.cta-buttons {
+ display: flex;
+ gap: 16px;
+ justify-content: center;
+ margin-top: 1rem;
+ flex-wrap: wrap;
+ width: 100%;
+ max-width: 500px;
 }
 
+.prevention-btn {
+ padding: 12px 28px;
+ border: none;
+ border-radius: 8px;
+ font-size: 1rem;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 200ms ease;
+ min-width: 180px;
+}
+
+.owner-btn {
+ background-color: #E29A5C;
+ color: #FFFFFF;
+}
+
+.owner-btn:hover {
+ background-color: #D4894A;
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.staff-btn {
+ background-color: #E29A5C;
+ color: #FFFFFF;
+}
+
+.staff-btn:hover {
+ background-color: #D4894A;
+ transform: translateY(-2px);
+ box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Responsive Breakpoints ─────────────────────────────── */
+
+/* Tablet - Large */
 @media (max-width: 1024px) {
-  .metric-grid {
-    gap: 6rem;
-  }
+ .metric-grid {
+   gap: 2rem;
+ }
+ 
+ .features-heading,
+ .metric-heading {
+   font-size: 1.75rem;
+ }
+ 
+ .prevention-description > h1 {
+   font-size: 1.75rem;
+ }
 }
 
+/* Tablet - Medium */
 @media (max-width: 768px) {
-  .metric-grid {
-    gap: 3rem;
-  }
-}
-
-
-/* Tablet */
-@media (max-width: 1024px) {
-  .features-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+ .landing-wrapper {
+   padding: 70px 1rem 0 1rem;
+ }
+ 
+ .features-wrapper,
+ .metric-wrapper {
+   margin: 3rem 0;
+ }
+ 
+ .features-grid {
+   grid-template-columns: 1fr;
+   gap: 1.5rem;
+ }
+ 
+ .metric-grid {
+   flex-direction: column;  /* Stack vertically on mobile */
+   gap: 2rem;
+   align-items: center;
+ }
+ 
+ .metric-heading {
+   font-size: 1.5rem;
+   margin-bottom: 1.5rem;
+ }
+ 
+ .prevention-description-wrapper {
+   padding: 2rem 1rem;
+ }
+ 
+ .prevention-description > h1 {
+   font-size: 1.5rem;
+   line-height: 1.4;
+ }
+ 
+ .prevention-description > p {
+   font-size: 0.95rem;
+ }
+ 
+ .cta-buttons {
+   flex-direction: column;
+   max-width: 100%;
+ }
+ 
+ .prevention-btn {
+   width: 100%;
+   min-width: auto;
+ }
 }
 
 /* Mobile */
-@media (max-width: 768px) {
-  .features-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-
-/* Tablet */
-@media (max-width: 1024px) {
-  .landing-wrapper {
-    padding: 0 2rem;
-  }
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-  .landing-wrapper {
-    padding: 0 1rem;
-  }
+@media (max-width: 640px) {
+ .landing-wrapper {
+   padding: 20px 0.5rem 0 0.5rem;
+ }
+ 
+ .features-container,
+ .metric-container {
+   padding: 1rem 0.5rem;
+ }
+ 
+ .features-heading,
+ .metric-heading {
+   font-size: 1.25rem;
+   margin-bottom: 1rem;
+ }
+ 
+ .features-wrapper,
+ .metric-wrapper {
+   margin: 2rem 0;
+ }
+ 
+ .prevention-description-wrapper {
+   padding: 2rem 0.5rem;
+   margin: 2rem 0;
+ }
+ 
+ .prevention-description > h1 {
+   font-size: 1.25rem;
+ }
 }

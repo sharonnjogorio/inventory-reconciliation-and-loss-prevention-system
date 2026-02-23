@@ -6,8 +6,6 @@ import ChartIcon from '../../assets/icon/chart.svg'
 import UserIcon from '../../assets/icon/user.svg'
 import TrendIcon from '../../assets/icon/trend.svg'
 import MetricCard from '../../components/card/WorkingMetricCard/MetricCard'
-import Footer from '../../components/card/Footer/Footer'
-import Header from '../../components/Header/Header'
 import { HeroSection } from '../../components/HeroSection/Herosection'
 import Button from '../../components/ui/button/button'
 
@@ -16,8 +14,8 @@ export default function LandingPage() {
   return (
     <div className='landing-wrapper'>
 
-      <Header/>
-      <section>
+      {/* <Header/> */}
+      <section style={{ margin:0, padding:0 }}>
         <HeroSection/>
       </section>
 
@@ -78,18 +76,29 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className='prevention-description-wrapper'>
-        <div className='prevention-description'>
-          <h1 >Start Preventing Losses Today</h1>
-          <p>Join retail SMEs protecting their profits with data-driven loss prevention</p>
-        <Link to={'/owner/register'}><Button className='prevention-btn'>Get Started</Button></Link>
-        </div>
-        
-      </section>
-
+     <section className='prevention-description-wrapper'>
+  <div className='prevention-description'>
+    <h1>Start Preventing Losses Today</h1>
+    <p>Join retail SMEs protecting their profits with data-driven loss prevention</p>
+    
+    <div className='cta-buttons'>
+      <Link to={'/owner/register'}>
+        <Button className='prevention-btn register-btn'>
+          Register My Shop
+        </Button>
+      </Link>
+      
+      <Link to={'/login'}>
+        <Button className='prevention-btn login-btn'>
+          Login
+        </Button>
+      </Link>
+    </div>
+  </div>
+</section>
     
 
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   )
 }
