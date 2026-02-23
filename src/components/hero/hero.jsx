@@ -1,45 +1,40 @@
-import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import './hero.module.css'
 import Button from '../ui/button/button'
-import heroImage2 from '../../assets/hero-oil-2.png'
-import styles from './hero.module.css'
 
-function Hero() {
+export function HeroSection() {
+  const navigate = useNavigate()
+
   return (
-    <section className={styles.hero}>
-
-      {/* ── Left: Text Content ── */}
-      <div className={styles.heroLeft}>
-        <h1 className={styles.headline}>
-          Prevent Inventory Losses <br /> Before They Happen
-        </h1>
-
-        <p className={styles.subtext}>
-          Smart Loss Control helps small retail businesses gain
-          real-time visibility into inventory movement, staff
-          activities, and operational patterns to reduce preventable losses.
+    <div className='hero-section'>
+      <div className='hero-text'>
+        <h1>Prevent Inventory Losses Before They Happen</h1>
+        <p>
+          Smart Loss Control helps shop retailers in Nigeria track losses, 
+          identify theft patterns, and empower staff with offline-first tools.
         </p>
 
-        <div className={styles.heroCta}>
-          <Link to="/register">
-            <Button variant="primary">Register My Shop</Button>
-          </Link>
-          <Link to="/services">
-            <Button variant="outline">Learn More</Button>
-          </Link>
+        {/* ADD BUTTONS HERE */}
+        <div className='hero-button'>
+          <Button 
+            className='hero-btn register-btn'
+            onClick={() => navigate('/owner/register')}
+          >
+            Register My Shop
+          </Button>
+          
+          <Button 
+            className='hero-btn login-btn'
+            onClick={() => navigate('/login')}
+          >
+            Login
+          </Button>
         </div>
       </div>
 
-      {/* ── Right: Oil Bottles Images ── */}
-      <div className={styles.heroRight}>
-        <img
-          src={heroImage2}
-          alt="Mamador oil bottles"
-          className={styles.heroImage}
-        />
+      <div className='hero-images'>
+        {/* Your images */}
       </div>
-
-    </section>
+    </div>
   )
 }
-
-export default Hero

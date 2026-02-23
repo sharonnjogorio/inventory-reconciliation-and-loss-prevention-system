@@ -8,7 +8,7 @@
     height: 411px;
 
     /* Positioning */
-    margin: 244px auto 0 auto;     /* top spacing 244px, horizontally centered */
+    margin: 80px auto 0 auto;     /* top spacing 244px, horizontally centered */
     opacity: 1;
     transform: rotate(0deg); 
 }

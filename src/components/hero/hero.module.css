@@ -60,6 +60,44 @@
   object-position: left;
   z-index: 2;
 }
+/* ── Hero Buttons ───────────────────────────────────────── */
+.hero-button {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.hero-btn {
+  padding: 14px 32px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.register-btn {
+  background-color: #E29A5C;
+  color: #FFFFFF;
+}
+
+.register-btn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.login-btn {
+  background-color: #2196F3;
+  color: #FFFFFF;
+}
+
+.login-btn:hover {
+  background-color: #1976D2;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+}
 
 @media (max-width: 768px) {
   .hero {
@@ -92,5 +130,13 @@
   .heroImage:last-child {
     width: 180px;
     height: 160px;
+  }
+   .hero-button {
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .hero-btn {
+    width: 100%;
   }
 }
