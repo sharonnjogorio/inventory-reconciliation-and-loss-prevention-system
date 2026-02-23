@@ -73,7 +73,7 @@ const RegisterPage = () => {
     if (!validateForm()) return;
 
     console.log("Form submitted:", formData);
-    navigate("/verifyPhone", { state: { formData } });
+    navigate("/owner/verify", { state: { formData } });
   };
 
   return (

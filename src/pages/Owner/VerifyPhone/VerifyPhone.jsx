@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import SmartLogo from "../../../assets/image/smartlogo.svg?react";
+import { useNavigate } from "react-router-dom";
 import styles from "./VerifyPhone.module.css";
 
 const VerifyPhone = () => {
+  const navigate = useNavigate();
   const [otp, setOtp] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(120);
   const [expired, setExpired] = useState(false);
@@ -53,6 +55,8 @@ const VerifyPhone = () => {
       setVerifying(false);
       if (code === "5555") {
         setVerified(true);
+
+        setTimeout(() => navigate("/owner/catalog"), 2000);
       } else {
         alert("Invalid OTP. Please try again.");
       }

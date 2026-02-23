@@ -1,8 +1,11 @@
 .container {
   display: flex;
   height: 100vh;
-  font-family: "Inter", sans-serif;
+  min-height:calc(100vh - 59px ); /* Account for navbar height */
+  font-family: "Roboto", sans-serif;
   box-sizing: border-box;
+  margin-top: 59px;
+  margin-bottom: 59px;
 }
 
 /* LEFT PANE */
@@ -10,6 +13,9 @@
   flex: 1;
   background: url("/src/assets/image/reg-img.jpg") center/cover no-repeat;
   position: relative;
+  min-height:100%;
+  margin: 0;
+  padding:0;
 }
 
 .overlay {
@@ -48,6 +54,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 40px, 20px;
 }
 
 .innerBox {
