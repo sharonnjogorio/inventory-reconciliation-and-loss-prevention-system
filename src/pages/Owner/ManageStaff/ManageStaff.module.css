@@ -1,0 +1,306 @@
+.container {
+  min-height: calc(100vh - 70px);
+  background-color: #FAFAFA;
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 48px;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0;
+}
+
+.addStaffBtn {
+  padding: 12px 28px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.addStaffBtn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Sections ───────────────────────────────────────────── */
+.section {
+  margin-bottom: 40px;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 20px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #E5E5E5;
+}
+
+/* ── Staff Cards ────────────────────────────────────────── */
+.staffList {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.staffCard {
+  background: #FFFFFF;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 200ms ease;
+}
+
+.staffCard:hover {
+  border-color: #E29A5C;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.staffCardRemoved {
+  background-color: #F0FDFA;
+  border-color: #99F6E4;
+}
+
+.staffMain {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex: 1;
+}
+
+.avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #E5E5E5;
+}
+
+.staffInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.staffName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.badgeActive {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.badgeLeave {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.staffDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.staffDetails span {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.removedDate {
+  color: #059669 !important;
+  font-weight: 600;
+}
+
+/* ── Action Buttons ─────────────────────────────────────── */
+.staffActions {
+  display: flex;
+  gap: 12px;
+}
+
+.actionBtn,
+.actionBtnDanger {
+  padding: 10px 20px;
+  border: 2px solid;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.actionBtn {
+  background-color: #FFFFFF;
+  color: #E29A5C;
+  border-color: #E29A5C;
+}
+
+.actionBtn:hover {
+  background-color: #FFF8F0;
+}
+
+.actionBtnDanger {
+  background-color: #FFFFFF;
+  color: #EF4444;
+  border-color: #EF4444;
+}
+
+.actionBtnDanger:hover {
+  background-color: #FEF2F2;
+}
+
+/* ── Empty State ────────────────────────────────────────── */
+.emptyState {
+  background: #FFFFFF;
+  border: 2px dashed #E5E5E5;
+  border-radius: 12px;
+  padding: 60px 24px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 16px;
+}
+
+.emptyText {
+  font-size: 1rem;
+  color: #999999;
+  margin: 0;
+}
+
+/* ── Quick Actions ──────────────────────────────────────── */
+.quickActions {
+  background-color: #FFFBF0;
+  border-radius: 12px;
+  padding: 32px;
+  margin-top: 40px;
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.quickActionCard {
+  background: #FFFFFF;
+  border: 2px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-align: left;
+}
+
+.quickActionCard:hover {
+  border-color: #E29A5C;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.quickActionIcon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.quickActionText h4 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.quickActionText p {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .addStaffBtn {
+    width: 100%;
+  }
+
+  .staffCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .staffActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .actionBtn,
+  .actionBtnDanger {
+    width: 100%;
+  }
+}
