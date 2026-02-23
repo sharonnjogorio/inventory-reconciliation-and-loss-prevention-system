@@ -78,7 +78,7 @@
 .statsBar {
   background-color: #002E27;
   color: #FFFFFF;
-  padding: 32px 48px;
+  padding: 20px 48px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 48px;
@@ -99,9 +99,9 @@
 }
 
 .statValue {
-  font-size: 2.5rem;
-  font-weight: 900;
-  font-family: 'Arial Black', sans-serif;
+  font-size: 2rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
   line-height: 1;
 }
 
@@ -135,7 +135,7 @@
 /* ── Bottom Action Bar ──────────────────────────────────── */
 .bottomBar {
   background-color: #FFFFFF;
-  padding: 20px 48px;
+  padding: 12px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -151,24 +151,24 @@
 }
 
 .totalLabel {
-  font-size: 1rem;
+  font-size: 1.75rem;
   color: #666666;
 }
 
 .totalAmount {
-  font-size: 2rem;
-  font-weight: 900;
-  font-family: 'Arial Black', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: 'Roboto', sans-serif;
   color: #1A1A1A;
 }
 
 .recordButton {
-  padding: 16px 48px;
+  padding: 12px 40px;
   background-color: #E29A5C;
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
-  font-size: 1.125rem;
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 150ms ease;
@@ -184,6 +184,33 @@
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
+}
+/* ── Button Group ───────────────────────────────────────── */
+.buttonGroup {
+ display: flex;
+ gap: 12px;
+ align-items: center;
+}
+.clearButton {
+ padding: 12px 28px;
+ background-color: #F5F5F5;
+ color: #666666;
+ border: 2px solid #E5E5E5;
+ border-radius: 8px;
+ font-size: 1rem;
+ font-weight: 600;
+ cursor: pointer;
+ transition: all 150ms ease;
+}
+.clearButton:hover:not(:disabled) {
+ background-color: #FFF0F0;
+ border-color: #DC143C;
+ color: #DC143C;
+ transform: translateY(-2px);
+}
+.clearButton:disabled {
+ opacity: 0.4;
+ cursor: not-allowed;
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -224,6 +251,15 @@
   .recordButton {
     width: 100%;
   }
+  .buttonGroup {
+   flex-direction: column;
+   width: 100%;
+   gap: 8px;
+ }
+ .clearButton,
+ .recordButton {
+   width: 100%;
+ }
 }
 /* ── Action Buttons Section ─────────────────────────────── */
 .actionButtons {
@@ -297,7 +333,7 @@
 
 .conversionAmount {
   font-size: 1.25rem;
-  font-family: 'Arial Black', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 .conversionIcon {
@@ -307,7 +343,7 @@
 
 .conversionBottles {
   font-size: 1.25rem;
-  font-family: 'Arial Black', sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 /* ── Responsive ─────────────────────────────────────────── */
@@ -422,4 +458,17 @@
     max-width: 100%;
   }
 }
+}
+/* Lock the dashboard when Quick Count is active */
+.container.locked {
+  pointer-events: none;
+  user-select: none;
+}
+
+.container.locked .staffBar,
+.container.locked .statsBar,
+.container.locked .content,
+.container.locked .bottomBar {
+  opacity: 0.5;
+  filter: blur(2px);
 }

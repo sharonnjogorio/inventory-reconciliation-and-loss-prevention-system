@@ -163,10 +163,17 @@ function BulkDecant() {
       
       <div className={styles.conversionBox}>
         <div className={styles.iconBox}>
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="6" y="6" width="12" height="12" fill="#4A5568"/>
-          </svg>
+          <svg width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_248_4913" fill="white">
+<path d="M0 0H80V80H0V0Z"/>
+</mask>
+<path d="M0 0H80V80H0V0Z" fill="#6A7282"/>
+<path d="M0 0V-1.77778H-1.77778V0H0ZM80 0H81.7778V-1.77778H80V0ZM80 80V81.7778H81.7778V80H80ZM0 80H-1.77778V81.7778H0V80ZM0 0V1.77778H80V0V-1.77778H0V0ZM80 0H78.2222V80H80H81.7778V0H80ZM80 80V78.2222H0V80V81.7778H80V80ZM0 80H1.77778V0H0H-1.77778V80H0Z" fill="#4A5565" mask="url(#path-1-inside-1_248_4913)"/>
+</svg>
+
+          
         </div>
+        <br></br>
         <span className={styles.iconLabel}>CARTON</span>
       </div>
       
@@ -200,10 +207,16 @@ function BulkDecant() {
       
       <div className={`${styles.conversionBox} ${styles.toBox}`}>
         <div className={styles.iconBoxGreen}>
-          <svg width="20" height="40" viewBox="0 0 20 40" fill="currentColor">
-            <rect x="6" y="0" width="8" height="40" rx="2" fill="#10B981"/>
-          </svg>
+          <svg width="64" height="96" viewBox="0 0 64 96" fill="none" xmlns="http://www.w3.org/2000/svg">
+<mask id="path-1-inside-1_248_4933" fill="white">
+<path d="M0 0H64V96H0V0Z"/>
+</mask>
+<path d="M0 0H64V96H0V0Z" fill="#00C950"/>
+<path d="M0 0V-1.77778H-1.77778V0H0ZM64 0H65.7778V-1.77778H64V0ZM64 96V97.7778H65.7778V96H64ZM0 96H-1.77778V97.7778H0V96ZM0 0V1.77778H64V0V-1.77778H0V0ZM64 0H62.2222V96H64H65.7778V0H64ZM64 96V94.2222H0V96V97.7778H64V96ZM0 96H1.77778V0H0H-1.77778V96H0Z" fill="#00A63E" mask="url(#path-1-inside-1_248_4933)"/>
+</svg>
+
         </div>
+        <br></br>
         <span className={styles.iconLabelGreen}>1L BOTTLES</span>
       </div>
       

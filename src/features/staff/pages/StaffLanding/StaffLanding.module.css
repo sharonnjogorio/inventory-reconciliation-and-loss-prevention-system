@@ -87,6 +87,7 @@
 
 /* ── Branding Section ───────────────────────────────────── */
 .brandingSection {
+  margin-top:160px;
   text-align: center;
 }
 
@@ -110,14 +111,15 @@
   gap: 16px;
   width: 100%;
   max-width: 300px;
+  margin-bottom: 160px;
 }
 
 .actionButton {
   padding: 16px 32px;
-  background-color:#FFFFFF;
-  border-color: 2px solid #E6A767;
-  color:000000;
-  border: none;
+  background-color:#E6A767;
+  border:none;
+  color: #FFFFFF;
+  border-color: 0.5px solid #E6A767;
   font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
@@ -134,7 +136,7 @@
 
 .actionButtonSecondary {
   padding: 16px 32px;
-  background-color: #E29A5C;
+  background-color: #E6A767;
   color: #FFFFFF;
   border: none;
   font-size: 1rem;

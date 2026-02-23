@@ -59,7 +59,7 @@ function StaffScan() {
         >
           ← Back
         </button>
-        <h1 className={styles.title}>Scan QR Code</h1>
+      
       </div>
 
       {/* Scanner View */}
