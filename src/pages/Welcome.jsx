@@ -1,5 +1,5 @@
 // import Navbar from '../components/navbar/navbar'
-import Hero from '../components/hero/hero'
+import {HeroSection} from '../components/hero/hero'
 // import Landing from './Landing/Landing'
 
 function Welcome() {
