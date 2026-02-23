@@ -5,6 +5,8 @@ import RegisterPage from "./pages/Owner/Register/Register";
 import VerifyPhone from "./pages/Owner/VerifyPhone/VerifyPhone";
 import Catalog from "./pages/Owner/Catalog/Catalog";
 import { CartProvider } from "./components/context/CartContext";
+import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
+import Report from "./pages/Owner/Report/Report"
 
 function App() {
 
@@ -16,6 +18,8 @@ function App() {
         <Route path="/owner/register" element={<RegisterPage />} />
         <Route path="/verifyPhone" element={<VerifyPhone />} />
         <Route path="/product/catalog" element={<Catalog />} />
+         <Route path="/analytic/dashboard" element={<AnalyticDashboard />} />
+         <Route path="/report/" element={<Report/>} />
       </Routes>
     </CartProvider>
   )

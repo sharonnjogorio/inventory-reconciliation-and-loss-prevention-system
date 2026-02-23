@@ -1,0 +1,143 @@
+
+
+.card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 18px 20px;
+  max-width: 420px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  font-family: inherit;
+}
+
+.headerRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.title {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Controls */
+
+.controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.select {
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  background-color: #ffffff;
+}
+
+.resetButton {
+  border: none;
+  background: transparent;
+  padding: 2px 4px;
+  font-size: 0.7rem;
+  color: #2563eb;
+  cursor: pointer;
+}
+
+.resetButton:hover {
+  text-decoration: underline;
+}
+
+/* Status / empty */
+
+.loading,
+.empty {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin-bottom: 6px;
+}
+
+/* List */
+
+.list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.item {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+}
+
+.timelineBar {
+  width: 3px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, #f97316, #f97316);
+  margin-top: 4px;
+}
+
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Meta row */
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.badgeLoss {
+  background-color: #fef3c7;
+  color: #b45309;
+}
+
+.badgeAddition {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.timeAgo {
+  font-size: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Text */
+
+.description {
+  font-size: 0.85rem;
+  color: #111827;
+  margin-bottom: 2px;
+}
+
+.user {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+/* Optional hover effect */
+
+.item:hover .description {
+  color: #1d4ed8;
+}

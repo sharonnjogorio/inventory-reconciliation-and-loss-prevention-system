@@ -1,0 +1,60 @@
+/* src/components/AnalyticsDashboard/Card.module.css */
+.card {
+  width: 200px;
+  height: 140px;
+  background: #ffffff;
+  padding: 16px 18px;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+  border: 2px solid #c8c8c8;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #4A5565;
+  text-transform: uppercase;
+}
+
+.valueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.value {
+  font-size: 36px;
+  font-weight: 700;
+  color: #101828;
+}
+
+.subtitle {
+  font-size: 18x;
+  font-weight: 400;
+  color: #4A5565;
+}
+
+.trend {
+  margin-top: 4px;
+  font-size: 0.8rem;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.trendPositive {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.trendNegative {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.trendLabel {
+  color: #6b7280;
+}
