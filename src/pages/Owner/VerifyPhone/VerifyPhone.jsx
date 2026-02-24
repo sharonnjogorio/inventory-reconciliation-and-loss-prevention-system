@@ -1,162 +1,100 @@
-import React, { useState, useEffect } from "react";
-import SmartLogo from "../../../assets/image/smartlogo.svg?react";
-import { useNavigate } from "react-router-dom";
-import styles from "./VerifyPhone.module.css";
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
+import styles from './VerifyPhone.module.css'
 
-const VerifyPhone = () => {
-  const navigate = useNavigate();
-  const [otp, setOtp] = useState(["", "", "", ""]);
-  const [timer, setTimer] = useState(120);
-  const [expired, setExpired] = useState(false);
-  const [verifying, setVerifying] = useState(false);
-  const [verified, setVerified] = useState(false);
+function VerifyPhone() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  const { phoneNumber } = location.state || {}
 
-  // Countdown
+  const [otp, setOtp] = useState(['', '', '', ''])
+  const [timer, setTimer] = useState(120)
+  const [verified, setVerified] = useState(false)
+
+  // ✅ Derived value — no useEffect needed
+  const expired = timer === 0
+
   useEffect(() => {
     if (timer > 0 && !verified) {
-      const countdown = setInterval(() => setTimer((t) => t - 1), 1000);
-      return () => clearInterval(countdown);
-    } else if (timer === 0) setExpired(true);
-  }, [timer, verified]);
+      const countdown = setInterval(() => setTimer((t) => t - 1), 1000)
+      return () => clearInterval(countdown)
+    }
+  }, [timer, verified])
 
-  // OTP input handler
-  const handleChange = (e, index) => {
-    const value = e.target.value.replace(/\D/, "");
-    if (value) {
-      const newOtp = [...otp];
-      newOtp[index] = value;
-      setOtp(newOtp);
-      if (index < 3) {
-        document.getElementById(`otp-input-${index + 1}`).focus();
+  const handleOtpChange = (index, value) => {
+    if (value.length <= 1 && /^\d*$/.test(value)) {
+      const newOtp = [...otp]
+      newOtp[index] = value
+      setOtp(newOtp)
+
+      if (value && index < 3) {
+        document.getElementById(`otp-${index + 1}`)?.focus()
+      }
+
+      if (index === 3 && value) {
+        const otpString = [...newOtp.slice(0, 3), value].join('')
+        handleVerify(otpString)
       }
     }
-  };
+  }
 
-  const handleKeyDown = (e, index) => {
-    if (e.key === "Backspace" && !otp[index] && index > 0) {
-      document.getElementById(`otp-input-${index - 1}`).focus();
+  const handleVerify = (otpString) => {
+    if (otpString === '1234') {
+      setVerified(true)
+      setTimeout(() => {
+        navigate('/owner/catalog')
+      }, 1000)
+    } else {
+      alert('Invalid OTP. Please try again.')
     }
-  };
+  }
 
-  const handleResendOtp = () => {
-    setTimer(120);
-    setExpired(false);
-    alert("OTP resent successfully!");
-  };
-
-  const handleVerify = () => {
-    const code = otp.join("");
-    if (code.length < 4) {
-      alert("Please enter all 4 digits.");
-      return;
-    }
-    setVerifying(true);
-    setTimeout(() => {
-      setVerifying(false);
-      if (code === "5555") {
-        setVerified(true);
-
-        setTimeout(() => navigate("/owner/catalog"), 2000);
-      } else {
-        alert("Invalid OTP. Please try again.");
-      }
-    }, 2000);
-  };
-
-  const handleChangePhone = () => {
-    alert("Redirecting to Change Phone Number...");
-  };
-
-  const formatTime = (seconds) => {
-    const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
-    const secs = String(seconds % 60).padStart(2, "0");
-    return `${mins}:${secs}`;
-  };
+  const handleResend = () => {
+    setTimer(120)
+    setOtp(['', '', '', ''])
+  }
 
   return (
     <div className={styles.container}>
-      <div className={styles.verifyWrapper}>
-        <div className={styles.verifyForm}>
-          {/* Progress Steps */}
-          <div className={styles.progress}>
-            <span className={styles.circle}>1</span>
-            <span className={styles.line}></span>
-            <span className={`${styles.circle} ${styles.active}`}>2</span>
-            <span className={styles.line}></span>
-            <span className={styles.circleNext}>3</span>
-          </div>
+      <div className={styles.content}>
+        <h1 className={styles.title}>Verify Your Phone</h1>
+        <p className={styles.subtitle}>
+          Enter the 4-digit code sent to {phoneNumber}
+        </p>
 
-          <div className={styles.card}>
-            <SmartLogo className={styles.logo} />
-
-            {verifying ? (
-              // ⏳ Spinner while verifying
-              <div className={styles.loadingBox}>
-                <div className={styles.spinner}></div>
-                <p>Verifying...</p>
-              </div>
-            ) : verified ? (
-              // ✅ Success Checkmark
-              <div className={styles.successBox}>
-                <div className={styles.checkmark}></div>
-                <h2>Verified Successfully!</h2>
-                <p>Your phone number has been confirmed.</p>
-              </div>
-            ) : (
-              // 🔢 OTP Section
-              <>
-                <h2>Verify Your Phone Number</h2>
-                <p>
-                  We’ve sent a 4-digit code to <strong>+234 803 XXX 4567</strong>
-                </p>
-
-                <div className={styles.otpInputs}>
-                  {otp.map((digit, index) => (
-                    <input
-                      key={index}
-                      id={`otp-input-${index}`}
-                      className={styles.otpBox}
-                      type="text"
-                      maxLength="1"
-                      value={digit}
-                      onChange={(e) => handleChange(e, index)}
-                      onKeyDown={(e) => handleKeyDown(e, index)}
-                    />
-                  ))}
-                </div>
-
-                <div className={styles.helperText}>
-                  <span>Didn’t receive the code? </span>
-                  <button onClick={handleResendOtp} className={styles.resendBtn}>
-                    Resend OTP
-                  </button>
-                </div>
-
-                <div className={styles.timerBox}>
-                  <span className={styles.timerText}>
-                    Code expires in:{" "}
-                    <strong>{expired ? "00:00" : formatTime(timer)}</strong>
-                  </span>
-                </div>
-
-                <button onClick={handleVerify} className={styles.verifyBtn}>
-                  Verify and continue
-                </button>
-
-                <button onClick={handleChangePhone} className={styles.changeBtn}>
-                  Change Phone number
-                </button>
-
-                <p className={styles.footer}>
-                  Copyrights © 2026 – Next Gen Workforce
-                </p>
-              </>
-            )}
-          </div>
+        <div className={styles.otpInputs}>
+          {otp.map((digit, index) => (
+            <input
+              key={index}
+              id={`otp-${index}`}
+              type="text"
+              inputMode="numeric"
+              maxLength="1"
+              value={digit}
+              onChange={(e) => handleOtpChange(index, e.target.value)}
+              className={styles.otpInput}
+              disabled={verified || expired}
+            />
+          ))}
         </div>
+
+        {verified && <p className={styles.success}>✓ Verified!</p>}
+        {expired && <p className={styles.expired}>Code expired. Please resend.</p>}
+
+        <p className={styles.timer}>
+          {Math.floor(timer / 60)}:{(timer % 60).toString().padStart(2, '0')}
+        </p>
+
+        <p className={styles.resendText}>
+          Didn't receive code? <button onClick={handleResend}>Resend</button>
+        </p>
+
+        <p className={styles.helpText}>
+          Need help? Contact support
+        </p>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default VerifyPhone;
+export default VerifyPhone

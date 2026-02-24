@@ -14,6 +14,11 @@ import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
 import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
 import ManageStaff from './pages/Owner/ManageStaff/ManageStaff'
 import StaffQRCode from './pages/Owner/StaffQRCode/StaffQRCode'
+import Inventory from './pages/Owner/Inventory/Inventory'
+import Settings from './pages/Owner/Settings/Settings'
+import AddStock from './pages/Owner/AddStock/AddStock'
+import Alerts from './pages/Owner/Alerts/Alerts'
+
 import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
 import Report from "./pages/Owner/Report/Report"
 
@@ -30,7 +35,7 @@ import Navbar from './components/navbar/navbar'
 import Footer from './components/footer/footer'
 import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
-import { CartProvider } from "./components/context/CartContext";
+import { CartProvider } from "./components/context/CartProvider";
 
 
 function App() {
@@ -65,6 +70,11 @@ function App() {
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/staff" element={<ManageStaff />} />
         <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
+        <Route path="/owner/inventory" element={<Inventory />} />
+        <Route path="/owner/settings" element={<Settings />} />
+        <Route path="/owner/inventory/add" element={<AddStock />} />
+<Route path="/owner/alerts" element={<Alerts />} />
+
         {/* Staff Routes - Sharon's work */}
         <Route path="/staff/scan" element={<StaffScan />} />
         <Route path="/staff/linked" element={<DeviceLinked />} />

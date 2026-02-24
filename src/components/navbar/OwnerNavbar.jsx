@@ -1,10 +1,13 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import logo from '../../assets/logo.png'
 import styles from './OwnerNavbar.module.css'
+import { useState } from 'react'
 
 function OwnerNavbar() {
   const navigate = useNavigate()
   const location = useLocation()
+
+  const [newAlertsCount] = useState(3)
 
   const isActive = (path) => location.pathname === path
 
@@ -52,6 +55,16 @@ function OwnerNavbar() {
             onClick={() => navigate('/owner/analytics')}
           >
             Analytics
+          </button>
+
+          <button 
+            className={`${styles.link} ${isActive('/owner/alerts') ? styles.active : ''}`}
+            onClick={() => navigate('/owner/alerts')}
+          >
+            Alerts
+            {newAlertsCount > 0 && (
+             <span className={styles.badge}>{newAlertsCount}</span>
+            )}
           </button>
           
           <button 

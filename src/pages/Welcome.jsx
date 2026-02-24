@@ -6,7 +6,7 @@ function Welcome() {
   return (
     <>
       {/* <Navbar /> */}          {/* Your navbar */}
-      <Hero />            {/* Your hero */}
+      <HeroSection />            {/* Your hero */}
       {/* <Landing /> */}  {/* Nafisat's features section */}
     </>
   )

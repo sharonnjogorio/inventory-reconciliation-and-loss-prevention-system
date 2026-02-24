@@ -1,7 +1,8 @@
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../../../store/useAuthStore'
 import db from '../../../../services/db'
+import { salesAPI, auditAPI } from '../../../../services'
 import ProductTile from '../../components/ProductTile/ProductTile'
 import QuickCountOverlay from '../../components/QuickCountOverlay/QuickCountOverlay'
 import heroOil1 from '../../../../assets/hero-oil-1.png'
@@ -37,20 +38,48 @@ function SalesDashboard() {
   const [showQuickCount, setShowQuickCount] = useState(false)
   const [quickCountProduct, setQuickCountProduct] = useState(null)
   const [quickCountExpected, setQuickCountExpected] = useState(50)
+  
+  // ✅ ADDED: Backend integration state
+  const [pendingSalesCount, setPendingSalesCount] = useState(() => {
+    const pending = JSON.parse(localStorage.getItem('pendingSales') || '[]')
+    return pending.length
+  })
+  const [lastSync, setLastSync] = useState(null)
 
   const staff = getCurrentStaff()
 
-  useEffect(() => {
-    if (!staff) {
-      navigate('/staff/pin')
-      return
+  // ✅ ADDED: Sync pending sales
+  const syncPendingSales = useCallback(async () => {
+    const pending = JSON.parse(localStorage.getItem('pendingSales') || '[]')
+    if (pending.length === 0) return
+    try {
+      console.log(`🔄 Syncing ${pending.length} pending sales...`)
+      await salesAPI.syncOfflineSales(pending)
+      localStorage.removeItem('pendingSales')
+      setPendingSalesCount(0)
+      setLastSync(new Date())
+      console.log(`✅ Synced ${pending.length} sales successfully`)
+    } catch (_err) {
+      console.error('❌ Sync failed')
     }
-    loadSessionRevenue()
-  }, [staff, navigate])
-
-  useEffect(() => {
-    window.scrollTo(0, 0)
   }, [])
+
+  // ✅ ADDED: Online/offline listener
+  useEffect(() => {
+    const handleOnline = async () => {
+      await syncPendingSales()
+    }
+    window.addEventListener('online', handleOnline)
+    return () => {
+      window.removeEventListener('online', handleOnline)
+    }
+  }, [syncPendingSales])
+
+ useEffect(() => {
+  if (!staff) {
+    navigate('/staff/pin')
+    return
+  }
 
   const loadSessionRevenue = async () => {
     try {
@@ -69,6 +98,14 @@ function SalesDashboard() {
       console.error('Error loading revenue:', err)
     }
   }
+
+  loadSessionRevenue()
+}, [staff, navigate])
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
+  
 
   const handleProductTap = (productId) => {
     setSelectedItems(prev => ({
@@ -119,6 +156,8 @@ function SalesDashboard() {
       return
     }
 
+    const BACKEND_READY = false // ✅ Set to true when backend is ready
+
     try {
       const sale = {
         id: 'sale_' + Date.now(),
@@ -128,6 +167,30 @@ function SalesDashboard() {
         total: calculateTotal(),
         timestamp: new Date().toISOString(),
         synced: false
+      }
+
+      // ✅ ADDED: Try backend sync if online and ready
+      if (isOnline && BACKEND_READY) {
+        const salesData = Object.entries(selectedItems).map(([productId, quantity]) => {
+          const product = PRODUCTS.find(p => p.id === productId)
+          return {
+            skuId: product.id,
+            quantity,
+            salePrice: product.price,
+            timestamp: new Date().toISOString()
+          }
+        })
+        
+        await salesAPI.syncOfflineSales(salesData)
+        setLastSync(new Date())
+        console.log('✅ Sale synced to backend')
+      } else {
+        // ✅ ADDED: Save to pending if offline or backend not ready
+        const pending = JSON.parse(localStorage.getItem('pendingSales') || '[]')
+        pending.push(sale)
+        localStorage.setItem('pendingSales', JSON.stringify(pending))
+        setPendingSalesCount(pending.length)
+        console.log('💾 Sale saved offline')
       }
 
       await db.sales.add(sale)
@@ -152,7 +215,23 @@ function SalesDashboard() {
       }
     } catch (err) {
       console.error('Error recording sale:', err)
-      alert('Failed to record sale. Please try again.')
+      
+      // ✅ ADDED: Fallback to offline
+      const pending = JSON.parse(localStorage.getItem('pendingSales') || '[]')
+      const sale = {
+        id: 'sale_' + Date.now(),
+        staff_id: staff.id,
+        staff_name: staff.name,
+        items: selectedItems,
+        total: calculateTotal(),
+        timestamp: new Date().toISOString(),
+        synced: false
+      }
+      pending.push(sale)
+      localStorage.setItem('pendingSales', JSON.stringify(pending))
+      setPendingSalesCount(pending.length)
+      
+      alert('Failed to sync. Sale saved offline.')
     }
   }
 
@@ -162,6 +241,15 @@ function SalesDashboard() {
   }
 
   if (!staff) return null
+
+  // ✅ ADDED: Format sync time
+  const getSyncTime = () => {
+    if (!lastSync) return '3m ago'
+    const seconds = Math.floor((new Date() - lastSync) / 1000)
+    if (seconds < 60) return 'Now'
+    const minutes = Math.floor(seconds / 60)
+    return `${minutes}m ago`
+  }
 
   return (
     <div className={`${styles.container} ${showQuickCount ? styles.locked : ''}`}>
@@ -175,7 +263,10 @@ function SalesDashboard() {
             <span className={styles.statusDot}></span>
             {isOnline ? 'ONLINE' : 'OFFLINE'}
           </button>
-          <button className={styles.syncBtn}>Synced: 3m ago</button>
+          {/* ✅ UPDATED: Show pending count or sync time */}
+          <button className={styles.syncBtn}>
+            {pendingSalesCount > 0 ? `${pendingSalesCount} Pending` : `Synced: ${getSyncTime()}`}
+          </button>
         </div>
       </div>
 
@@ -255,18 +346,18 @@ function SalesDashboard() {
         <div className={styles.buttonGroup}>
           <button 
             className={styles.clearButton}
-            onClick={() =>setSelectedItems({})}
+            onClick={() => setSelectedItems({})}
             disabled={Object.keys(selectedItems).length === 0}
           >
             Clear
           </button>
-        <button 
-          className={styles.recordButton}
-          onClick={handleRecordSale}
-          disabled={Object.keys(selectedItems).length === 0}
-        >
-          Record Sale
-        </button>
+          <button 
+            className={styles.recordButton}
+            onClick={handleRecordSale}
+            disabled={Object.keys(selectedItems).length === 0}
+          >
+            Record Sale
+          </button>
         </div>
       </div>
 

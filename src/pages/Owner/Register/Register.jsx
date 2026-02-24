@@ -1,195 +1,238 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { authAPI } from '../../../services'
+import styles from './RegisterPage.module.css'
 
-
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styles from "./RegisterPage.module.css";
-import SmartLogo from "../../../assets/image/smartlogo.svg?react";
-
-const RegisterPage = () => {
+function Register() {
+  const navigate = useNavigate()
+  
   const [formData, setFormData] = useState({
-    fullName: "",
-    shop: "",
-    phone: "",
-    location: "",
-    terms: false,
-  });
-
-  const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
-
-  // Validation rules using regex patterns
-  const nameRegex = /^[A-Za-z\s.'-]{2,50}$/; // Full name pattern
-  const phoneRegex = /^(?:\+234|0)[789][01]\d{8}$/; // Nigerian phone pattern
-  const shopNameRegex = /^[A-Za-z0-9\s.,'-]{2,50}$/; // Allows letters, numbers & punctuation
+    fullName: '',
+    shopName: '',
+    phoneNumber: '',
+    countryCode: 'NG',
+    city: ''
+  })
+  
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData({
-      ...formData,
-      [name]: type === "checkbox" ? checked : value,
-    });
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
 
-    // Clear error for a field as user types
-    if (errors[name]) {
-      setErrors({
-        ...errors,
-        [name]: "",
-      });
-    }
-  };
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
 
-  const validateForm = () => {
-    const newErrors = {};
-
-    if (!formData.fullName.trim()) {
-      newErrors.fullName = "Full name is required.";
-    } else if (!nameRegex.test(formData.fullName)) {
-      newErrors.fullName = "Enter a valid name (letters and spaces only).";
+    // Validation
+    if (!formData.fullName || !formData.shopName || !formData.phoneNumber) {
+      setError('Please fill in all required fields')
+      setLoading(false)
+      return
     }
 
-    if (!formData.shop.trim()) {
-      newErrors.shop = "Shop name is required.";
-    } else if (!shopNameRegex.test(formData.shop)) {
-      newErrors.shop = "Shop name contains invalid characters.";
+    if (!formData.phoneNumber.startsWith('+')) {
+      setError('Phone number must include country code (e.g., +234...)')
+      setLoading(false)
+      return
     }
 
-    if (!formData.phone.trim()) {
-      newErrors.phone = "Phone number is required.";
-    } else if (!phoneRegex.test(formData.phone)) {
-      newErrors.phone = "Enter a valid Nigerian phone number.";
+    try {
+      const payload = {
+        name: formData.fullName.trim(),
+        shop_name: formData.shopName.trim(),
+        phone_number: formData.phoneNumber.trim(),
+        country: formData.countryCode.toUpperCase(),
+        city: formData.city.trim()
+      }
+
+      console.log('📤 Registration payload:', payload)
+
+      const response = await authAPI.registerOwner(payload)
+      
+      console.log('✅ Registration successful:', response)
+      
+      // Store phone for OTP page
+      localStorage.setItem('phoneNumber', formData.phoneNumber)
+      localStorage.setItem('shopName', formData.shopName)
+      
+      navigate('/owner/verify', { 
+        state: { 
+          phoneNumber: formData.phoneNumber,
+          userId: response.user_id,
+          shopName: formData.shopName
+        } 
+      })
+      
+    } catch (err) {
+      console.error('❌ Registration failed:', err)
+      console.error('Error details:', err.response?.data)
+      setError(
+        err.response?.data?.error || 
+        err.response?.data?.message || 
+        'Registration failed. Please try again.'
+      )
+    } finally {
+      setLoading(false)
     }
-
-    if (!formData.terms) {
-      newErrors.terms = "You must accept the Terms & Conditions.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    if (!validateForm()) return;
-
-    console.log("Form submitted:", formData);
-    navigate("/owner/verify", { state: { formData } });
-  };
+  }
 
   return (
     <div className={styles.container}>
-      {/* Left Pane */}
+      {/* Left Pane - Branding */}
       <div className={styles.leftPane}>
         <div className={styles.overlay}>
-          <h1>Welcome!!!</h1>
-          <h2>
-            Prevent Inventory Losses
-            <br />
-            Before They Happen
-          </h2>
+          <h1>Smart Loss Control</h1>
+          <h2>Stop Revenue Leaks</h2>
+          <p>Track every drop, save every naira</p>
         </div>
       </div>
 
-      {/* Right Pane */}
+      {/* Right Pane - Form */}
       <div className={styles.rightPane}>
         <div className={styles.innerBox}>
           <div className={styles.logo}>
-            <SmartLogo />
+            {/* Add your logo here if you have one */}
+            <h2>Register Your Shop</h2>
           </div>
 
-          <form className={styles.form} onSubmit={handleSubmit}>
-            <h2>Register</h2>
-            <p className={styles.subTitle}>
-              Welcome!!!
-              <br />
-              Prevent Inventory Losses Before They Happen
-            </p>
+          <form onSubmit={handleSubmit} className={styles.form}>
+            <p className={styles.subTitle}>Get started with Smart Loss Control</p>
+
+            {error && (
+              <div className={styles.errorBox}>
+                <span className={styles.errorIcon}>⚠️</span>
+                <span>{error}</span>
+              </div>
+            )}
 
             {/* Full Name */}
-            <label>
-              Full name<span className={styles.required}>*</span>
+            <div>
+              <label>
+                Full Name <span className={styles.required}>*</span>
+              </label>
               <input
                 type="text"
                 name="fullName"
-                placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
+                placeholder="e.g., Amina Yusuf"
                 required
               />
-              {errors.fullName && <p className={styles.error}>{errors.fullName}</p>}
-            </label>
+            </div>
 
-            {/* Shop name */}
-            <label>
-              Shop name<span className={styles.required}>*</span>
-              <div >
-                <input
-                  type="text"
-                  name="shop"
-                  placeholder="Enter shop name"
-                  value={formData.shop}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              {errors.shop && <p className={styles.error}>{errors.shop}</p>}
-            </label>
-
-            {/* Phone number */}
-            <label>
-              Phone number<span className={styles.required}>*</span>
-              <input
-                type="tel"
-                name="phone"
-                placeholder="+234 803 XXX 4567"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-              {errors.phone && <p className={styles.error}>{errors.phone}</p>}
-            </label>
-
-            {/* Shop location */}
-            <label>
-              Shop Location (Optional)
+            {/* Shop Name */}
+            <div>
+              <label>
+                Shop Name <span className={styles.required}>*</span>
+              </label>
               <input
                 type="text"
-                name="location"
-                placeholder="Enter shop location"
-                value={formData.location}
+                name="shopName"
+                value={formData.shopName}
                 onChange={handleChange}
-              />
-            </label>
-
-            {/* Terms and Conditions */}
-            <label className={styles.checkboxLabel}>
-              <input
-                type="checkbox"
-                name="terms"
-                checked={formData.terms}
-                onChange={handleChange}
+                placeholder="e.g., Amina's Store"
                 required
               />
-              <a href="#" target="_blank">
-                I agree to the Terms & Conditions and acknowledge that this platform complies with
-              NDPR (Nigeria Data Protection Regulation)
-              </a>
-            </label>
-            {errors.terms && <p className={styles.error}>{errors.terms}</p>}
+            </div>
+
+            {/* Phone Number */}
+            <div>
+              <label>
+                Phone Number <span className={styles.required}>*</span>
+              </label>
+              <input
+                type="tel"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                placeholder="+234 800 000 0000"
+                required
+              />
+              <span className={styles.hint}>
+                Include country code (e.g., +234 for Nigeria)
+              </span>
+            </div>
+
+            {/* Country */}
+            <div>
+              <label>Country</label>
+              <select
+                name="countryCode"
+                value={formData.countryCode}
+                onChange={handleChange}
+                style={{ 
+                  width: '100%', 
+                  padding: '0.6rem 0.75rem', 
+                  borderRadius: '8px', 
+                  border: '0.89px solid #E6EAED', 
+                  marginTop: '0.4rem',
+                  fontSize: '0.9rem'
+                }}
+              >
+                <option value="NG">🇳🇬 Nigeria</option>
+                <option value="KE">🇰🇪 Kenya</option>
+                <option value="GH">🇬🇭 Ghana</option>
+                <option value="ZA">🇿🇦 South Africa</option>
+                <option value="ET">🇪🇹 Ethiopia</option>
+                <option value="UG">🇺🇬 Uganda</option>
+                <option value="TZ">🇹🇿 Tanzania</option>
+                <option value="CM">🇨🇲 Cameroon</option>
+                <option value="CI">🇨🇮 Ivory Coast</option>
+                <option value="SN">🇸🇳 Senegal</option>
+                <option value="RW">🇷🇼 Rwanda</option>
+                <option value="ZM">🇿🇲 Zambia</option>
+                <option value="ZW">🇿🇼 Zimbabwe</option>
+                <option value="BW">🇧🇼 Botswana</option>
+                <option value="MW">🇲🇼 Malawi</option>
+              </select>
+            </div>
+
+            {/* City */}
+            <div>
+              <label>City</label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                placeholder="e.g., Lagos"
+              />
+            </div>
 
             {/* Submit Button */}
-            <button type="submit" className={styles.submitButton}>
-              Continue To Verification
+            <button 
+              type="submit" 
+              className={styles.submitButton} 
+              disabled={loading}
+            >
+              {loading ? (
+                <span className={styles.loadingText}>
+                  <span className={styles.spinner}></span>
+                  Sending OTP...
+                </span>
+              ) : (
+                'Register My Shop'
+              )}
             </button>
+
+            {/* Footer */}
+            <div className={styles.footer}>
+              <p>Already have an account? <a href="/owner/login">Login here</a></p>
+            </div>
           </form>
 
-          <p className={styles.footer}>
-            Copyrights © 2026 - Next Gen Workforce
-          </p>
+          {/* Dev Note */}
+          <div className={styles.devNote}>
+            <strong>Development Mode:</strong> OTP will be <strong>1234</strong>
+          </div>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default RegisterPage;
+export default Register

@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useCallback, useEffect } from "react";
+import React, { useState, useReducer, useEffect } from "react";
 import { Link } from 'react-router-dom'
 import styles from "./AnalyticDashboard.module.css";
 import AnalyticCard from "../../../components/card/AnalyticCard/AnalyticCard";
@@ -23,10 +23,6 @@ function dashboardReducer(state, action) {
   }
 }
 
-/**
- * Default AI-generated values (local stub)
- * Replace later with a real API fetch
- */
 const defaultAIData = {
   cards: {
     totalRevenue: {
@@ -83,37 +79,26 @@ const AnalyticDashboard = () => {
   const [aiData, setAiData] = useState(defaultAIData);
   const [state, dispatch] = useReducer(dashboardReducer, initialDashboardState);
 
-  /**
-   * Memoized function where to plug the AI API.
-   *
-   * Replace the body with a real fetch, e.g.:
-   * const res = await fetch("YOUR_AI_API_URL", { method: "POST", body: ... });
-   * const json = await res.json();
-   * setAiData(json);
-   */
-  const fetchAIData = useCallback(async (range) => {
-    // TODO: replace with real API call when ready.
-    // For now I just reuse default data
-    if (range === "30d") {
-      setAiData((prev) => ({
-        ...prev,
-        cards: {
-          ...prev.cards,
-          totalRevenue: {
-            ...prev.cards.totalRevenue,
-            value: "$3,892.74",
-            trendValue: "+8.2%",
-          },
-        },
-      }));
-    } else {
-      setAiData(defaultAIData);
-    }
-  }, []);
-
   useEffect(() => {
-    fetchAIData(timeRange);
-  }, [timeRange, fetchAIData]);
+    const runFetch = async () => {
+      if (timeRange === "30d") {
+        setAiData((prev) => ({
+          ...prev,
+          cards: {
+            ...prev.cards,
+            totalRevenue: {
+              ...prev.cards.totalRevenue,
+              value: "$3,892.74",
+              trendValue: "+8.2%",
+            },
+          },
+        }))
+      } else {
+        setAiData(defaultAIData)
+      }
+    }
+    runFetch()
+  }, [timeRange])
 
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
@@ -147,7 +132,6 @@ const AnalyticDashboard = () => {
         </div>
       <main className={styles.main}>
 
-        {/* Stats cards */}
         <section className={styles.cardsRow}>
           <AnalyticCard
             title="TOTAL REVENUE (7d)"
@@ -183,7 +167,6 @@ const AnalyticDashboard = () => {
           />
         </section>
 
-        {/* Chart row */}
         <section className={styles.chartsRow}>
           {state.showLossTrend && (
             <WeeklyLossTrendChart data={aiData.weeklyLossTrend} />
@@ -191,10 +174,8 @@ const AnalyticDashboard = () => {
           <LossByCategoryChart data={aiData.lossByCategory} />
         </section>
 
-        {/* Lower panels */}
         <section className={styles.bottomRow}>
-         <AnalyticProduct/>
-
+          <AnalyticProduct/>
           <RecentStockActivitiesCard/>
         </section>
       </main>

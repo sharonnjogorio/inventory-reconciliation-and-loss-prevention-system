@@ -1,0 +1,337 @@
+.container {
+  min-height: calc(100vh - 70px);
+  background-color: #F5F7FA;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background-color: #FFFFFF;
+  padding: 24px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid #E5E5E5;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.addStockBtn {
+  padding: 10px 20px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.addStockBtn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+}
+
+/* ── Stats Grid ─────────────────────────────────────────── */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding: 24px 48px;
+}
+
+.statCard {
+  background: #FFFFFF;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.statCard h3 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #666666;
+  margin: 0 0 8px 0;
+}
+
+.statValue {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+/* ── Controls ───────────────────────────────────────────── */
+.controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 48px 20px 48px;
+  gap: 20px;
+}
+
+.searchBox {
+  flex: 1;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #E29A5C;
+}
+
+.filterButtons {
+  display: flex;
+  gap: 12px;
+}
+
+.filterBtn,
+.viewBtn {
+  padding: 10px 20px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.filterBtn:hover,
+.viewBtn:hover {
+  border-color: #E29A5C;
+  color: #E29A5C;
+}
+
+/* ── Table ──────────────────────────────────────────────── */
+.tableWrapper {
+  padding: 0 48px 32px 48px;
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.table thead {
+  background-color: #F5F7FA;
+}
+
+.table th {
+  padding: 16px;
+  text-align: left;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #666666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid #E5E5E5;
+  transition: background-color 200ms ease;
+}
+
+.table tbody tr:hover {
+  background-color: #FAFBFC;
+}
+
+.table td {
+  padding: 16px;
+  font-size: 0.875rem;
+  color: #1A1A1A;
+}
+
+/* ── Product Cell ───────────────────────────────────────── */
+.productCell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.productImage {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.productName {
+  font-weight: 600;
+}
+
+/* ── Quantity & Price ───────────────────────────────────── */
+.quantity {
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.price {
+  font-weight: 700;
+  color: #1A1A1A;
+}
+
+/* ── Status Badges ──────────────────────────────────────── */
+.statusBadge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.statusGreen {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.statusYellow {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.statusRed {
+  background-color: #FEE2E2;
+  color: #991B1B;
+}
+
+/* ── Actions ────────────────────────────────────────────── */
+.lastUpdated {
+  color: #999999;
+  font-size: 0.8rem;
+}
+
+.editBtn {
+  padding: 6px 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.editBtn:hover {
+  border-color: #E29A5C;
+  color: #E29A5C;
+}
+
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 400px;
+  font-size: 1.125rem;
+  color: #666666;
+}
+
+.errorState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 400px;
+  text-align: center;
+}
+
+.errorIcon {
+  font-size: 3rem;
+}
+
+.retryBtn {
+  padding: 10px 24px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.addFirstBtn {
+  padding: 12px 24px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header,
+  .statsGrid,
+  .controls,
+  .tableWrapper,
+  .footerCta {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .addStockBtn {
+    width: 100%;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .searchBox,
+  .filterButtons {
+    width: 100%;
+  }
+
+  .table {
+    font-size: 0.75rem;
+  }
+}

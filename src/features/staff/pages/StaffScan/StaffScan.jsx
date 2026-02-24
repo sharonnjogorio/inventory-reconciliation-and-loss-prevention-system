@@ -1,110 +1,73 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
-import useAuthStore from '../../../../store/useAuthStore'
 import styles from './StaffScan.module.css'
-
 
 function StaffScan() {
   const navigate = useNavigate()
-  const [scanning, setScanning] = useState(false)
-  const [error, setError] = useState('')
   const videoRef = useRef(null)
   const streamRef = useRef(null)
+  const [error, setError] = useState('')
 
   useEffect(() => {
+    const startCamera = async () => {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'environment' }
+        })
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream
+        }
+        streamRef.current = stream
+      } catch (err) {
+        console.error('Camera access denied:', err)
+        setError('Camera access denied. Please enable camera permissions.')
+      }
+    }
+
     startCamera()
-    return () => stopCamera()
+
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop())
+      }
+    }
   }, [])
 
-  const startCamera = async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'environment' } // Back camera
-      })
-      
-      streamRef.current = stream
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream
-      }
-      setScanning(true)
-    } catch (err) {
-      console.error('Camera error:', err)
-      setError('Unable to access camera. Please check permissions.')
-    }
-  }
-
-  const stopCamera = () => {
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop())
-    }
-  }
-
-  // Mock QR scan for testing
   const handleMockScan = () => {
-    // Simulate successful scan
-    stopCamera()
-    navigate('/staff/linked')
+    const mockToken = 'mock_qr_token_12345'
+    navigate('/staff/linked', { state: { qrToken: mockToken } })
   }
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
-        <button 
-          className={styles.backButton}
-          onClick={() => {
-            stopCamera()
-            navigate('/staff')
-          }}
-        >
-          ← Back
-        </button>
-      
+        <h1 className={styles.title}>Scan QR Code</h1>
       </div>
 
-      {/* Scanner View */}
       <div className={styles.scannerWrapper}>
         <div className={styles.scanner}>
-          {scanning && !error && (
-            <video
-              ref={videoRef}
-              autoPlay
-              playsInline
-              className={styles.video}
-            />
-          )}
-          
-          {/* Scan Frame */}
+          <video ref={videoRef} autoPlay playsInline className={styles.video} />
           <div className={styles.scanFrame}>
-            <div className={styles.corner} style={{ top: 0, left: 0 }}></div>
-            <div className={styles.corner} style={{ top: 0, right: 0 }}></div>
-            <div className={styles.corner} style={{ bottom: 0, left: 0 }}></div>
-            <div className={styles.corner} style={{ bottom: 0, right: 0 }}></div>
+            <div className={styles.corner}></div>
+            <div className={styles.corner}></div>
+            <div className={styles.corner}></div>
+            <div className={styles.corner}></div>
           </div>
-
           {error && (
             <div className={styles.errorBox}>
               <p>{error}</p>
-              <button onClick={startCamera} className={styles.retryButton}>
-                Retry
+              <button onClick={handleMockScan} className={styles.retryButton}>
+                Use Mock QR
               </button>
             </div>
           )}
         </div>
 
-        <p className={styles.instruction}>
-          Point camera at QR Code
-        </p>
-        <p className={styles.subtext}>
-          Get the QR code from your shop owner
-        </p>
+        <p className={styles.instruction}>Point your camera at the QR code displayed by your manager</p>
+        <p className={styles.subtext}>Scanning automatically...</p>
 
-        {/* Mock Scan Button (for testing without camera) */}
-        <button 
-          className={styles.mockButton}
-          onClick={handleMockScan}
-        >
-          Simulate Successful Scan (Testing)
+        <button onClick={handleMockScan} className={styles.mockButton}>
+          Skip Camera (Testing)
         </button>
       </div>
     </div>
