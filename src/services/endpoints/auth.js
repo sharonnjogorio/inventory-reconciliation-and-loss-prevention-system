@@ -5,7 +5,7 @@ export const authAPI = {
    * Register Owner & Send 4-digit OTP
    * POST /auth/register-owner
    */
-  registerOwner: async (data) => {
+ registerOwner: async (data) => {
     const response = await api.post('/auth/register-owner', {
       
       full_name: data.fullName,
@@ -14,7 +14,10 @@ export const authAPI = {
      
     })
     return response.data
+    
   },
+
+  
 
   /**
    * Verify 4-digit OTP & Get JWT Token

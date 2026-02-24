@@ -9,7 +9,7 @@ function Register() {
   const [formData, setFormData] = useState({
     fullName: '',
     shopName: '',
-    phoneNumber: ''
+    phoneNumber: '',
   })
   
   const [loading, setLoading] = useState(false)
@@ -25,7 +25,6 @@ function Register() {
     setLoading(true)
     setError('')
 
-    // Validation
     if (!formData.fullName || !formData.shopName || !formData.phoneNumber) {
       setError('Please fill in all required fields')
       setLoading(false)
@@ -41,27 +40,38 @@ function Register() {
     try {
       // ✅ API expects: full_name, shop_name, phone_number (only 3 fields)
       const payload = {
-        full_name: formData.fullName.trim(),
-        shop_name: formData.shopName.trim(),
-        phone_number: formData.phoneNumber.trim()
+        fullName: formData.fullName.trim(),
+        shopName: formData.shopName.trim(),
+        phoneNumber: formData.phoneNumber.trim(),
       }
 
-      console.log('📤 Registration payload:', payload)
+      console.log('📤 Registration payload (to authAPI):', payload)
 
       const response = await authAPI.registerOwner(payload)
-      
       console.log('✅ Registration successful:', response)
       console.log('🔐 Dev OTP:', response.dev_otp || '1234')
       
       // Store phone for OTP page
+
+      // Expected response from Swagger:
+      // {
+      //   success: true,
+      //   message: "OTP sent to +254712345678",
+      //   sms_status: "development",
+      //   dev_otp: "1234" // dev only
+      // }
+
       localStorage.setItem('phoneNumber', formData.phoneNumber)
       localStorage.setItem('shopName', formData.shopName)
-      
+      if (response.dev_otp) {
+        localStorage.setItem('devOtp', response.dev_otp)
+      }
+
       navigate('/owner/verify', { 
         state: { 
           phoneNumber: formData.phoneNumber,
-          userId: response.user_id,
-          shopName: formData.shopName
+          shopName: formData.shopName,
+          devOtp: response.dev_otp || null,
         } 
       })
       
@@ -69,8 +79,8 @@ function Register() {
       console.error('❌ Registration failed:', err)
       console.error('Error details:', err.response?.data)
       setError(
-        err.response?.data?.error || 
-        err.response?.data?.message || 
+        err.response?.data?.message ||
+        err.response?.data?.errors?.join(', ') ||
         'Registration failed. Please try again.'
       )
     } finally {
@@ -80,7 +90,6 @@ function Register() {
 
   return (
     <div className={styles.container}>
-      {/* Left Pane - Branding */}
       <div className={styles.leftPane}>
         <div className={styles.overlay}>
           <h1>Smart Loss Control</h1>
@@ -89,7 +98,6 @@ function Register() {
         </div>
       </div>
 
-      {/* Right Pane - Form */}
       <div className={styles.rightPane}>
         <div className={styles.innerBox}>
           <div className={styles.logo}>
@@ -121,7 +129,6 @@ function Register() {
               />
             </div>
 
-            {/* Shop Name */}
             <div>
               <label>
                 Shop Name <span className={styles.required}>*</span>
@@ -136,7 +143,6 @@ function Register() {
               />
             </div>
 
-            {/* Phone Number */}
             <div>
               <label>
                 Phone Number <span className={styles.required}>*</span>
@@ -170,7 +176,6 @@ function Register() {
               )}
             </button>
 
-            {/* Footer */}
             <div className={styles.footer}>
               <p>Already have an account? <a href="/owner/login">Login here</a></p>
             </div>
