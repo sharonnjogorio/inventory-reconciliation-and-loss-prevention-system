@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-// import { inventoryAPI } from '../../../services'
+import { inventoryAPI } from '../../../services'
 import styles from './Inventory.module.css'
 
 function Inventory() {
