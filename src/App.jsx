@@ -36,6 +36,7 @@ import Footer from './components/footer/footer'
 import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
 import { CartProvider } from "./components/context/CartProvider";
+import OwnerCreatePin from "./pages/Owner/OwnerCreatePin/CreatePin";
 
 
 function App() {
@@ -46,6 +47,7 @@ function App() {
                        location.pathname !== '/owner/register' && 
                        location.pathname !== '/owner/verify' &&
                        location.pathname !== '/owner/login' &&
+                       location.pathname !== '/owner/createpin' &&
                        location.pathname !== '/owner/catalog'
   
   const showNavbar = !location.pathname.startsWith('/staff')
@@ -67,6 +69,7 @@ function App() {
         <Route path="/owner/verify" element={<VerifyPhone />} />
         <Route path="/owner/catalog" element={<Catalog />} />
         <Route path="/owner/login" element={<OwnerLogin />} />
+        <Route path="/owner/createpin" element={<OwnerCreatePin />} />
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/staff" element={<ManageStaff />} />
         <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />

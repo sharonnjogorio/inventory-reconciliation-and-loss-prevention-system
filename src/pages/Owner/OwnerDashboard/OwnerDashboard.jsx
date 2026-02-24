@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './OwnerDashboard.module.css'
 
@@ -7,23 +7,38 @@ import kingsoilImg from '../../../assets/image/kingsoil.png'
 
 function OwnerDashboard() {
   const navigate = useNavigate()
-  const [shopData] = useState({
+
+  const [shopData, setShopData] = useState({
     name: "Amina's Store",
-    owner: "Amina Yusuf",
+    owner: 'Amina Yusuf',
     healthScore: 92,
     totalSales: 1867.83,
     revenue: 1867.83,
     lowStockCount: 14,
-    lastSynced: '1 minutes ago'
+    lastSynced: '1 minutes ago',
   })
+
+  useEffect(() => {
+    const storedShopName = localStorage.getItem('shopName')
+    const storedOwnerName = localStorage.getItem('fullName')
+
+    console.log('[OwnerDashboard] shopName from LS:', storedShopName)
+    console.log('[OwnerDashboard] fullName from LS:', storedOwnerName)
+
+    setShopData(prev => ({
+      ...prev,
+      name: storedShopName || prev.name,
+      owner: storedOwnerName || prev.owner,
+    }))
+  }, [])
 
   const recentAlerts = [
     {
       id: 1,
       type: 'success',
       title: 'Inventory Synced',
-      message: 'Successfully synced inventory at 2:45 PM'
-    }
+      message: 'Successfully synced inventory at 2:45 PM',
+    },
   ]
 
   const topSelling = [
@@ -31,14 +46,14 @@ function OwnerDashboard() {
       id: 1,
       name: 'Mamador 2L',
       image: mamadorImg,
-      sales: 45
+      sales: 45,
     },
     {
       id: 2,
       name: "King's Oil 1L",
       image: kingsoilImg,
-      sales: 38
-    }
+      sales: 38,
+    },
   ]
 
   return (
@@ -46,11 +61,13 @@ function OwnerDashboard() {
       {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.pageTitle}>Select Your Product Catalog</h1>
-        <button 
+        <button
           className={styles.welcomeBtn}
           onClick={() => navigate('/owner/catalog')}
         >
-          Welcome Amina!
+          {shopData.owner
+            ? `Welcome ${shopData.owner.split(' ')[0]}!`
+            : 'Welcome Owner!'}
         </button>
       </div>
 
@@ -91,11 +108,15 @@ function OwnerDashboard() {
           <div className={styles.statsColumn}>
             <div className={styles.statCard}>
               <h3>TOTAL SALES</h3>
-              <p className={styles.statAmount}>${shopData.totalSales.toLocaleString()}</p>
+              <p className={styles.statAmount}>
+                ${shopData.totalSales.toLocaleString()}
+              </p>
             </div>
             <div className={styles.statCard}>
               <h3>REVENUE</h3>
-              <p className={styles.statAmount}>${shopData.revenue.toLocaleString()}</p>
+              <p className={styles.statAmount}>
+                ${shopData.revenue.toLocaleString()}
+              </p>
             </div>
           </div>
 
@@ -118,10 +139,12 @@ function OwnerDashboard() {
           <div className={styles.alertsSection}>
             <div className={styles.sectionHeader}>
               <h2>Recent Alerts</h2>
-              <button 
-              className={styles.viewAll}
-              onClick={() => navigate('/owner/alerts')}
-              >View all</button>
+              <button
+                className={styles.viewAll}
+                onClick={() => navigate('/owner/alerts')}
+              >
+                View all
+              </button>
             </div>
             <div className={styles.alertsList}>
               {recentAlerts.map(alert => (
@@ -142,7 +165,11 @@ function OwnerDashboard() {
             <div className={styles.productsList}>
               {topSelling.map(product => (
                 <div key={product.id} className={styles.productItem}>
-                  <img src={product.image} alt={product.name} className={styles.productImage} />
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className={styles.productImage}
+                  />
                   <div className={styles.productInfo}>
                     <h4>{product.name}</h4>
                     <p>{product.sales} units sold</p>
@@ -156,7 +183,9 @@ function OwnerDashboard() {
         {/* CTA Section */}
         <div className={styles.ctaSection}>
           <h2>Start Preventing Losses Today</h2>
-          <p>Join retail SMEs protecting their profits with data-driven loss prevention</p>
+          <p>
+            Join retail SMEs protecting their profits with data-driven loss prevention
+          </p>
           <button className={styles.ctaBtn}>LEARN MORE</button>
         </div>
 

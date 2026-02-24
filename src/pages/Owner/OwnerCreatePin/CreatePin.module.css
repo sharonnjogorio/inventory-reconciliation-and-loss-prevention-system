@@ -1,0 +1,128 @@
+/* src/pages/Owner/CreatePin/OwnerCreatePin.module.css */
+
+.pageWrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f5f7fb;
+  padding: 1rem;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.12);
+  padding: 2.5rem 2.25rem;
+  box-sizing: border-box;
+}
+
+.title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  text-align: center;
+  margin: 0 0 0.35rem;
+  color: #111827;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  text-align: center;
+  margin: 0 0 1.5rem;
+  color: #6b7280;
+}
+
+.form {
+  margin-top: 0.5rem;
+}
+
+.section {
+  margin-bottom: 1.4rem;
+}
+
+.label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #6b7280;
+  margin-bottom: 0.5rem;
+}
+
+.pinRow {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.pinInput {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #111827;
+  outline: none;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.pinInput:focus {
+  border-color: #f59e0b;
+  box-shadow: 0 0 0 1px rgba(245, 158, 11, 0.1);
+}
+
+.pinInput::-ms-reveal,
+.pinInput::-ms-clear {
+  display: none;
+}
+
+/* Error box */
+
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: #fef2f2;
+  color: #b91c1c;
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.82rem;
+  margin-bottom: 1rem;
+}
+
+.errorIcon {
+  font-size: 1rem;
+}
+
+/* Button */
+
+.submitButton {
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.85rem 1rem;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background: #e89a4b; /* similar to your owner login color */
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.05s ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: #d8842a;
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.submitButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
