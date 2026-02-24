@@ -156,7 +156,7 @@ function SalesDashboard() {
       return
     }
 
-    const BACKEND_READY = false // ✅ Set to true when backend is ready
+    const BACKEND_READY = true
 
     try {
       const sale = {
@@ -236,9 +236,19 @@ function SalesDashboard() {
   }
 
   const handleLogout = () => {
-    logout()
-    navigate('/staff/pin')
-  }
+  // Clear device linking flags
+  localStorage.removeItem('deviceLinked')
+  localStorage.removeItem('staffData')
+  localStorage.removeItem('authToken')
+  
+  // Clear auth store
+  logout()
+  
+  console.log('✅ Staff logged out - device unlinked')
+  
+  // Redirect to staff landing (so they can choose Scan QR or PIN again)
+  navigate('/staff/landing')
+}
 
   if (!staff) return null
 

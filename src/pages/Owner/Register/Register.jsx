@@ -9,9 +9,7 @@ function Register() {
   const [formData, setFormData] = useState({
     fullName: '',
     shopName: '',
-    phoneNumber: '',
-    countryCode: 'NG',
-    city: ''
+    phoneNumber: ''
   })
   
   const [loading, setLoading] = useState(false)
@@ -41,12 +39,11 @@ function Register() {
     }
 
     try {
+      // ✅ API expects: full_name, shop_name, phone_number (only 3 fields)
       const payload = {
-        name: formData.fullName.trim(),
+        full_name: formData.fullName.trim(),
         shop_name: formData.shopName.trim(),
-        phone_number: formData.phoneNumber.trim(),
-        country: formData.countryCode.toUpperCase(),
-        city: formData.city.trim()
+        phone_number: formData.phoneNumber.trim()
       }
 
       console.log('📤 Registration payload:', payload)
@@ -54,6 +51,7 @@ function Register() {
       const response = await authAPI.registerOwner(payload)
       
       console.log('✅ Registration successful:', response)
+      console.log('🔐 Dev OTP:', response.dev_otp || '1234')
       
       // Store phone for OTP page
       localStorage.setItem('phoneNumber', formData.phoneNumber)
@@ -95,7 +93,6 @@ function Register() {
       <div className={styles.rightPane}>
         <div className={styles.innerBox}>
           <div className={styles.logo}>
-            {/* Add your logo here if you have one */}
             <h2>Register Your Shop</h2>
           </div>
 
@@ -109,10 +106,10 @@ function Register() {
               </div>
             )}
 
-            {/* Full Name */}
+            {/* Owner Name */}
             <div>
               <label>
-                Full Name <span className={styles.required}>*</span>
+                Your Full Name <span className={styles.required}>*</span>
               </label>
               <input
                 type="text"
@@ -153,54 +150,8 @@ function Register() {
                 required
               />
               <span className={styles.hint}>
-                Include country code (e.g., +234 for Nigeria)
+                Include country code (e.g., +234 for Nigeria, +254 for Kenya)
               </span>
-            </div>
-
-            {/* Country */}
-            <div>
-              <label>Country</label>
-              <select
-                name="countryCode"
-                value={formData.countryCode}
-                onChange={handleChange}
-                style={{ 
-                  width: '100%', 
-                  padding: '0.6rem 0.75rem', 
-                  borderRadius: '8px', 
-                  border: '0.89px solid #E6EAED', 
-                  marginTop: '0.4rem',
-                  fontSize: '0.9rem'
-                }}
-              >
-                <option value="NG">🇳🇬 Nigeria</option>
-                <option value="KE">🇰🇪 Kenya</option>
-                <option value="GH">🇬🇭 Ghana</option>
-                <option value="ZA">🇿🇦 South Africa</option>
-                <option value="ET">🇪🇹 Ethiopia</option>
-                <option value="UG">🇺🇬 Uganda</option>
-                <option value="TZ">🇹🇿 Tanzania</option>
-                <option value="CM">🇨🇲 Cameroon</option>
-                <option value="CI">🇨🇮 Ivory Coast</option>
-                <option value="SN">🇸🇳 Senegal</option>
-                <option value="RW">🇷🇼 Rwanda</option>
-                <option value="ZM">🇿🇲 Zambia</option>
-                <option value="ZW">🇿🇼 Zimbabwe</option>
-                <option value="BW">🇧🇼 Botswana</option>
-                <option value="MW">🇲🇼 Malawi</option>
-              </select>
-            </div>
-
-            {/* City */}
-            <div>
-              <label>City</label>
-              <input
-                type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                placeholder="e.g., Lagos"
-              />
             </div>
 
             {/* Submit Button */}
@@ -227,7 +178,8 @@ function Register() {
 
           {/* Dev Note */}
           <div className={styles.devNote}>
-            <strong>Development Mode:</strong> OTP will be <strong>1234</strong>
+            <strong>🔧 Development Mode</strong><br/>
+            OTP will be <strong>1234</strong> (also visible in browser console)
           </div>
         </div>
       </div>

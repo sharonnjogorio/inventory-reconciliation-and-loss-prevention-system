@@ -73,7 +73,7 @@ function App() {
         <Route path="/owner/inventory" element={<Inventory />} />
         <Route path="/owner/settings" element={<Settings />} />
         <Route path="/owner/inventory/add" element={<AddStock />} />
-<Route path="/owner/alerts" element={<Alerts />} />
+        <Route path="/owner/alerts" element={<Alerts />} />
 
         {/* Staff Routes - Sharon's work */}
         <Route path="/staff/scan" element={<StaffScan />} />
@@ -81,6 +81,7 @@ function App() {
         <Route path="/staff/pin" element={<StaffPIN />} />
         <Route path="/staff/sales" element={<SalesDashboard />} />
         <Route path="/staff/bulk-decant" element={<BulkDecant />} />
+        <Route path="/staff" element={<Navigate to="/staff/landing" replace />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />

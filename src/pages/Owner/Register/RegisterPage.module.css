@@ -1,21 +1,20 @@
 .container {
   display: flex;
-  height: 100vh;
-  min-height:calc(100vh - 59px ); /* Account for navbar height */
+  min-height: 100vh;
   font-family: "Roboto", sans-serif;
   box-sizing: border-box;
   margin-top: 59px;
   margin-bottom: 59px;
 }
 
-/* LEFT PANE */
+/* ── LEFT PANE ─────────────────────────────────────────── */
 .leftPane {
   flex: 1;
   background: url("/src/assets/image/reg-img.jpg") center/cover no-repeat;
   position: relative;
-  min-height:100%;
+  min-height: 100%;
   margin: 0;
-  padding:0;
+  padding: 0;
 }
 
 .overlay {
@@ -24,191 +23,203 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background:linear-gradient(180deg, rgba(230, 167, 103, 0.9) 0%, 
-  rgba(216, 151, 86, 0.9) 100%);
+  background: linear-gradient(180deg, rgba(230, 167, 103, 0.9) 0%, rgba(216, 151, 86, 0.9) 100%);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   color: #ffffff;
   text-align: center;
+  padding: 40px;
 }
 
 .overlay h1 {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
-  margin: 0;
+  margin: 0 0 12px 0;
+  line-height: 1.2;
 }
 
-.overlay h2{
-  font-size: 2rem;
-  font-weight: 700;
+.overlay h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
   color: #ffffff;
-  margin: 0;
+  margin: 0 0 16px 0;
+  opacity: 0.95;
 }
 
-/* RIGHT PANE */
+.overlay p {
+  font-size: 1.125rem;
+  margin: 0;
+  opacity: 0.9;
+  max-width: 400px;
+}
+
+/* ── RIGHT PANE ────────────────────────────────────────── */
 .rightPane {
   flex: 1;
   background: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 40px, 20px;
+  padding: 40px 20px;
+  overflow-y: visible;
+  overflow-x: hidden;
 }
 
 .innerBox {
-  width: 29.42rem;
-  transform: rotate(0deg);
-  opacity: 1;
-  padding-top: 2rem;
-  padding-right: 2rem;
-  padding-left: 2rem;
-  border-radius: 0.875rem;
+  width: 100%;
+  max-width: 480px;
+  padding: 48px 40px;
+  border-radius: 16px;
   box-sizing: border-box;
-  box-shadow: 0.2rem 1.2rem 2rem 0.3rem rgba(12, 12, 12, 0.08);
+  box-shadow: 0 4px 24px rgba(12, 12, 12, 0.08);
   background: #ffffff;
- 
+  overflow:visible;
+  max-height:none;
+  border: 1.5px solid #E29A5C;
+  border-radius: 12px;
+  padding: 15px;
 }
 
-/* LOGO */
+/* ── LOGO & HEADER ─────────────────────────────────────── */
 .logo {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 1rem;
+  text-align: center;
+  margin-bottom: 32px;
 }
 
-.form h2 {
-  text-align: flex-start;
-  margin-bottom: 0.3rem;
+.logo h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
 }
 
 .subTitle {
-  text-align: flex-start;
-  color: #666;
-  font-size: 16px;
-  margin-bottom: 1.5rem;
+  text-align: center;
+  color: #666666;
+  font-size: 0.95rem;
+  margin-bottom: 32px;
   font-weight: 400;
 }
 
-/* FORM INPUTS */
+/* ── FORM ──────────────────────────────────────────────── */
+.form {
+  width: 100%;
+  
+}
+
+/* Form Group Wrapper */
+.form > div {
+  margin-bottom: 24px;
+}
+
+.form > div:last-of-type {
+  margin-bottom: 32px;
+}
+
+/* Labels */
 label {
   display: block;
-  margin-bottom: 1rem;
-  color: #333;
-  font-size: 14px;
-  font-weight: 520;
-  font-style: medium;
+  margin-bottom: 8px;
+  color: #333333;
+  font-size: 0.875rem;
+  font-weight: 600;
 }
 
 .required {
-  color: var(--color-primary);
+  color: #E29A5C;
   margin-left: 3px;
+  font-weight: 700;
 }
 
-.error {
-  color: var(--color-primary);
-  font-size: 0.8rem;
-  margin-top: 0.2rem;
-}
-
-
-.icon {
-  width: 18px;
-  height: 18px;
-  margin-right: 8px;
-  color: #999;
-}
-
+/* Inputs */
 input[type="text"],
 input[type="tel"] {
-  width: 90%;
-  padding: 0.6rem 0.75rem;
-  border-radius: 8px;
-  border: 0.89px solid #E6EAED;
-  margin-top: 0.4rem;
-  font-size: 0.9rem;
-}
-
-input:focus {
-  outline: none;
-  border-color: var(--color-primary);
-}
-
-/* CHECKBOX */
-.checkboxLabel {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 0.8rem;
-  line-height: 1.4;
-  color: #444;
-  margin-bottom: 1rem;
-}
-
-.checkboxLabel a {
-  color: #7ED99B;
-  text-decoration: none;
-}
-
-.checkboxLabel a:hover {
-  text-decoration: underline;
-}
-
-/* BUTTON */
-.submitButton {
   width: 100%;
-  background-color: var(--color-primary);
-  color: #fff;
-  border: none;
+  padding: 12px 16px;
   border-radius: 8px;
-  padding: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  border: 1.5px solid #E6EAED;
+  font-size: 0.95rem;
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+  transition: all 200ms ease;
 }
 
-.submitButton:hover {
-  background-color: #cf6d16;
+input[type="text"]:focus,
+input[type="tel"]:focus {
+  outline: none;
+  border-color: #E29A5C;
+  box-shadow: 0 0 0 3px rgba(226, 154, 92, 0.1);
 }
 
-/* FOOTER */
-.footer {
-  margin-top: 1.5rem;
-  text-align: center;
-  font-size: 0.8rem;
-  color: #888;
-  font-weight: 600;
+input[type="text"]::placeholder,
+input[type="tel"]::placeholder {
+  color: #AAAAAA;
 }
+
+/* Hint Text */
+.hint {
+  display: block;
+  font-size: 0.75rem;
+  color: #888888;
+  margin-top: 6px;
+  line-height: 1.4;
+}
+
+/* ── ERROR BOX ─────────────────────────────────────────── */
 .errorBox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 12px 16px;
+  gap: 10px;
+  padding: 14px 16px;
   background-color: #FEF2F2;
   border: 1px solid #FCA5A5;
-  border-radius: 6px;
+  border-radius: 8px;
   color: #991B1B;
   font-size: 0.875rem;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
+  line-height: 1.5;
 }
 
 .errorIcon {
   font-size: 1.25rem;
+  flex-shrink: 0;
 }
 
-.hint {
-  display: block;
-  font-size: 0.75rem;
-  color: #666666;
-  margin-top: 4px;
+/* ── SUBMIT BUTTON ─────────────────────────────────────── */
+.submitButton {
+  width: 100%;
+  background-color: #E29A5C;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  font-family: "Roboto", sans-serif;
 }
 
+.submitButton:hover:not(:disabled) {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Loading State */
 .loadingText {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .spinner {
@@ -222,30 +233,105 @@ input:focus {
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to { 
+    transform: rotate(360deg); 
+  }
 }
 
+/* ── FOOTER ────────────────────────────────────────────── */
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #888888;
+  font-weight: 500;
+}
+
+.footer a {
+  color: #E29A5C;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* ── DEV NOTE ──────────────────────────────────────────── */
 .devNote {
   margin-top: 24px;
-  padding: 12px 16px;
+  padding: 14px 18px;
   background-color: #FFFBEB;
-  border: 1px solid #FCD34D;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  border: 1.5px solid #FCD34D;
+  border-radius: 8px;
+  font-size: 0.8rem;
   text-align: center;
+  line-height: 1.6;
+  color: #92400E;
 }
 
-/* RESPONSIVE */
+.devNote strong {
+  color: #78350F;
+  font-weight: 700;
+}
+
+/* ── RESPONSIVE ────────────────────────────────────────── */
 @media (max-width: 900px) {
   .container {
     flex-direction: column;
   }
 
   .leftPane {
-    height: 35vh;
+    min-height: 35vh;
+  }
+
+  .overlay h1 {
+    font-size: 2rem;
+  }
+
+  .overlay h2 {
+    font-size: 1.5rem;
   }
 
   .rightPane {
-    height: 65vh;
+    min-height: 65vh;
+    padding: 24px 16px;
+  }
+
+  .innerBox {
+    max-width: 100%;
+    padding: 32px 24px;
+    box-shadow: none;
+  }
+
+  .logo h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay h1 {
+    font-size: 1.75rem;
+  }
+
+  .overlay h2 {
+    font-size: 1.25rem;
+  }
+
+  .overlay p {
+    font-size: 1rem;
+  }
+
+  .innerBox {
+    padding: 24px 20px;
+  }
+
+  .logo h2 {
+    font-size: 1.375rem;
+  }
+
+  input[type="text"],
+  input[type="tel"] {
+    font-size: 16px; /* Prevents iOS zoom on focus */
   }
 }

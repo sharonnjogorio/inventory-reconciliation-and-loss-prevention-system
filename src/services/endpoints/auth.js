@@ -7,11 +7,11 @@ export const authAPI = {
    */
   registerOwner: async (data) => {
     const response = await api.post('/auth/register-owner', {
-      name: data.fullName,
+      
+      full_name: data.fullName,
       shop_name: data.shopName,
       phone_number: data.phoneNumber,
-      country_code: data.countryCode || 'NG',
-      city: data.city || ''
+     
     })
     return response.data
   },
