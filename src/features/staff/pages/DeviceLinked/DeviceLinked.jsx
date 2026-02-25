@@ -54,17 +54,17 @@ function DeviceLinked() {
       const token = generateToken()
       const staffId = 'staff_' + Date.now()
 
-      // Save to IndexedDB
-      await db.staff.add({
+      const staffData = {
         id: staffId,
         name: staffName.trim(),
         pin: pinString,
         device_id: deviceId,
         token: token,
         linked_at: new Date().toISOString()
-      })
+      }
 
-      // ✅ SET FLAGS in localStorage for smart routing
+      await db.staff.add(staffData)
+
       localStorage.setItem('deviceLinked', 'true')
       localStorage.setItem('staffData', JSON.stringify({
         id: staffId,
@@ -73,10 +73,10 @@ function DeviceLinked() {
         linkedAt: new Date().toISOString()
       }))
 
-      console.log('✅ Device linked successfully for:', staffName.trim())
+      console.log('✅ Device linked and logged in:', staffName.trim())
 
-      // Redirect to dashboard
-      navigate('/staff/dashboard')
+      navigate('/staff/pin')
+      
     } catch (err) {
       console.error('Failed to link device:', err)
       setError('Failed to link device. Please try again.')
@@ -138,7 +138,7 @@ function DeviceLinked() {
               className={styles.generateButton}
               disabled={loading}
             >
-              {loading ? 'Setting Up...' : 'Complete Setup'}
+              {loading ? 'Setting Up...' : 'Complete Setup & Start Working'}
             </button>
           </form>
         </div>

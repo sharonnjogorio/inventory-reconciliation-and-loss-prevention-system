@@ -81,7 +81,7 @@ function App() {
         <Route path="/staff/pin" element={<StaffPIN />} />
         <Route path="/staff/sales" element={<SalesDashboard />} />
         <Route path="/staff/bulk-decant" element={<BulkDecant />} />
-        <Route path="/staff" element={<Navigate to="/staff/landing" replace />} />
+        <Route path="/staff/landing" element={<StaffLanding />} />
         
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
