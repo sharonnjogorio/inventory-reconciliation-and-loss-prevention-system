@@ -1,3 +1,4 @@
+// src/pages/Owner/Inventory/AddStock.jsx
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { inventoryAPI, skusAPI } from '../../../services'
@@ -8,6 +9,7 @@ function AddStock() {
   
   const [skus, setSKUs] = useState([])
   const [loadingSKUs, setLoadingSKUs] = useState(true)
+
   const [formData, setFormData] = useState({
     skuId: '',
     quantityOrdered: '',
@@ -21,6 +23,7 @@ function AddStock() {
   const [error, setError] = useState('')
   const [showSuccess, setShowSuccess] = useState(false)
 
+  // Load SKUs when component mounts
   useEffect(() => {
     fetchSKUs()
   }, [])
@@ -28,6 +31,7 @@ function AddStock() {
   const fetchSKUs = async () => {
     try {
       const response = await skusAPI.getSKUs()
+      // depending on your API, it might be response.data or response
       setSKUs(response.data || response)
       console.log('✅ SKUs loaded:', response)
     } catch (err) {
@@ -43,11 +47,13 @@ function AddStock() {
     setFormData(prev => ({ ...prev, [name]: value }))
   }
 
-  const selectedSKU = skus.find(s => s.id === parseInt(formData.skuId))
-  
-  const discrepancy = formData.quantityOrdered && formData.quantityReceived 
-    ? parseInt(formData.quantityOrdered) - parseInt(formData.quantityReceived)
-    : 0
+  const selectedSKU = skus.find(s => s.id === parseInt(formData.skuId, 10))
+
+  const discrepancy =
+    formData.quantityOrdered && formData.quantityReceived
+      ? parseInt(formData.quantityOrdered, 10) -
+        parseInt(formData.quantityReceived, 10)
+      : 0
 
   const hasDiscrepancy = discrepancy !== 0
 
@@ -56,6 +62,7 @@ function AddStock() {
     setLoading(true)
     setError('')
 
+    // Basic validation
     if (!formData.skuId || !formData.quantityReceived || !formData.costPrice) {
       setError('Please fill in all required fields')
       setLoading(false)
@@ -63,26 +70,36 @@ function AddStock() {
     }
 
     try {
-      const response = await inventoryAPI.recordRestock({
-        skuId: parseInt(formData.skuId),
-        quantityOrdered: parseInt(formData.quantityOrdered) || parseInt(formData.quantityReceived),
-        quantityReceived: parseInt(formData.quantityReceived),
+      // Use quantityOrdered if provided, otherwise fall back to quantityReceived
+      const quantityOrdered =
+        parseInt(formData.quantityOrdered || formData.quantityReceived, 10)
+
+      const payload = {
+        skuId: parseInt(formData.skuId, 10),
+        quantityOrdered,
+        quantityReceived: parseInt(formData.quantityReceived, 10),
         costPrice: parseFloat(formData.costPrice),
-        supplierName: formData.supplierName,
-        notes: formData.notes
-      })
-      
+        supplierName: formData.supplierName || undefined,
+        notes: formData.notes || undefined,
+      }
+
+      const response = await inventoryAPI.recordRestock(payload)
+
       console.log('✅ Restock recorded:', response)
-      
+
       setShowSuccess(true)
-      
+
+      // After short delay, go back to inventory
       setTimeout(() => {
         navigate('/owner/inventory')
       }, 2000)
-      
     } catch (err) {
       console.error('❌ Restock failed:', err)
-      setError(err.response?.data?.error || err.response?.data?.message || 'Failed to add stock. Please try again.')
+      setError(
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        'Failed to add stock. Please try again.'
+      )
     } finally {
       setLoading(false)
     }
@@ -102,16 +119,20 @@ function AddStock() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button className={styles.backBtn} onClick={() => navigate('/owner/inventory')}>
+        <button
+          className={styles.backBtn}
+          onClick={() => navigate('/owner/inventory')}
+        >
           ← Back to Inventory
         </button>
         <h1 className={styles.title}>Add New Stock</h1>
-        <p className={styles.subtitle}>Record new inventory received from supplier</p>
+        <p className={styles.subtitle}>
+          Record new inventory received from supplier
+        </p>
       </div>
 
       <div className={styles.content}>
         <form onSubmit={handleSubmit} className={styles.form}>
-          
           {error && (
             <div className={styles.errorBox}>
               <span className={styles.errorIcon}>⚠️</span>
@@ -119,14 +140,15 @@ function AddStock() {
             </div>
           )}
 
+          {/* Product information */}
           <div className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Product Information</h2>
-            
+
             <div className={styles.formGroup}>
               <label className={styles.label}>
                 Select Product <span className={styles.required}>*</span>
               </label>
-              <select 
+              <select
                 name="skuId"
                 value={formData.skuId}
                 onChange={handleChange}
@@ -134,7 +156,7 @@ function AddStock() {
                 required
               >
                 <option value="">Choose a product...</option>
-                {skus.map(sku => (
+                {skus.map((sku) => (
                   <option key={sku.id} value={sku.id}>
                     {sku.brand} {sku.size} - {sku.unit}
                   </option>
@@ -154,16 +176,17 @@ function AddStock() {
             )}
           </div>
 
+          {/* Quantity audit */}
           <div className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Quantity Audit</h2>
             <p className={styles.sectionNote}>
               Track ordered vs received to detect supplier errors or delivery theft
             </p>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label className={styles.label}>Quantity Ordered</label>
-                <input 
+                <input
                   type="number"
                   name="quantityOrdered"
                   value={formData.quantityOrdered}
@@ -172,14 +195,16 @@ function AddStock() {
                   className={styles.input}
                   min="0"
                 />
-                <span className={styles.hint}>What you ordered from supplier</span>
+                <span className={styles.hint}>
+                  What you ordered from supplier
+                </span>
               </div>
 
               <div className={styles.formGroup}>
                 <label className={styles.label}>
                   Quantity Received <span className={styles.required}>*</span>
                 </label>
-                <input 
+                <input
                   type="number"
                   name="quantityReceived"
                   value={formData.quantityReceived}
@@ -189,20 +214,25 @@ function AddStock() {
                   min="0"
                   required
                 />
-                <span className={styles.hint}>What actually arrived (enters inventory)</span>
+                <span className={styles.hint}>
+                  What actually arrived (enters inventory)
+                </span>
               </div>
             </div>
 
             {hasDiscrepancy && (
-              <div className={`${styles.discrepancyAlert} ${discrepancy > 0 ? styles.alertWarning : styles.alertInfo}`}>
+              <div
+                className={`${styles.discrepancyAlert} ${
+                  discrepancy > 0 ? styles.alertWarning : styles.alertInfo
+                }`}
+              >
                 <div className={styles.alertIcon}>⚠️</div>
                 <div className={styles.alertContent}>
                   <h4>Supplier Discrepancy Detected</h4>
                   <p>
-                    {discrepancy > 0 
+                    {discrepancy > 0
                       ? `${discrepancy} unit(s) missing from delivery`
-                      : `${Math.abs(discrepancy)} extra unit(s) received`
-                    }
+                      : `${Math.abs(discrepancy)} extra unit(s) received`}
                   </p>
                   <p className={styles.alertNote}>
                     This will be flagged in your reports for follow-up.
@@ -212,9 +242,10 @@ function AddStock() {
             )}
           </div>
 
+          {/* Pricing */}
           <div className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Pricing Information</h2>
-            
+
             <div className={styles.formRow}>
               <div className={styles.formGroup}>
                 <label className={styles.label}>
@@ -222,7 +253,7 @@ function AddStock() {
                 </label>
                 <div className={styles.inputGroup}>
                   <span className={styles.currency}>$</span>
-                  <input 
+                  <input
                     type="number"
                     name="costPrice"
                     value={formData.costPrice}
@@ -234,17 +265,20 @@ function AddStock() {
                     required
                   />
                 </div>
-                <span className={styles.hint}>USD - What you paid per unit</span>
+                <span className={styles.hint}>
+                  USD - What you paid per unit
+                </span>
               </div>
             </div>
           </div>
 
+          {/* Optional details */}
           <div className={styles.formSection}>
             <h2 className={styles.sectionTitle}>Additional Details (Optional)</h2>
-            
+
             <div className={styles.formGroup}>
               <label className={styles.label}>Supplier Name</label>
-              <input 
+              <input
                 type="text"
                 name="supplierName"
                 value={formData.supplierName}
@@ -256,7 +290,7 @@ function AddStock() {
 
             <div className={styles.formGroup}>
               <label className={styles.label}>Notes</label>
-              <textarea 
+              <textarea
                 name="notes"
                 value={formData.notes}
                 onChange={handleChange}
@@ -270,48 +304,66 @@ function AddStock() {
             </div>
           </div>
 
+          {/* Summary */}
           <div className={styles.summary}>
             <h3 className={styles.summaryTitle}>Restock Summary</h3>
             <div className={styles.summaryGrid}>
               <div className={styles.summaryItem}>
                 <span className={styles.summaryLabel}>Product:</span>
                 <span className={styles.summaryValue}>
-                  {selectedSKU ? `${selectedSKU.brand} ${selectedSKU.size}` : 'Not selected'}
+                  {selectedSKU
+                    ? `${selectedSKU.brand} ${selectedSKU.size}`
+                    : 'Not selected'}
                 </span>
               </div>
               <div className={styles.summaryItem}>
                 <span className={styles.summaryLabel}>Units to Add:</span>
-                <span className={styles.summaryValue}>{formData.quantityReceived || '0'}</span>
+                <span className={styles.summaryValue}>
+                  {formData.quantityReceived || '0'}
+                </span>
               </div>
               <div className={styles.summaryItem}>
                 <span className={styles.summaryLabel}>Total Cost:</span>
                 <span className={styles.summaryValue}>
-                  ${formData.quantityReceived && formData.costPrice 
-                    ? (parseFloat(formData.quantityReceived) * parseFloat(formData.costPrice)).toFixed(2)
-                    : '0.00'
-                  }
+                  $
+                  {formData.quantityReceived && formData.costPrice
+                    ? (
+                        parseFloat(formData.quantityReceived) *
+                        parseFloat(formData.costPrice)
+                      ).toFixed(2)
+                    : '0.00'}
                 </span>
               </div>
               {hasDiscrepancy && (
                 <div className={styles.summaryItem}>
                   <span className={styles.summaryLabel}>Discrepancy:</span>
-                  <span className={`${styles.summaryValue} ${styles.summaryDanger}`}>
-                    {discrepancy > 0 ? `-${discrepancy}` : `+${Math.abs(discrepancy)}`} units
+                  <span
+                    className={`${styles.summaryValue} ${styles.summaryDanger}`}
+                  >
+                    {discrepancy > 0
+                      ? `-${discrepancy}`
+                      : `+${Math.abs(discrepancy)}`}{' '}
+                    units
                   </span>
                 </div>
               )}
             </div>
           </div>
 
+          {/* Actions */}
           <div className={styles.actions}>
-            <button 
-              type="button" 
+            <button
+              type="button"
               className={styles.cancelBtn}
               onClick={() => navigate('/owner/inventory')}
             >
               Cancel
             </button>
-            <button type="submit" className={styles.submitBtn} disabled={loading}>
+            <button
+              type="submit"
+              className={styles.submitBtn}
+              disabled={loading}
+            >
               {loading ? (
                 <span className={styles.loadingText}>
                   <span className={styles.spinner}></span>
@@ -331,12 +383,13 @@ function AddStock() {
             <div className={styles.successIcon}>✓</div>
             <h2 className={styles.modalTitle}>Stock Added Successfully!</h2>
             <p className={styles.modalText}>
-              {formData.quantityReceived} units of {selectedSKU?.brand} {selectedSKU?.size} 
-              {' '}have been added to your inventory.
+              {formData.quantityReceived} units of {selectedSKU?.brand}{' '}
+              {selectedSKU?.size} have been added to your inventory.
             </p>
             {hasDiscrepancy && (
               <p className={styles.modalWarning}>
-                ⚠️ Supplier discrepancy of {Math.abs(discrepancy)} units has been logged.
+                ⚠️ Supplier discrepancy of {Math.abs(discrepancy)} units has been
+                logged.
               </p>
             )}
           </div>

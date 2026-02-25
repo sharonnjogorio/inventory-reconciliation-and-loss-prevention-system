@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { inventoryAPI } from '../../../services'
+import { inventoryAPI } from '../../../services/endpoints/inventory'
 import styles from './Inventory.module.css'
 
 function Inventory() {
   const navigate = useNavigate()
-  
+
   const [inventory, setInventory] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -17,9 +17,10 @@ function Inventory() {
 
   const fetchInventory = async () => {
     try {
-      const response = await inventoryAPI.getInventorySummary()
-      setInventory(response.data || response.inventory || [])
-      console.log('✅ Inventory loaded:', response)
+      const data = await inventoryAPI.getInventorySummary()
+      // data is already an array from backend
+      console.log('✅ Inventory loaded:', data)
+      setInventory(Array.isArray(data) ? data : [])
     } catch (err) {
       console.error('❌ Failed to load inventory:', err)
       setError('Failed to load inventory. Please refresh.')
@@ -27,7 +28,6 @@ function Inventory() {
       setLoading(false)
     }
   }
-
   const getStatusColor = (quantity) => {
     if (quantity === 0) return styles.statusRed
     if (quantity <= 10) return styles.statusYellow
@@ -48,9 +48,10 @@ function Inventory() {
   }
 
   const filteredInventory = inventory.filter(item =>
-    item.sku?.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.sku?.size?.toLowerCase().includes(searchTerm.toLowerCase())
+    item.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.size?.toLowerCase().includes(searchTerm.toLowerCase())
   )
+
 
   if (loading) {
     return (
@@ -84,7 +85,7 @@ function Inventory() {
           <h1 className={styles.title}>Inventory Management</h1>
           <p className={styles.subtitle}>Track and manage your stock levels</p>
         </div>
-        <button 
+        <button
           className={styles.addStockBtn}
           onClick={() => navigate('/owner/inventory/add')}
         >
@@ -113,8 +114,8 @@ function Inventory() {
 
       <div className={styles.controls}>
         <div className={styles.searchBox}>
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Search by product name or size..."
             className={styles.searchInput}
             value={searchTerm}
@@ -132,7 +133,7 @@ function Inventory() {
           <div className={styles.emptyState}>
             <h3>No inventory found</h3>
             <p>Add your first stock to get started</p>
-            <button 
+            <button
               className={styles.addFirstBtn}
               onClick={() => navigate('/owner/inventory/add')}
             >
@@ -153,15 +154,15 @@ function Inventory() {
             </thead>
             <tbody>
               {filteredInventory.map(item => (
-                <tr key={item.id}>
+                <tr key={item.sku_id}>
                   <td>
                     <div className={styles.productCell}>
                       <span className={styles.productName}>
-                        {item.sku?.brand} {item.sku?.size}
+                        {item.brand} {item.size}
                       </span>
                     </div>
                   </td>
-                  <td>{item.sku?.unit || 'N/A'}</td>
+                  <td>{/* Category/Unit if you have it, otherwise 'Oil' or 'N/A' */}Oil</td>
                   <td>
                     <span className={styles.quantity}>
                       {item.quantity} units
@@ -171,6 +172,7 @@ function Inventory() {
                     <span className={`${styles.statusBadge} ${getStatusColor(item.quantity)}`}>
                       {getStatusText(item.quantity)}
                     </span>
+
                   </td>
                   <td className={styles.lastUpdated}>
                     {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'N/A'}
@@ -181,6 +183,7 @@ function Inventory() {
                 </tr>
               ))}
             </tbody>
+
           </table>
         )}
       </div>

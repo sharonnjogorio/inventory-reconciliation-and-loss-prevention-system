@@ -1,10 +1,7 @@
+// src/services/endpoints/inventory.js
 import api from '../api'
 
 export const inventoryAPI = {
-  /**
-   * Get Shop Inventory Summary
-   * GET /inventory/summary
-   */
   getInventorySummary: async () => {
     const response = await api.get('/inventory/summary')
     return response.data
@@ -17,11 +14,12 @@ export const inventoryAPI = {
   recordRestock: async (data) => {
     const response = await api.post('/inventory/restock', {
       sku_id: data.skuId,
-      quantity_ordered: data.quantityOrdered,
-      quantity_received: data.quantityReceived,
-      cost_per_unit: data.costPrice,
+      ordered_qty: data.orderedQty,      // match Swagger
+      received_qty: data.receivedQty,    // match Swagger
+      cost_price: data.costPrice,
+      sell_price: data.sellPrice,
       supplier_name: data.supplierName || null,
-      notes: data.notes || null
+      reference_note: data.referenceNote || null,
     })
     return response.data
   },
@@ -31,10 +29,12 @@ export const inventoryAPI = {
    * POST /inventory/decant
    * Default: 1 carton = 12 bottles
    */
-  decantCartons: async (skuId, cartons) => {
+  decantCartons: async (fromSkuId, toSkuId, cartons, unitsPerCarton = 12) => {
     const response = await api.post('/inventory/decant', {
-      sku_id: skuId,
-      cartons: cartons
+      from_sku_id: fromSkuId,
+      to_sku_id: toSkuId,
+      cartons,
+      units_per_carton: unitsPerCarton,
     })
     return response.data
   },

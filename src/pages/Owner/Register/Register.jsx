@@ -1,17 +1,18 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../../../services'
+// import { mockAuthAPI } from "../../../services/endpoints/mockAuth";
 import styles from './RegisterPage.module.css'
 
 function Register() {
   const navigate = useNavigate()
-  
+
   const [formData, setFormData] = useState({
     fullName: '',
     shopName: '',
     phoneNumber: '',
   })
-  
+
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
 
@@ -46,35 +47,41 @@ function Register() {
       }
 
       console.log('📤 Registration payload (to authAPI):', payload)
+      // console.log('📤 Registration payload (to mockAuthAPI):', payload)
 
-      const response = await authAPI.registerOwner(payload)
-      console.log('✅ Registration successful:', response)
-      console.log('🔐 Dev OTP:', response.dev_otp || '1234')
-      
-      // Store phone for OTP page
+      const response = await authAPI.registerOwner(payload) 
+      // const response = await mockAuthAPI.registerOwner(payload)
+      // console.log('✅ Registration successful:', response)
+// disbale line 55-62 later
+      // const userData = { 
+      //   full_name: payload.fullName,
+      //   shop_name: payload.shopName,
+      //   phone: payload.phoneNumber,
+      //   id: response.user?.id || 1,
+      // };
+      // localStorage.setItem('userData', JSON.stringify(userData));
+      // localStorage.setItem('shopId', userData.id);
 
-      // Expected response from Swagger:
-      // {
-      //   success: true,
-      //   message: "OTP sent to +254712345678",
-      //   sms_status: "development",
-      //   dev_otp: "1234" // dev only
-      // }
 
-      localStorage.setItem('phoneNumber', formData.phoneNumber)
+      localStorage.setItem('phoneNumber', formData.phoneNumber) 
       localStorage.setItem('shopName', formData.shopName)
+      localStorage.setItem('fullName', formData.fullName)
       if (response.dev_otp) {
         localStorage.setItem('devOtp', response.dev_otp)
       }
 
-      navigate('/owner/verify', { 
-        state: { 
+      navigate('/owner/verify', {
+        state: {
+          phoneNumber: userData.phone,
+          shopName: userData.shop_name,
+          devOtp: response.dev_otp || null,
+
           phoneNumber: formData.phoneNumber,
           shopName: formData.shopName,
           devOtp: response.dev_otp || null,
-        } 
+        }
       })
-      
+
     } catch (err) {
       console.error('❌ Registration failed:', err)
       console.error('Error details:', err.response?.data)
@@ -160,10 +167,9 @@ function Register() {
               </span>
             </div>
 
-            {/* Submit Button */}
-            <button 
-              type="submit" 
-              className={styles.submitButton} 
+            <button
+              type="submit"
+              className={styles.submitButton}
               disabled={loading}
             >
               {loading ? (
