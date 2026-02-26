@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './OwnerDashboard.module.css'
 
@@ -8,29 +8,19 @@ import kingsoilImg from '../../../assets/image/kingsoil.png'
 function OwnerDashboard() {
   const navigate = useNavigate()
 
-  const [shopData, setShopData] = useState({
-    name: "Amina's Store",
-    owner: 'Amina Yusuf',
-    healthScore: 92,
-    totalSales: 1867.83,
-    revenue: 1867.83,
-    lowStockCount: 14,
-    lastSynced: '1 minutes ago',
-  })
-
-  useEffect(() => {
+  const [shopData, setShopData] = useState(() => {
     const storedShopName = localStorage.getItem('shopName')
     const storedOwnerName = localStorage.getItem('fullName')
-
-    console.log('[OwnerDashboard] shopName from LS:', storedShopName)
-    console.log('[OwnerDashboard] fullName from LS:', storedOwnerName)
-
-    setShopData(prev => ({
-      ...prev,
-      name: storedShopName || prev.name,
-      owner: storedOwnerName || prev.owner,
-    }))
-  }, [])
+    return {
+      name: storedShopName || "Amina's Store",
+      owner: storedOwnerName || 'Amina Yusuf',
+      healthScore: 92,
+      totalSales: 1867.83,
+      revenue: 1867.83,
+      lowStockCount: 14,
+      lastSynced: '1 minutes ago',
+    }
+  })
 
   const recentAlerts = [
     {
@@ -58,7 +48,6 @@ function OwnerDashboard() {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.pageTitle}>Select Your Product Catalog</h1>
         <button
@@ -71,11 +60,8 @@ function OwnerDashboard() {
         </button>
       </div>
 
-      {/* Main Content */}
       <div className={styles.content}>
-        {/* Top Stats Section */}
         <div className={styles.topSection}>
-          {/* Health Score Circle */}
           <div className={styles.healthCard}>
             <div className={styles.circleWrapper}>
               <svg className={styles.circle} viewBox="0 0 200 200">
@@ -104,7 +90,6 @@ function OwnerDashboard() {
             <p className={styles.healthLabel}>HEALTH SCORE</p>
           </div>
 
-          {/* Revenue Stats */}
           <div className={styles.statsColumn}>
             <div className={styles.statCard}>
               <h3>TOTAL SALES</h3>
@@ -120,7 +105,6 @@ function OwnerDashboard() {
             </div>
           </div>
 
-          {/* Alert Stats */}
           <div className={styles.statsColumn}>
             <div className={styles.alertCard}>
               <h3>LOW STOCK ALERT</h3>
@@ -133,9 +117,7 @@ function OwnerDashboard() {
           </div>
         </div>
 
-        {/* Middle Section */}
         <div className={styles.middleSection}>
-          {/* Recent Alerts */}
           <div className={styles.alertsSection}>
             <div className={styles.sectionHeader}>
               <h2>Recent Alerts</h2>
@@ -159,7 +141,6 @@ function OwnerDashboard() {
             </div>
           </div>
 
-          {/* Top Selling Today */}
           <div className={styles.topSellingSection}>
             <h2 className={styles.sectionTitle}>Top Selling Today</h2>
             <div className={styles.productsList}>
@@ -180,7 +161,6 @@ function OwnerDashboard() {
           </div>
         </div>
 
-        {/* CTA Section */}
         <div className={styles.ctaSection}>
           <h2>Start Preventing Losses Today</h2>
           <p>
@@ -189,7 +169,6 @@ function OwnerDashboard() {
           <button className={styles.ctaBtn}>LEARN MORE</button>
         </div>
 
-        {/* Quick Actions */}
         <div className={styles.quickActions}>
           <h2 className={styles.sectionTitle}>Quick Actions</h2>
           <div className={styles.actionsGrid}>

@@ -55,8 +55,40 @@
 }
 
 .statusBtn {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #1A1A1A;
   color: #FFFFFF;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #50C878;
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .statusBtn.online {

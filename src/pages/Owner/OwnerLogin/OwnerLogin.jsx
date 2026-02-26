@@ -1,30 +1,16 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './OwnerLogin.module.css'
 
 function OwnerLogin() {
   const navigate = useNavigate()
 
-  const [shopName, setShopName] = useState('')
+  const [shopName, setShopName] = useState(() => localStorage.getItem('shopName') || '')
   const [pin, setPin] = useState(['', '', '', ''])
-  const [storedPin, setStoredPin] = useState('')
+  const [storedPin, setStoredPin] = useState(() => localStorage.getItem('ownerPin') || '')
   const [error, setError] = useState('')
 
-  // Load stored values from localStorage (set by Create PIN page)
-  useEffect(() => {
-    const savedPin = localStorage.getItem('ownerPin')
-    const savedShopName = localStorage.getItem('shopName')
-
-    if (savedShopName) {
-      setShopName(savedShopName)
-    }
-    if (savedPin) {
-      setStoredPin(savedPin)
-    }
-  }, [])
-
   const handlePinChange = useCallback((index, value) => {
-    // digits only, allow empty
     if (value && !/^\d$/.test(value)) return
 
     const newPin = [...pin]
@@ -32,7 +18,6 @@ function OwnerLogin() {
     setPin(newPin)
     setError('')
 
-    // auto-focus next box
     if (value && index < 3) {
       const next = document.getElementById(`owner-pin-${index + 1}`)
       if (next) next.focus()
@@ -62,7 +47,6 @@ function OwnerLogin() {
       return
     }
 
-    // Compare with stored PIN (set during Create PIN)
     if (!storedPin) {
       setError('No PIN found. Please create a PIN first.')
       return
@@ -73,8 +57,6 @@ function OwnerLogin() {
       return
     }
 
-    // At this point credentials are valid (locally)
-    // Next step in a real app: call backend /auth/login-pin with shopName + pinString
     navigate('/owner/dashboard')
   }
 
@@ -91,7 +73,6 @@ function OwnerLogin() {
           </div>
         )}
 
-        {/* Shop Name */}
         <div className={styles.inputGroup}>
           <label>SHOP NAME</label>
           <input
@@ -106,7 +87,6 @@ function OwnerLogin() {
           />
         </div>
 
-        {/* PIN */}
         <div className={styles.inputGroup}>
           <label>4-DIGIT PIN</label>
           <div className={styles.pinInputs}>
@@ -126,7 +106,7 @@ function OwnerLogin() {
           </div>
         </div>
 
-        <button 
+        <button
           className={styles.loginBtn}
           onClick={handleLogin}
         >

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../../../services'
-// import { mockAuthAPI } from "../../../services/endpoints/mockAuth";
 import styles from './RegisterPage.module.css'
 
 function Register() {
@@ -39,7 +38,6 @@ function Register() {
     }
 
     try {
-      // ✅ API expects: full_name, shop_name, phone_number (only 3 fields)
       const payload = {
         fullName: formData.fullName.trim(),
         shopName: formData.shopName.trim(),
@@ -47,23 +45,12 @@ function Register() {
       }
 
       console.log('📤 Registration payload (to authAPI):', payload)
-      // console.log('📤 Registration payload (to mockAuthAPI):', payload)
 
-      const response = await authAPI.registerOwner(payload) 
-      // const response = await mockAuthAPI.registerOwner(payload)
-      // console.log('✅ Registration successful:', response)
-// disbale line 55-62 later
-      // const userData = { 
-      //   full_name: payload.fullName,
-      //   shop_name: payload.shopName,
-      //   phone: payload.phoneNumber,
-      //   id: response.user?.id || 1,
-      // };
-      // localStorage.setItem('userData', JSON.stringify(userData));
-      // localStorage.setItem('shopId', userData.id);
+      const response = await authAPI.registerOwner(payload)
+      console.log('✅ Registration successful:', response)
+      console.log('🔐 Dev OTP:', response.dev_otp || '1234')
 
-
-      localStorage.setItem('phoneNumber', formData.phoneNumber) 
+      localStorage.setItem('phoneNumber', formData.phoneNumber)
       localStorage.setItem('shopName', formData.shopName)
       localStorage.setItem('fullName', formData.fullName)
       if (response.dev_otp) {
@@ -72,10 +59,6 @@ function Register() {
 
       navigate('/owner/verify', {
         state: {
-          phoneNumber: userData.phone,
-          shopName: userData.shop_name,
-          devOtp: response.dev_otp || null,
-
           phoneNumber: formData.phoneNumber,
           shopName: formData.shopName,
           devOtp: response.dev_otp || null,
@@ -121,7 +104,6 @@ function Register() {
               </div>
             )}
 
-            {/* Owner Name */}
             <div>
               <label>
                 Your Full Name <span className={styles.required}>*</span>
@@ -187,7 +169,6 @@ function Register() {
             </div>
           </form>
 
-          {/* Dev Note */}
           <div className={styles.devNote}>
             <strong>🔧 Development Mode</strong><br/>
             OTP will be <strong>1234</strong> (also visible in browser console)
