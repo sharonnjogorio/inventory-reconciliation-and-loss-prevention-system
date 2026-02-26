@@ -47,21 +47,10 @@ function Register() {
       }
 
       console.log('📤 Registration payload (to authAPI):', payload)
-      // console.log('📤 Registration payload (to mockAuthAPI):', payload)
+      console.log('📤 Registration payload:', payload)
 
       const response = await authAPI.registerOwner(payload) 
-      // const response = await mockAuthAPI.registerOwner(payload)
-      // console.log('✅ Registration successful:', response)
-// disbale line 55-62 later
-      // const userData = { 
-      //   full_name: payload.fullName,
-      //   shop_name: payload.shopName,
-      //   phone: payload.phoneNumber,
-      //   id: response.user?.id || 1,
-      // };
-      // localStorage.setItem('userData', JSON.stringify(userData));
-      // localStorage.setItem('shopId', userData.id);
-
+      console.log('✅ Registration successful:', response)
 
       localStorage.setItem('phoneNumber', formData.phoneNumber) 
       localStorage.setItem('shopName', formData.shopName)
@@ -72,12 +61,9 @@ function Register() {
 
       navigate('/owner/verify', {
         state: {
-          phoneNumber: userData.phone,
-          shopName: userData.shop_name,
-          devOtp: response.dev_otp || null,
-
           phoneNumber: formData.phoneNumber,
           shopName: formData.shopName,
+          fullName: formData.fullName,
           devOtp: response.dev_otp || null,
         }
       })
@@ -186,12 +172,6 @@ function Register() {
               <p>Already have an account? <a href="/owner/login">Login here</a></p>
             </div>
           </form>
-
-          {/* Dev Note */}
-          <div className={styles.devNote}>
-            <strong>🔧 Development Mode</strong><br/>
-            OTP will be <strong>1234</strong> (also visible in browser console)
-          </div>
         </div>
       </div>
     </div>

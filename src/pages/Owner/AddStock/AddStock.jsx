@@ -1,116 +1,200 @@
-// src/pages/Owner/Inventory/AddStock.jsx
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { inventoryAPI, skusAPI } from '../../../services'
+import { inventoryAPI } from '../../../services/endpoints/inventory'
 import styles from './AddStock.module.css'
+import oilBottle from '../../../assets/hero-oil-1.png'
+
+// 10 Popular African Cooking Oil Brands (All 1L)
+const AFRICAN_OIL_BRANDS = [
+  { id: 1, name: "King's Oil", brand: "King's Oil", image: oilBottle, color: '#FFD700' },
+  { id: 2, name: 'Mamador', brand: 'Mamador', image: oilBottle, color: '#8B008B' },
+  { id: 3, name: 'Golden Terra', brand: 'Golden Terra', image: oilBottle, color: '#FF6347' },
+  { id: 4, name: 'Devon Kings', brand: 'Devon Kings', image: oilBottle, color: '#4169E1' },
+  { id: 5, name: 'Golden Penny', brand: 'Golden Penny', image: oilBottle, color: '#DAA520' },
+  { id: 6, name: 'Power Oil', brand: 'Power Oil', image: oilBottle, color: '#DC143C' },
+  { id: 7, name: 'Gino', brand: 'Gino', image: oilBottle, color: '#228B22' },
+  { id: 8, name: 'Soya Gold', brand: 'Soya Gold', image: oilBottle, color: '#FF8C00' },
+  { id: 9, name: 'Tropical', brand: 'Tropical', image: oilBottle, color: '#00CED1' },
+  { id: 10, name: 'Grand Pure', brand: 'Grand Pure', image: oilBottle, color: '#9370DB' }
+]
 
 function AddStock() {
   const navigate = useNavigate()
   
-  const [skus, setSKUs] = useState([])
-  const [loadingSKUs, setLoadingSKUs] = useState(true)
-
-  const [formData, setFormData] = useState({
-    skuId: '',
-    quantityOrdered: '',
-    quantityReceived: '',
-    costPrice: '',
-    supplierName: '',
-    notes: ''
+  const [loading, setLoading] = useState(true)
+  const [inventory, setInventory] = useState([])
+  const [allSKUs, setAllSKUs] = useState([])
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [stockData, setStockData] = useState({
+    cartons: 0,
+    bottlesPerCarton: 12,
+    totalBottles: 0,
+    costPrice: 0,
+    sellingPrice: 0
   })
-  
-  const [loading, setLoading] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const [showSuccess, setShowSuccess] = useState(false)
+  const [success, setSuccess] = useState('')
 
-  // Load SKUs when component mounts
   useEffect(() => {
-    fetchSKUs()
+    fetchData()
   }, [])
 
-  const fetchSKUs = async () => {
+  const fetchData = async () => {
     try {
-      const response = await skusAPI.getSKUs()
-      // depending on your API, it might be response.data or response
-      setSKUs(response.data || response)
-      console.log('✅ SKUs loaded:', response)
+      // Fetch current inventory
+      const inventoryData = await inventoryAPI.getInventorySummary()
+      const inventoryList = inventoryData.inventory || inventoryData.data || []
+      setInventory(Array.isArray(inventoryList) ? inventoryList : [])
+
+      // Fetch all SKUs
+      const skusResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://192.168.8.27:5000'}/inventory/skus`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+        }
+      })
+      const skusData = await skusResponse.json()
+      setAllSKUs(skusData.skus || skusData.data || [])
+      
+      console.log('✅ Data loaded:', { inventory: inventoryList.length, skus: (skusData.skus || []).length })
     } catch (err) {
-      console.error('❌ Failed to load SKUs:', err)
-      setError('Failed to load products. Please refresh.')
+      console.error('❌ Failed to load data:', err)
+      setError('Failed to load data. Please refresh.')
     } finally {
-      setLoadingSKUs(false)
+      setLoading(false)
     }
   }
 
-  const handleChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
+  const getProductStatus = (brand) => {
+    const existingItem = inventory.find(item => 
+      item.brand.toLowerCase() === brand.toLowerCase() && item.size === '1L'
+    )
+    return existingItem
   }
 
-  const selectedSKU = skus.find(s => s.id === parseInt(formData.skuId, 10))
-
-  const discrepancy =
-    formData.quantityOrdered && formData.quantityReceived
-      ? parseInt(formData.quantityOrdered, 10) -
-        parseInt(formData.quantityReceived, 10)
-      : 0
-
-  const hasDiscrepancy = discrepancy !== 0
-
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
+  const handleProductSelect = (product) => {
+    const existingItem = getProductStatus(product.brand)
+    
+    if (existingItem) {
+      // Product exists - show restock option
+      setSelectedProduct({ ...product, existing: existingItem })
+      setStockData({
+        cartons: 0,
+        bottlesPerCarton: 12,
+        totalBottles: 0,
+        costPrice: existingItem.cost_price || 0,
+        sellingPrice: existingItem.selling_price || 0
+      })
+    } else {
+      // New product - show add option
+      setSelectedProduct({ ...product, existing: null })
+      setStockData({
+        cartons: 0,
+        bottlesPerCarton: 12,
+        totalBottles: 0,
+        costPrice: 0,
+        sellingPrice: 0
+      })
+    }
     setError('')
+    setSuccess('')
+  }
 
-    // Basic validation
-    if (!formData.skuId || !formData.quantityReceived || !formData.costPrice) {
-      setError('Please fill in all required fields')
-      setLoading(false)
+  const updateStockData = (field, value) => {
+    setStockData(prev => {
+      const updated = {
+        ...prev,
+        [field]: parseFloat(value) || 0
+      }
+      
+      // Auto-calculate total bottles
+      if (field === 'cartons' || field === 'bottlesPerCarton') {
+        updated.totalBottles = updated.cartons * updated.bottlesPerCarton
+      }
+      
+      return updated
+    })
+  }
+
+  const handleSubmit = async () => {
+    if (!selectedProduct) {
+      setError('Please select a product')
       return
     }
 
-    try {
-      // Use quantityOrdered if provided, otherwise fall back to quantityReceived
-      const quantityOrdered =
-        parseInt(formData.quantityOrdered || formData.quantityReceived, 10)
+    if (stockData.totalBottles === 0) {
+      setError('Please enter quantity')
+      return
+    }
 
-      const payload = {
-        skuId: parseInt(formData.skuId, 10),
-        quantityOrdered,
-        quantityReceived: parseInt(formData.quantityReceived, 10),
-        costPrice: parseFloat(formData.costPrice),
-        supplierName: formData.supplierName || undefined,
-        notes: formData.notes || undefined,
+    if (!stockData.costPrice || !stockData.sellingPrice) {
+      setError('Please enter cost and selling prices')
+      return
+    }
+
+    if (stockData.sellingPrice < stockData.costPrice) {
+      setError('Selling price should be higher than cost price')
+      return
+    }
+
+    setSubmitting(true)
+    setError('')
+
+    try {
+      // Find matching SKU
+      const matchingSKU = allSKUs.find(sku => 
+        sku.brand.toLowerCase() === selectedProduct.brand.toLowerCase() && 
+        sku.size === '1L'
+      )
+
+      if (!matchingSKU) {
+        throw new Error(`SKU not found for ${selectedProduct.brand} 1L`)
       }
 
-      const response = await inventoryAPI.recordRestock(payload)
+      // Call restock API
+      await inventoryAPI.recordRestock({
+        skuId: matchingSKU.id,
+        orderedQty: stockData.totalBottles,
+        receivedQty: stockData.totalBottles,
+        costPrice: stockData.costPrice,
+        sellPrice: stockData.sellingPrice,
+        supplierName: selectedProduct.existing ? 'Restock' : 'Initial Stock',
+        referenceNote: `${stockData.cartons} cartons × ${stockData.bottlesPerCarton} bottles`
+      })
 
-      console.log('✅ Restock recorded:', response)
-
-      setShowSuccess(true)
-
-      // After short delay, go back to inventory
+      const action = selectedProduct.existing ? 'restocked' : 'added'
+      setSuccess(`✅ ${selectedProduct.name} ${action} successfully!`)
+      
+      // Refresh data
+      await fetchData()
+      
+      // Reset form after 2 seconds
       setTimeout(() => {
-        navigate('/owner/inventory')
+        setSelectedProduct(null)
+        setStockData({
+          cartons: 0,
+          bottlesPerCarton: 12,
+          totalBottles: 0,
+          costPrice: 0,
+          sellingPrice: 0
+        })
+        setSuccess('')
       }, 2000)
+      
     } catch (err) {
-      console.error('❌ Restock failed:', err)
-      setError(
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        'Failed to add stock. Please try again.'
-      )
+      console.error('❌ Failed to add stock:', err)
+      setError(err.response?.data?.message || err.message || 'Failed to add stock')
     } finally {
-      setLoading(false)
+      setSubmitting(false)
     }
   }
 
-  if (loadingSKUs) {
+  if (loading) {
     return (
       <div className={styles.container}>
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
-          Loading products...
+          Loading...
         </div>
       </div>
     )
@@ -119,282 +203,169 @@ function AddStock() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button
-          className={styles.backBtn}
-          onClick={() => navigate('/owner/inventory')}
-        >
+        <div>
+          <h1 className={styles.title}>Add Stock</h1>
+          <p className={styles.subtitle}>Select a product to add or restock</p>
+        </div>
+        <button className={styles.backBtn} onClick={() => navigate('/owner/inventory')}>
           ← Back to Inventory
         </button>
-        <h1 className={styles.title}>Add New Stock</h1>
-        <p className={styles.subtitle}>
-          Record new inventory received from supplier
-        </p>
       </div>
 
-      <div className={styles.content}>
-        <form onSubmit={handleSubmit} className={styles.form}>
-          {error && (
-            <div className={styles.errorBox}>
-              <span className={styles.errorIcon}>⚠️</span>
-              <span>{error}</span>
-            </div>
-          )}
-
-          {/* Product information */}
-          <div className={styles.formSection}>
-            <h2 className={styles.sectionTitle}>Product Information</h2>
-
-            <div className={styles.formGroup}>
-              <label className={styles.label}>
-                Select Product <span className={styles.required}>*</span>
-              </label>
-              <select
-                name="skuId"
-                value={formData.skuId}
-                onChange={handleChange}
-                className={styles.select}
-                required
-              >
-                <option value="">Choose a product...</option>
-                {skus.map((sku) => (
-                  <option key={sku.id} value={sku.id}>
-                    {sku.brand} {sku.size} - {sku.unit}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {selectedSKU && (
-              <div className={styles.productPreview}>
-                <div className={styles.previewInfo}>
-                  <span className={styles.previewLabel}>Selected:</span>
-                  <span className={styles.previewName}>
-                    {selectedSKU.brand} {selectedSKU.size}
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Quantity audit */}
-          <div className={styles.formSection}>
-            <h2 className={styles.sectionTitle}>Quantity Audit</h2>
-            <p className={styles.sectionNote}>
-              Track ordered vs received to detect supplier errors or delivery theft
-            </p>
-
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>Quantity Ordered</label>
-                <input
-                  type="number"
-                  name="quantityOrdered"
-                  value={formData.quantityOrdered}
-                  onChange={handleChange}
-                  placeholder="e.g., 100"
-                  className={styles.input}
-                  min="0"
-                />
-                <span className={styles.hint}>
-                  What you ordered from supplier
-                </span>
-              </div>
-
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Quantity Received <span className={styles.required}>*</span>
-                </label>
-                <input
-                  type="number"
-                  name="quantityReceived"
-                  value={formData.quantityReceived}
-                  onChange={handleChange}
-                  placeholder="e.g., 98"
-                  className={styles.input}
-                  min="0"
-                  required
-                />
-                <span className={styles.hint}>
-                  What actually arrived (enters inventory)
-                </span>
-              </div>
-            </div>
-
-            {hasDiscrepancy && (
-              <div
-                className={`${styles.discrepancyAlert} ${
-                  discrepancy > 0 ? styles.alertWarning : styles.alertInfo
-                }`}
-              >
-                <div className={styles.alertIcon}>⚠️</div>
-                <div className={styles.alertContent}>
-                  <h4>Supplier Discrepancy Detected</h4>
-                  <p>
-                    {discrepancy > 0
-                      ? `${discrepancy} unit(s) missing from delivery`
-                      : `${Math.abs(discrepancy)} extra unit(s) received`}
-                  </p>
-                  <p className={styles.alertNote}>
-                    This will be flagged in your reports for follow-up.
-                  </p>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Pricing */}
-          <div className={styles.formSection}>
-            <h2 className={styles.sectionTitle}>Pricing Information</h2>
-
-            <div className={styles.formRow}>
-              <div className={styles.formGroup}>
-                <label className={styles.label}>
-                  Cost Price (per unit) <span className={styles.required}>*</span>
-                </label>
-                <div className={styles.inputGroup}>
-                  <span className={styles.currency}>$</span>
-                  <input
-                    type="number"
-                    name="costPrice"
-                    value={formData.costPrice}
-                    onChange={handleChange}
-                    placeholder="13.75"
-                    className={styles.inputWithCurrency}
-                    step="0.01"
-                    min="0"
-                    required
-                  />
-                </div>
-                <span className={styles.hint}>
-                  USD - What you paid per unit
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Optional details */}
-          <div className={styles.formSection}>
-            <h2 className={styles.sectionTitle}>Additional Details (Optional)</h2>
-
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Supplier Name</label>
-              <input
-                type="text"
-                name="supplierName"
-                value={formData.supplierName}
-                onChange={handleChange}
-                placeholder="e.g., Wilmar Distributors"
-                className={styles.input}
-              />
-            </div>
-
-            <div className={styles.formGroup}>
-              <label className={styles.label}>Notes</label>
-              <textarea
-                name="notes"
-                value={formData.notes}
-                onChange={handleChange}
-                placeholder="Any additional notes about this delivery..."
-                className={styles.textarea}
-                rows="3"
-              />
-              <span className={styles.hint}>
-                e.g., "2 bottles damaged", "Delivery was late"
-              </span>
-            </div>
-          </div>
-
-          {/* Summary */}
-          <div className={styles.summary}>
-            <h3 className={styles.summaryTitle}>Restock Summary</h3>
-            <div className={styles.summaryGrid}>
-              <div className={styles.summaryItem}>
-                <span className={styles.summaryLabel}>Product:</span>
-                <span className={styles.summaryValue}>
-                  {selectedSKU
-                    ? `${selectedSKU.brand} ${selectedSKU.size}`
-                    : 'Not selected'}
-                </span>
-              </div>
-              <div className={styles.summaryItem}>
-                <span className={styles.summaryLabel}>Units to Add:</span>
-                <span className={styles.summaryValue}>
-                  {formData.quantityReceived || '0'}
-                </span>
-              </div>
-              <div className={styles.summaryItem}>
-                <span className={styles.summaryLabel}>Total Cost:</span>
-                <span className={styles.summaryValue}>
-                  $
-                  {formData.quantityReceived && formData.costPrice
-                    ? (
-                        parseFloat(formData.quantityReceived) *
-                        parseFloat(formData.costPrice)
-                      ).toFixed(2)
-                    : '0.00'}
-                </span>
-              </div>
-              {hasDiscrepancy && (
-                <div className={styles.summaryItem}>
-                  <span className={styles.summaryLabel}>Discrepancy:</span>
-                  <span
-                    className={`${styles.summaryValue} ${styles.summaryDanger}`}
-                  >
-                    {discrepancy > 0
-                      ? `-${discrepancy}`
-                      : `+${Math.abs(discrepancy)}`}{' '}
-                    units
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* Actions */}
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={() => navigate('/owner/inventory')}
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className={styles.submitBtn}
-              disabled={loading}
-            >
-              {loading ? (
-                <span className={styles.loadingText}>
-                  <span className={styles.spinner}></span>
-                  Adding Stock...
-                </span>
-              ) : (
-                'Confirm & Add to Inventory'
-              )}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {showSuccess && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modal}>
-            <div className={styles.successIcon}>✓</div>
-            <h2 className={styles.modalTitle}>Stock Added Successfully!</h2>
-            <p className={styles.modalText}>
-              {formData.quantityReceived} units of {selectedSKU?.brand}{' '}
-              {selectedSKU?.size} have been added to your inventory.
-            </p>
-            {hasDiscrepancy && (
-              <p className={styles.modalWarning}>
-                ⚠️ Supplier discrepancy of {Math.abs(discrepancy)} units has been
-                logged.
-              </p>
-            )}
-          </div>
+      {error && (
+        <div className={styles.error}>
+          <span>⚠️</span> {error}
         </div>
       )}
+
+      {success && (
+        <div className={styles.success}>
+          <span>✅</span> {success}
+        </div>
+      )}
+
+      <div className={styles.content}>
+        <div className={styles.productsSection}>
+          <h2 className={styles.sectionTitle}>Select Product</h2>
+          <div className={styles.productsGrid}>
+            {AFRICAN_OIL_BRANDS.map(product => {
+              const existingItem = getProductStatus(product.brand)
+              const isSelected = selectedProduct?.id === product.id
+
+              return (
+                <div
+                  key={product.id}
+                  className={`${styles.productCard} ${isSelected ? styles.selected : ''}`}
+                  onClick={() => handleProductSelect(product)}
+                  style={{ borderColor: isSelected ? product.color : '#ddd' }}
+                >
+                  {existingItem && (
+                    <div className={styles.badge}>
+                      In Stock: {existingItem.quantity}
+                    </div>
+                  )}
+                  <img src={product.image} alt={product.name} className={styles.productImage} />
+                  <div className={styles.productInfo}>
+                    <h3 className={styles.productName}>{product.name}</h3>
+                    <p className={styles.productSize}>1L Bottle</p>
+                    {existingItem ? (
+                      <span className={styles.statusBadge} style={{ background: '#e29a5c' }}>
+                        Restock
+                      </span>
+                    ) : (
+                      <span className={styles.statusBadge} style={{ background: '#10b981' }}>
+                        Add New
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {selectedProduct && (
+          <div className={styles.formSection}>
+            <div className={styles.formHeader}>
+              <h2 className={styles.sectionTitle}>
+                {selectedProduct.existing ? 'Restock' : 'Add'} {selectedProduct.name}
+              </h2>
+              {selectedProduct.existing && (
+                <p className={styles.currentStock}>
+                  Current Stock: {selectedProduct.existing.quantity} bottles
+                </p>
+              )}
+            </div>
+
+            <div className={styles.form}>
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>Number of Cartons</label>
+                  <input
+                    type="number"
+                    min="0"
+                    value={stockData.cartons || ''}
+                    onChange={(e) => updateStockData('cartons', e.target.value)}
+                    placeholder="0"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Bottles per Carton</label>
+                  <input
+                    type="number"
+                    min="1"
+                    value={stockData.bottlesPerCarton || 12}
+                    onChange={(e) => updateStockData('bottlesPerCarton', e.target.value)}
+                    placeholder="12"
+                  />
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Total Bottles</label>
+                  <input
+                    type="number"
+                    value={stockData.totalBottles || 0}
+                    disabled
+                    className={styles.calculated}
+                  />
+                </div>
+              </div>
+
+              <div className={styles.formRow}>
+                <div className={styles.formGroup}>
+                  <label>Cost Price (per bottle)</label>
+                  <div className={styles.inputWithIcon}>
+                    <span className={styles.currencyIcon}>$</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={stockData.costPrice || ''}
+                      onChange={(e) => updateStockData('costPrice', e.target.value)}
+                      placeholder="0.00"
+                      className={styles.priceInput}
+                    />
+                  </div>
+                </div>
+
+                <div className={styles.formGroup}>
+                  <label>Selling Price (per bottle)</label>
+                  <div className={styles.inputWithIcon}>
+                    <span className={styles.currencyIcon}>$</span>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={stockData.sellingPrice || ''}
+                      onChange={(e) => updateStockData('sellingPrice', e.target.value)}
+                      placeholder="0.00"
+                      className={styles.priceInput}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {selectedProduct.existing && stockData.totalBottles > 0 && (
+                <div className={styles.restockSummary}>
+                  <p>New Total: {selectedProduct.existing.quantity + stockData.totalBottles} bottles</p>
+                  <p className={styles.increase}>
+                    +{stockData.totalBottles} bottles
+                  </p>
+                </div>
+              )}
+
+              <button
+                className={styles.submitBtn}
+                onClick={handleSubmit}
+                disabled={submitting || stockData.totalBottles === 0}
+              >
+                {submitting ? 'Processing...' : selectedProduct.existing ? 'Restock Product' : 'Add to Inventory'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }

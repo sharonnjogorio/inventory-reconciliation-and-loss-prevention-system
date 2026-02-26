@@ -2,26 +2,44 @@ import api from '../api'
 
 export const alertsAPI = {
   /**
-   * List Alerts for Current Shop
+   * Get Alerts with Filters
    * GET /alerts
    */
-  getAlerts: async (params = {}) => {
+  getAlerts: async (filters = {}) => {
     const response = await api.get('/alerts', {
-      params: {
-        status: params.status, // 'new', 'acknowledged', 'resolved'
-        page: params.page || 1,
-        limit: params.limit || 20
-      }
+      params: filters
     })
     return response.data
   },
 
   /**
-   * Resolve an Alert (Owner Only)
-   * PATCH /alerts/{id}/resolve
+   * Get Alerts Summary (for dashboard)
+   * GET /alerts/summary
    */
-  resolveAlert: async (alertId) => {
-    const response = await api.patch(`/alerts/${alertId}/resolve`)
+  getAlertsSummary: async (days = 7) => {
+    const response = await api.get('/alerts/summary', {
+      params: { days }
+    })
+    return response.data
+  },
+
+  /**
+   * Get Single Alert Details
+   * GET /alerts/:id
+   */
+  getAlertDetails: async (alertId) => {
+    const response = await api.get(`/alerts/${alertId}`)
+    return response.data
+  },
+
+  /**
+   * Resolve Alert
+   * PATCH /alerts/:id/resolve
+   */
+  resolveAlert: async (alertId, notes = '') => {
+    const response = await api.patch(`/alerts/${alertId}/resolve`, {
+      notes
+    })
     return response.data
   },
 }

@@ -4,6 +4,10 @@ import svgr from 'vite-plugin-svgr'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  server: {
+    host: true, // Listen on all network interfaces
+    port: 5174,
+  },
   plugins: [
     react(),
     svgr(),

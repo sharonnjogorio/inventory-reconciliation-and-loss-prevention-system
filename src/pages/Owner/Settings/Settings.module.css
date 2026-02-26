@@ -92,6 +92,62 @@
   color: #E29A5C;
 }
 
+/* ── Edit Mode ──────────────────────────────────────────── */
+.editInput {
+  padding: 8px 12px;
+  border: 2px solid #E29A5C;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  color: #1A1A1A;
+  width: 100%;
+  max-width: 300px;
+  outline: none;
+}
+
+.editActions {
+  display: flex;
+  gap: 8px;
+}
+
+.saveBtn {
+  padding: 6px 16px;
+  background-color: #10B981;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #FFFFFF;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.saveBtn:hover {
+  background-color: #059669;
+}
+
+.cancelBtn {
+  padding: 6px 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666666;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.cancelBtn:hover {
+  border-color: #999999;
+  color: #1A1A1A;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666666;
+}
+
 /* ── Toggle Rows (Alert Preferences) ────────────────────── */
 .toggleRow {
   display: flex;

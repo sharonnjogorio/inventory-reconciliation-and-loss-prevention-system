@@ -1,25 +1,21 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { authAPI } from '../../../services'
 import styles from './OwnerLogin.module.css'
 
 function OwnerLogin() {
   const navigate = useNavigate()
 
-  const [shopName, setShopName] = useState('')
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [pin, setPin] = useState(['', '', '', ''])
-  const [storedPin, setStoredPin] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  // Load stored values from localStorage (set by Create PIN page)
+  // Load stored phone number from localStorage
   useEffect(() => {
-    const savedPin = localStorage.getItem('ownerPin')
-    const savedShopName = localStorage.getItem('shopName')
-
-    if (savedShopName) {
-      setShopName(savedShopName)
-    }
-    if (savedPin) {
-      setStoredPin(savedPin)
+    const savedPhone = localStorage.getItem('ownerPhone')
+    if (savedPhone) {
+      setPhoneNumber(savedPhone)
     }
   }, [])
 
@@ -49,11 +45,16 @@ function OwnerLogin() {
     }
   }, [])
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const pinString = pin.join('')
 
-    if (!shopName.trim()) {
-      setError('Please enter your shop name')
+    if (!phoneNumber.trim()) {
+      setError('Please enter your phone number')
+      return
+    }
+
+    if (!phoneNumber.startsWith('+')) {
+      setError('Phone number must include country code (e.g., +254...)')
       return
     }
 
@@ -62,27 +63,33 @@ function OwnerLogin() {
       return
     }
 
-    // Compare with stored PIN (set during Create PIN)
-    if (!storedPin) {
-      setError('No PIN found. Please create a PIN first.')
-      return
-    }
+    setLoading(true)
+    setError('')
 
-    if (pinString !== storedPin) {
-      setError('Invalid shop name or PIN')
-      return
+    try {
+      console.log('📤 Owner login:', { phoneNumber, pin: pinString })
+      
+      const response = await authAPI.ownerLoginWithPin(phoneNumber, pinString)
+      
+      console.log('✅ Login successful:', response)
+      
+      // Navigate to dashboard
+      navigate('/owner/dashboard')
+    } catch (err) {
+      console.error('❌ Login failed:', err)
+      setError(err.response?.data?.message || 'Invalid phone number or PIN')
+      setPin(['', '', '', ''])
+      document.getElementById('owner-pin-0')?.focus()
+    } finally {
+      setLoading(false)
     }
-
-    // At this point credentials are valid (locally)
-    // Next step in a real app: call backend /auth/login-pin with shopName + pinString
-    navigate('/owner/dashboard')
   }
 
   return (
     <div className={styles.container}>
       <div className={styles.card}>
         <h1>Owner Login</h1>
-        <p className={styles.subtitle}>Enter your shop credentials</p>
+        <p className={styles.subtitle}>Enter your credentials</p>
 
         {error && (
           <div className={styles.errorBox}>
@@ -91,19 +98,22 @@ function OwnerLogin() {
           </div>
         )}
 
-        {/* Shop Name */}
+        {/* Phone Number */}
         <div className={styles.inputGroup}>
-          <label>SHOP NAME</label>
+          <label>PHONE NUMBER</label>
           <input
-            type="text"
-            placeholder="Enter your shop name"
-            value={shopName}
+            type="tel"
+            placeholder="+254 712 345 678"
+            value={phoneNumber}
             onChange={(e) => {
-              setShopName(e.target.value)
+              setPhoneNumber(e.target.value)
               setError('')
             }}
             className={styles.input}
           />
+          <span style={{ fontSize: '12px', color: '#666', marginTop: '4px', display: 'block' }}>
+            Include country code (e.g., +254 for Kenya)
+          </span>
         </div>
 
         {/* PIN */}
@@ -121,6 +131,7 @@ function OwnerLogin() {
                 onChange={(e) => handlePinChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(e, index)}
                 className={styles.pinBox}
+                disabled={loading}
               />
             ))}
           </div>
@@ -129,9 +140,16 @@ function OwnerLogin() {
         <button 
           className={styles.loginBtn}
           onClick={handleLogin}
+          disabled={loading}
         >
-          Login
+          {loading ? 'Logging in...' : 'Login'}
         </button>
+
+        <div style={{ marginTop: '20px', textAlign: 'center' }}>
+          <p style={{ color: '#666' }}>
+            Don't have an account? <a href="/owner/register" style={{ color: '#667eea' }}>Register here</a>
+          </p>
+        </div>
       </div>
     </div>
   )
