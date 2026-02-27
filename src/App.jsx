@@ -14,6 +14,7 @@ import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
 import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
 import ManageStaff from './pages/Owner/ManageStaff/ManageStaff'
 import StaffQRCode from './pages/Owner/StaffQRCode/StaffQRCode'
+import InventoryFlow from "./pages/Owner/Catalog/InventoryFlow";
 import Inventory from './pages/Owner/Inventory/Inventory'
 import Settings from './pages/Owner/Settings/Settings'
 import AddStock from './pages/Owner/AddStock/AddStock'
@@ -37,6 +38,7 @@ import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
 import { CartProvider } from "./components/context/CartProvider";
 import OwnerCreatePin from "./pages/Owner/OwnerCreatePin/CreatePin";
+import InventoryFlow2 from "./pages/Owner/Catalog/InventoryFlow2";
 
 
 function App() {
@@ -48,6 +50,7 @@ function App() {
                        location.pathname !== '/owner/verify' &&
                        location.pathname !== '/owner/login' &&
                        location.pathname !== '/owner/createpin' &&
+                       location.pathname !== '/owner/inventory/flow'
                        location.pathname !== '/owner/catalog'
   
   const showNavbar = !location.pathname.startsWith('/staff')
@@ -73,6 +76,8 @@ function App() {
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/staff" element={<ManageStaff />} />
         <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
+         <Route path="/owner/inventory/flow" element={<InventoryFlow />} />
+         <Route path="/owner/inventory/flow2" element={<InventoryFlow2 />} />
         <Route path="/owner/inventory" element={<Inventory />} />
         <Route path="/owner/settings" element={<Settings />} />
         <Route path="/owner/inventory/add" element={<AddStock />} />
