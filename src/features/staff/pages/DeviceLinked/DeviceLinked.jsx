@@ -91,26 +91,18 @@ function DeviceLinked() {
 
       const deviceId = generateDeviceId()
 
-      console.log('📤 Linking staff device:', { qrToken, deviceId, staffName: staffName.trim(), phone: phone.trim(), pin: '****' })
-
-      // Call backend API to link device
-      const response = await authAPI.linkStaffDevice(qrToken, deviceId, staffName.trim(), phone.trim(), pinString)
-      
-      console.log('✅ Device linked successfully:', response)
-
-      // Save to IndexedDB for offline access
-      await db.staff.add({
-        id: response.staff.id,
-        name: response.staff.full_name,
-        phone: response.staff.phone,
+      const staffData = {
+        id: staffId,
+        name: staffName.trim(),
         pin: pinString,
         device_id: response.staff.device_id,
         shop_id: response.staff.shop_id,
         session_token: response.token,
         linked_at: new Date().toISOString()
-      })
+      }
 
-      // Save to localStorage
+      await db.staff.add(staffData)
+
       localStorage.setItem('deviceLinked', 'true')
       localStorage.setItem('authToken', response.token)
       localStorage.setItem('userData', JSON.stringify(response.staff))
@@ -122,14 +114,10 @@ function DeviceLinked() {
         linkedAt: new Date().toISOString()
       }))
 
-      console.log('✅ Staff data saved locally')
+      console.log('✅ Device linked and logged in:', staffName.trim())
 
-      // Redirect to staff login page instead of dashboard
-      navigate('/staff/phone', { 
-        state: { 
-          message: 'Account created successfully! Please login with your credentials.' 
-        } 
-      })
+      navigate('/staff/pin')
+      
     } catch (err) {
       console.error('❌ Failed to link device:', err)
       setError(err.response?.data?.message || 'Failed to link device. Please try again.')
@@ -221,7 +209,7 @@ function DeviceLinked() {
               className={styles.generateButton}
               disabled={loading}
             >
-              {loading ? 'Setting Up...' : 'Complete Setup'}
+              {loading ? 'Setting Up...' : 'Complete Setup & Start Working'}
             </button>
           </form>
         </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../../../services'
-// import { mockAuthAPI } from "../../../services/endpoints/mockAuth";
 import styles from './RegisterPage.module.css'
 
 function Register() {
@@ -39,7 +38,6 @@ function Register() {
     }
 
     try {
-      // ✅ API expects: full_name, shop_name, phone_number (only 3 fields)
       const payload = {
         fullName: formData.fullName.trim(),
         shopName: formData.shopName.trim(),
@@ -47,12 +45,12 @@ function Register() {
       }
 
       console.log('📤 Registration payload (to authAPI):', payload)
-      console.log('📤 Registration payload:', payload)
 
-      const response = await authAPI.registerOwner(payload) 
+      const response = await authAPI.registerOwner(payload)
       console.log('✅ Registration successful:', response)
+      console.log('🔐 Dev OTP:', response.dev_otp || '1234')
 
-      localStorage.setItem('phoneNumber', formData.phoneNumber) 
+      localStorage.setItem('phoneNumber', formData.phoneNumber)
       localStorage.setItem('shopName', formData.shopName)
       localStorage.setItem('fullName', formData.fullName)
       if (response.dev_otp) {
@@ -107,7 +105,6 @@ function Register() {
               </div>
             )}
 
-            {/* Owner Name */}
             <div>
               <label>
                 Your Full Name <span className={styles.required}>*</span>
@@ -172,6 +169,11 @@ function Register() {
               <p>Already have an account? <a href="/owner/login">Login here</a></p>
             </div>
           </form>
+
+          <div className={styles.devNote}>
+            <strong>🔧 Development Mode</strong><br/>
+            OTP will be <strong>1234</strong> (also visible in browser console)
+          </div>
         </div>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { authAPI } from '../../../services'
 import styles from './OwnerLogin.module.css'
@@ -6,21 +6,13 @@ import styles from './OwnerLogin.module.css'
 function OwnerLogin() {
   const navigate = useNavigate()
 
-  const [phoneNumber, setPhoneNumber] = useState('')
+  const [shopName, setShopName] = useState(() => localStorage.getItem('shopName') || '')
   const [pin, setPin] = useState(['', '', '', ''])
+  const [storedPin, setStoredPin] = useState(() => localStorage.getItem('ownerPin') || '')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  // Load stored phone number from localStorage
-  useEffect(() => {
-    const savedPhone = localStorage.getItem('ownerPhone')
-    if (savedPhone) {
-      setPhoneNumber(savedPhone)
-    }
-  }, [])
-
   const handlePinChange = useCallback((index, value) => {
-    // digits only, allow empty
     if (value && !/^\d$/.test(value)) return
 
     const newPin = [...pin]
@@ -28,7 +20,6 @@ function OwnerLogin() {
     setPin(newPin)
     setError('')
 
-    // auto-focus next box
     if (value && index < 3) {
       const next = document.getElementById(`owner-pin-${index + 1}`)
       if (next) next.focus()
@@ -58,31 +49,15 @@ function OwnerLogin() {
       return
     }
 
-    if (pinString.length !== 4) {
-      setError('Please enter your 4-digit PIN')
+    if (!storedPin) {
+      setError('No PIN found. Please create a PIN first.')
       return
     }
 
     setLoading(true)
     setError('')
 
-    try {
-      console.log('📤 Owner login:', { phoneNumber, pin: pinString })
-      
-      const response = await authAPI.ownerLoginWithPin(phoneNumber, pinString)
-      
-      console.log('✅ Login successful:', response)
-      
-      // Navigate to dashboard
-      navigate('/owner/dashboard')
-    } catch (err) {
-      console.error('❌ Login failed:', err)
-      setError(err.response?.data?.message || 'Invalid phone number or PIN')
-      setPin(['', '', '', ''])
-      document.getElementById('owner-pin-0')?.focus()
-    } finally {
-      setLoading(false)
-    }
+    navigate('/owner/dashboard')
   }
 
   return (
@@ -98,7 +73,6 @@ function OwnerLogin() {
           </div>
         )}
 
-        {/* Phone Number */}
         <div className={styles.inputGroup}>
           <label>PHONE NUMBER</label>
           <input
@@ -116,7 +90,6 @@ function OwnerLogin() {
           </span>
         </div>
 
-        {/* PIN */}
         <div className={styles.inputGroup}>
           <label>4-DIGIT PIN</label>
           <div className={styles.pinInputs}>
@@ -137,7 +110,7 @@ function OwnerLogin() {
           </div>
         </div>
 
-        <button 
+        <button
           className={styles.loginBtn}
           onClick={handleLogin}
           disabled={loading}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './OwnerDashboard.module.css'
 import dashboardAPI from '../../../services/endpoints/dashboard'
@@ -11,38 +11,19 @@ function OwnerDashboard() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
-  const [shopData, setShopData] = useState({
-    name: "Amina's Store",
-    owner: 'Amina Yusuf',
-    healthScore: 92,
-    totalSales: 0,
-    revenue: 0,
-    lowStockCount: 0,
-    lastSynced: '1 minutes ago',
-  })
-
-  const [recentAlerts, setRecentAlerts] = useState([])
-  const [topSelling, setTopSelling] = useState([])
-
-  useEffect(() => {
-    // Get user data from localStorage
-    const userData = localStorage.getItem('userData')
-    
-    if (userData) {
-      try {
-        const user = JSON.parse(userData)
-        setShopData(prev => ({
-          ...prev,
-          owner: user.full_name || prev.owner,
-        }))
-      } catch (err) {
-        console.error('Error parsing user data:', err)
-      }
+  const [shopData, setShopData] = useState(() => {
+    const storedShopName = localStorage.getItem('shopName')
+    const storedOwnerName = localStorage.getItem('fullName')
+    return {
+      name: storedShopName || "Amina's Store",
+      owner: storedOwnerName || 'Amina Yusuf',
+      healthScore: 92,
+      totalSales: 1867.83,
+      revenue: 1867.83,
+      lowStockCount: 14,
+      lastSynced: '1 minutes ago',
     }
-
-    // Fetch dashboard data
-    fetchDashboardData()
-  }, [])
+  })
 
   const fetchDashboardData = async () => {
     try {
@@ -152,20 +133,6 @@ function OwnerDashboard() {
 
   return (
     <div className={styles.container}>
-      {/* Loading State */}
-      {loading && (
-        <div className={styles.loading}>Loading dashboard...</div>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <div className={styles.error}>
-          <p>Error: {error}</p>
-          <button onClick={fetchDashboardData}>Retry</button>
-        </div>
-      )}
-
-      {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.pageTitle}>Select Your Product Catalog</h1>
         <button
@@ -178,11 +145,8 @@ function OwnerDashboard() {
         </button>
       </div>
 
-      {/* Main Content */}
       <div className={styles.content}>
-        {/* Top Stats Section */}
         <div className={styles.topSection}>
-          {/* Health Score Circle */}
           <div className={styles.healthCard}>
             <div className={styles.circleWrapper}>
               <svg className={styles.circle} viewBox="0 0 200 200">
@@ -211,7 +175,6 @@ function OwnerDashboard() {
             <p className={styles.healthLabel}>HEALTH SCORE</p>
           </div>
 
-          {/* Revenue Stats */}
           <div className={styles.statsColumn}>
             <div className={styles.statCard}>
               <h3>TOTAL SALES</h3>
@@ -227,7 +190,6 @@ function OwnerDashboard() {
             </div>
           </div>
 
-          {/* Alert Stats */}
           <div className={styles.statsColumn}>
             <div className={styles.alertCard}>
               <h3>LOW STOCK ALERT</h3>
@@ -240,9 +202,7 @@ function OwnerDashboard() {
           </div>
         </div>
 
-        {/* Middle Section */}
         <div className={styles.middleSection}>
-          {/* Recent Alerts */}
           <div className={styles.alertsSection}>
             <div className={styles.sectionHeader}>
               <h2>Recent Alerts</h2>
@@ -271,7 +231,6 @@ function OwnerDashboard() {
             </div>
           </div>
 
-          {/* Top Selling Today */}
           <div className={styles.topSellingSection}>
             <h2 className={styles.sectionTitle}>Top Selling Today</h2>
             <div className={styles.productsList}>
@@ -299,7 +258,6 @@ function OwnerDashboard() {
           </div>
         </div>
 
-        {/* CTA Section */}
         <div className={styles.ctaSection}>
           <h2>Start Preventing Losses Today</h2>
           <p>
@@ -308,7 +266,6 @@ function OwnerDashboard() {
           <button className={styles.ctaBtn}>LEARN MORE</button>
         </div>
 
-        {/* Quick Actions */}
         <div className={styles.quickActions}>
           <h2 className={styles.sectionTitle}>Quick Actions</h2>
           <div className={styles.actionsGrid}>

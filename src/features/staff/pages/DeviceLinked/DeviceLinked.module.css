@@ -62,7 +62,7 @@
 }
 
 .label {
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #1A1A1A;
   margin: 0;
@@ -73,6 +73,7 @@
 .pinBoxes {
   display: flex;
   gap: 12px;
+  margin-bottom:20px;
 }
 
 .pinBox {
@@ -102,7 +103,7 @@
 }
 
 .infoTitle {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 600;
   color: #999999;
   margin: 0 0 8px 0;
@@ -184,6 +185,7 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  margin-bottom:  20px; ;
 }
 
 .nameInput {
