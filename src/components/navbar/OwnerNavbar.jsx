@@ -1,13 +1,74 @@
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { alertsAPI } from '../../services'
 import logo from '../../assets/logo.png'
 import styles from './OwnerNavbar.module.css'
-import { useState } from 'react'
 
 function OwnerNavbar() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  const [newAlertsCount] = useState(3)
+  const [newAlertsCount, setNewAlertsCount] = useState(0)
+  const [ownerName, setOwnerName] = useState('Owner')
+  const [shopName, setShopName] = useState('My Shop')
+  const [ownerInitial, setOwnerInitial] = useState('O')
+
+  // Load user data and fetch alerts count
+  useEffect(() => {
+    const userData = localStorage.getItem('userData')
+    
+    if (userData) {
+      try {
+        const user = JSON.parse(userData)
+        if (user.full_name) {
+          setOwnerName(user.full_name)
+          setOwnerInitial(user.full_name.charAt(0).toUpperCase())
+        }
+      } catch (err) {
+        console.error('Error parsing user data:', err)
+      }
+    }
+    
+    // Fetch shop name and alerts count
+    const fetchData = async () => {
+      try {
+        // Fetch shop name
+        const dashResponse = await fetch('http://192.168.8.27:5000/dashboard/overview', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          }
+        })
+        const dashData = await dashResponse.json()
+        if (dashData.success && dashData.shop) {
+          setShopName(dashData.shop.shop_name)
+        }
+
+        // Fetch active alerts count
+        const alertsResponse = await alertsAPI.getAlertsSummary()
+        if (alertsResponse.success) {
+          setNewAlertsCount(alertsResponse.summary.total_active || 0)
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err)
+      }
+    }
+    
+    fetchData()
+
+    // Refresh alerts count every 30 seconds
+    const interval = setInterval(async () => {
+      try {
+        const alertsResponse = await alertsAPI.getAlertsSummary()
+        if (alertsResponse.success) {
+          setNewAlertsCount(alertsResponse.summary.total_active || 0)
+        }
+      } catch (err) {
+        console.error('Error refreshing alerts:', err)
+      }
+    }, 30000)
+
+    return () => clearInterval(interval)
+  }, [])
 
   const isActive = (path) => location.pathname === path
 
@@ -17,7 +78,7 @@ function OwnerNavbar() {
         {/* Logo */}
         <div className={styles.logoSection} onClick={() => navigate('/owner/dashboard')}>
           <img src={logo} alt="Smart Loss Control" className={styles.logo} />
-          <span className={styles.shopName}>Amina's Store</span>
+          <span className={styles.shopName}>{shopName}</span>
         </div>
 
         {/* Nav Links */}
@@ -44,10 +105,10 @@ function OwnerNavbar() {
           </button>
           
           <button 
-            className={`${styles.link} ${isActive('/owner/reports') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/reports')}
+            className={`${styles.link} ${isActive('/owner/sales-activity') ? styles.active : ''}`}
+            onClick={() => navigate('/owner/sales-activity')}
           >
-            Reports
+            Sales Activity
           </button>
           
           <button 
@@ -78,12 +139,17 @@ function OwnerNavbar() {
         {/* Right Side - User Menu */}
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
-            <div className={styles.avatar}>A</div>
-            <span className={styles.userName}>Amina</span>
+            <div className={styles.avatar}>{ownerInitial}</div>
+            <span className={styles.userName}>{ownerName}</span>
           </div>
           <button 
             className={styles.logoutBtn}
-            onClick={() => navigate('/')}
+            onClick={() => {
+              // Clear auth data on logout
+              localStorage.removeItem('authToken')
+              localStorage.removeItem('userData')
+              navigate('/')
+            }}
           >
             Logout
           </button>

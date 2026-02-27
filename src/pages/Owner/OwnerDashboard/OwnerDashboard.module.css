@@ -94,6 +94,14 @@
   margin: 0;
 }
 
+.healthStatus {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 8px 0 0 0;
+}
+
 /* Stats Columns */
 .statsColumn {
   display: flex;
@@ -214,6 +222,22 @@
   border: 1px solid #14AE5C;
 }
 
+/* Alert type variants */
+.alertItem.alertError {
+  background-color: #FEF2F2;
+  border-color: #DC143C;
+}
+
+.alertItem.alertWarning {
+  background-color: #FFF7ED;
+  border-color: #FFA500;
+}
+
+.alertItem.alertSuccess {
+  background-color: #F0FDF4;
+  border-color: #14AE5C;
+}
+
 .alertIcon {
   width: 40px;
   height: 40px;
@@ -226,6 +250,19 @@
   font-weight: 700;
   font-size: 1.25rem;
   flex-shrink: 0;
+}
+
+/* Alert icon variants */
+.alertError .alertIcon {
+  background-color: #DC143C;
+}
+
+.alertWarning .alertIcon {
+  background-color: #FFA500;
+}
+
+.alertSuccess .alertIcon {
+  background-color: #14AE5C;
 }
 
 .alertContent h4 {
@@ -395,4 +432,21 @@
   .pageTitle {
     font-size: 1.25rem;
   }
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.emptyState p:first-child {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.emptyHint {
+  font-size: 14px;
+  color: #999;
 }

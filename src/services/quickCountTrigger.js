@@ -1,51 +1,55 @@
-import db from './db'
+import { aiAPI } from './endpoints/ai'
 
 const TRIGGER_CONFIG = {
-  SALES_THRESHOLD: 10,               // Trigger every 2 sales
-  TIME_THRESHOLD: 4 * 60 * 60 * 1000,  // 4 hours
-  RANDOM_PROBABILITY: 0.2,          // 20% chance
+  SALES_THRESHOLD: 3,                // Check backend every 3 sales (for demo)
+  TIME_THRESHOLD: 4 * 60 * 60 * 1000,  // Check backend every 4 hours
 }
 
+/**
+ * Check if AI spot check should be triggered
+ * Calls backend AI endpoint which uses data science logic
+ */
 export const shouldTriggerQuickCount = async () => {
   try {
     // Check 1: Sale counter threshold
     const counter = localStorage.getItem('quick_count_sale_counter')
     const count = parseInt(counter || '0')
     
-    if (count >= TRIGGER_CONFIG.SALES_THRESHOLD) {
-      localStorage.setItem('quick_count_sale_counter', '0')
-      console.log('🔔 Quick Count triggered: Sale counter reached threshold')
-      return true
+    // Check 2: Time since last check
+    const lastCheckTime = localStorage.getItem('quick_count_last_check')
+    const timeSince = lastCheckTime ? Date.now() - parseInt(lastCheckTime) : Infinity
+    
+    // Only call backend if thresholds met (to reduce API calls)
+    if (count >= TRIGGER_CONFIG.SALES_THRESHOLD || timeSince > TRIGGER_CONFIG.TIME_THRESHOLD) {
+      console.log('🔔 Checking backend for AI trigger...')
+      
+      // Call backend AI trigger endpoint
+      const response = await aiAPI.checkTriggerCount()
+      
+      if (response.should_trigger) {
+        // Reset counters
+        localStorage.setItem('quick_count_sale_counter', '0')
+        localStorage.setItem('quick_count_last_check', Date.now().toString())
+        
+        console.log(`🔔 AI Trigger activated: ${response.type} - ${response.reason}`)
+        
+        return {
+          shouldTrigger: true,
+          sku: response.sku_to_check,
+          reason: response.reason,
+          type: response.type
+        }
+      } else {
+        // Update last check time even if no trigger
+        localStorage.setItem('quick_count_last_check', Date.now().toString())
+        console.log('✅ No trigger needed')
+      }
     }
 
-    // Check 2: Time-based trigger
-    // const lastCount = await db.audit_logs
-    //   .where('type')
-    //   .equals('QUICK_COUNT')
-    //   .reverse()
-    //   .first()
-
-    // if (!lastCount) {
-    //   return true // Never done a count - trigger immediately
-    // }
-
-    // const timeSince = Date.now() - new Date(lastCount.timestamp).getTime()
-    // if (timeSince > TRIGGER_CONFIG.TIME_THRESHOLD) {
-    //   console.log('🔔 Quick Count triggered: Time threshold reached')
-    //   return true
-    // }
-
-    // // Check 3: Random probability
-    // const randomTrigger = Math.random() < TRIGGER_CONFIG.RANDOM_PROBABILITY
-    // if (randomTrigger) {
-    //   console.log('🔔 Quick Count triggered: Random check')
-    //   return true
-    // }
-
-    // return false
+    return { shouldTrigger: false }
   } catch (error) {
     console.error('Error checking Quick Count triggers:', error)
-    return false
+    return { shouldTrigger: false }
   }
 }
 
@@ -61,11 +65,6 @@ export const selectRandomProduct = (products) => {
 }
 
 export const getExpectedCount = async (productId) => {
-  try {
-    const item = await db.inventory.get(productId)
-    return item?.qty_bottles || 50
-  } catch (error) {
-    console.error('Error getting expected count:', error)
-    return 50
-  }
+  // This is now handled by backend, but keep for fallback
+  return 50
 }

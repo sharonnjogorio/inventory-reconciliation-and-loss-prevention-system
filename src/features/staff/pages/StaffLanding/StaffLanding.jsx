@@ -49,7 +49,7 @@ function StaffLanding() {
 
           <button 
             className={styles.actionButtonSecondary}
-            onClick={() => navigate('/staff/pin')}
+            onClick={() => navigate('/staff/phone')}
           >
             ENTER PIN
           </button>

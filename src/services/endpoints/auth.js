@@ -7,14 +7,11 @@ export const authAPI = {
    */
  registerOwner: async (data) => {
     const response = await api.post('/auth/register-owner', {
-      
       full_name: data.fullName,
       shop_name: data.shopName,
-      phone_number: data.phoneNumber,
-     
+      phone: data.phoneNumber, 
     })
     return response.data
-    
   },
 
   
@@ -25,26 +22,67 @@ export const authAPI = {
    */
   verifyOTP: async (phoneNumber, otp) => {
     const response = await api.post('/auth/verify-otp', {
-      phone_number: phoneNumber,
+      phone: phoneNumber, 
       otp: otp
     })
     
     if (response.data.token) {
       localStorage.setItem('authToken', response.data.token)
       localStorage.setItem('userData', JSON.stringify(response.data.user))
-      localStorage.setItem('shopId', response.data.shop?.id)
+      localStorage.setItem('shopId', response.data.user?.shop_id)
     }
     
     return response.data
   },
 
   /**
-   * Staff Login via Name + 4-digit PIN
+   * Set 4-digit PIN after OTP verification
+   * POST /auth/set-pin
+   */
+  setPin: async (pin) => {
+    const response = await api.post('/auth/set-pin', {
+      pin: pin
+    })
+    return response.data
+  },
+
+  /**
+   * Owner Login with Phone + PIN (Daily Login)
+   * POST /auth/login-owner-pin
+   */
+  ownerLoginWithPin: async (phone, pin) => {
+    const response = await api.post('/auth/login-owner-pin', {
+      phone: phone,
+      pin: pin
+    })
+    
+    if (response.data.token) {
+      localStorage.setItem('authToken', response.data.token)
+      localStorage.setItem('userData', JSON.stringify(response.data.user))
+      localStorage.setItem('shopId', response.data.user?.shop_id)
+    }
+    
+    return response.data
+  },
+
+  /**
+   * Get Staff by Phone (for login flow - Step 1)
+   * POST /auth/staff/get-by-phone
+   */
+  getStaffByPhone: async (phone) => {
+    const response = await api.post('/auth/staff/get-by-phone', {
+      phone: phone
+    })
+    return response.data
+  },
+
+  /**
+   * Staff Login via Phone + 4-digit PIN
    * POST /auth/login-pin
    */
-  staffLogin: async (name, pin) => {
+  staffLogin: async (phone, pin) => {
     const response = await api.post('/auth/login-pin', {
-      name: name,
+      phone: phone, 
       pin: pin
     })
     
@@ -60,16 +98,18 @@ export const authAPI = {
    * Link Staff Device using QR Token
    * POST /auth/staff/link
    */
-  linkStaffDevice: async (qrToken, name, pin) => {
+  linkStaffDevice: async (qrToken, deviceId, staffName, phone, pin) => {
     const response = await api.post('/auth/staff/link', {
       qr_token: qrToken,
-      name: name,
+      device_id: deviceId,  
+      staff_name: staffName,
+      phone: phone,
       pin: pin
     })
     
     if (response.data.token) {
       localStorage.setItem('authToken', response.data.token)
-      localStorage.setItem('userData', JSON.stringify(response.data.user))
+      localStorage.setItem('userData', JSON.stringify(response.data.staff))
     }
     
     return response.data

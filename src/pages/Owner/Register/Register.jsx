@@ -61,6 +61,7 @@ function Register() {
         state: {
           phoneNumber: formData.phoneNumber,
           shopName: formData.shopName,
+          fullName: formData.fullName,
           devOtp: response.dev_otp || null,
         }
       })

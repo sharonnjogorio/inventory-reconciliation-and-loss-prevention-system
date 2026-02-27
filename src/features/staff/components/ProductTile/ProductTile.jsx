@@ -1,6 +1,9 @@
 import styles from './ProductTile.module.css'
 
 function ProductTile({ product, quantity, onTap, onRemove }) {
+  const isOutOfStock = product.quantity <= 0
+  const isLowStock = product.quantity > 0 && product.quantity <= 10
+  
   const getSubtleBackground = (brandColor) => {
     // FIX: Check if brandColor exists before using .replace()
     if (!brandColor || typeof brandColor !== 'string') {
@@ -11,18 +14,26 @@ function ProductTile({ product, quantity, onTap, onRemove }) {
     const r = parseInt(hex.substr(0, 2), 16)
     const g = parseInt(hex.substr(2, 2), 16)
     const b = parseInt(hex.substr(4, 2), 16)
+    
+    // Gray out if out of stock
+    if (isOutOfStock) {
+      return 'rgba(200, 200, 200, 0.15)'
+    }
+    
     return `rgba(${r}, ${g}, ${b}, 0.08)`
   }
 
   // FIX: Use default color if product.color is missing
-  const productColor = product?.color || '#E29A5C'
+  const productColor = isOutOfStock ? '#999999' : (product?.color || '#E29A5C')
 
   return (
     <div
-      className={styles.tile}
+      className={`${styles.tile} ${isOutOfStock ? styles.outOfStock : ''}`}
       style={{
         borderColor: productColor,
-        backgroundColor: getSubtleBackground(productColor)
+        backgroundColor: getSubtleBackground(productColor),
+        opacity: isOutOfStock ? 0.6 : 1,
+        cursor: isOutOfStock ? 'not-allowed' : 'pointer'
       }}
     >
       {/* Quantity Badge - Click to Remove */}
@@ -40,7 +51,21 @@ function ProductTile({ product, quantity, onTap, onRemove }) {
       )}
 
       {/* Entire tile = Click to Add */}
-      <div className={styles.clickableArea} onClick={onTap}>
+      <div className={styles.clickableArea} onClick={isOutOfStock ? undefined : onTap}>
+        {/* Out of Stock Overlay */}
+        {isOutOfStock && (
+          <div className={styles.outOfStockOverlay}>
+            <span className={styles.outOfStockText}>OUT OF STOCK</span>
+          </div>
+        )}
+        
+        {/* Low Stock Badge */}
+        {isLowStock && !isOutOfStock && (
+          <div className={styles.lowStockBadge}>
+            ⚠️ Low Stock
+          </div>
+        )}
+        
         {/* Image Section */}
         <div className={styles.imageSection}>
           <div className={styles.imageFrame}>
@@ -75,7 +100,9 @@ function ProductTile({ product, quantity, onTap, onRemove }) {
             {product.size}
           </p>
           <p className={styles.price}>${product.price.toFixed(2)}</p>
-          <p className={styles.stock}>Stock: 34 units</p>
+          <p className={`${styles.stock} ${isLowStock ? styles.lowStockText : ''} ${isOutOfStock ? styles.outOfStockText : ''}`}>
+            Stock: {product.quantity || 0} units
+          </p>
         </div>
       </div>
     </div>

@@ -31,16 +31,32 @@ export const auditAPI = {
     const response = await api.post('/audit/verify', {
       sku_id: data.skuId,
       physical_count: data.physicalCount,
-      staff_id: data.staffId
+      counted_at: data.countedAt
     })
     return response.data
     // Response:
     // {
-    //   variance: 2,              // Difference (expected - actual)
-    //   expected: 67,             // System expected count
-    //   actual: 65,               // Physical count submitted
-    //   alert_created: true,      // Whether alert was created (variance > 10%)
-    //   estimated_loss: 31.22     // Financial loss in USD
+    //   success: true,
+    //   verification: {
+    //     expected_stock: 97,
+    //     physical_count: 95,
+    //     variance: -2,
+    //     variance_percent: -2.06,
+    //     alert_level: "MINOR" | "WARNING" | "CRITICAL" | "NORMAL",
+    //     alert_triggered: true,
+    //     estimated_loss: 9.00
+    //   }
     // }
+  },
+
+  /**
+   * Get Audit History
+   * GET /audit/history
+   */
+  getAuditHistory: async (filters = {}) => {
+    const response = await api.get('/audit/history', {
+      params: filters
+    })
+    return response.data
   },
 }
