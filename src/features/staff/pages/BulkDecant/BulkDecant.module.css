@@ -7,12 +7,13 @@
 
 /* ── Staff Bar (Orange) ─────────────────────────────────── */
 .staffBar {
-  background-color: #E6A767;
+   background: linear-gradient(135deg, #E29A5C 0%, #D4894A 50%, #C67839 100%);
   color: #FFFFFF;
   padding: 16px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 2px solid #F5F5F5;
 }
 
 .staffInfo {
@@ -54,8 +55,40 @@
 }
 
 .statusBtn {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: #1A1A1A;
   color: #FFFFFF;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #50C878;
+  box-shadow: 0 0 10px rgba(80, 200, 120, 0.8);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .statusBtn.online {
@@ -70,13 +103,19 @@
 }
 
 .syncBtn {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(60, 40, 20, 0.9);
   color: #FFFFFF;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
-/* ── Header Section (Dark Teal) ─────────────────────────── */
+
+/* ── Header Section ─────────────────────────── */
 .header {
-  background-color: #002E27;
+  background-color: #D4894A;
   color: #FFFFFF;
   padding: 32px 48px;
 }
@@ -350,7 +389,7 @@
 /* ── Formula ────────────────────────────────────────────── */
 .formula {
   background-color: #EFF6FF;
-  border-left: 4px solid #3B82F6;
+  border-left: 4px solid #E6A767;
   padding: 20px 24px;
   border-radius: 4px;
 }
@@ -368,7 +407,7 @@
 .formulaCalc {
   margin: 0;
   font-size: 0.875rem;
-  color: #3B82F6;
+  color: #E6A767;
   font-weight: 600;
   font-family: 'Courier New', monospace;
 }

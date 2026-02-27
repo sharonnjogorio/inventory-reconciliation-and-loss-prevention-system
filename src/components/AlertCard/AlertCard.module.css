@@ -1,0 +1,163 @@
+.card {
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border-left: 4px solid #E5E5E5;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 150ms ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.card.resolved {
+  opacity: 0.7;
+  background-color: #F9F9F9;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.severity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 1.25rem;
+}
+
+.severityText {
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #666666;
+}
+
+.resolvedBadge {
+  background-color: #50C878;
+  color: #FFFFFF;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.productInfo {
+  border-bottom: 1px solid #E5E5E5;
+  padding-bottom: 16px;
+}
+
+.productName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.details {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.label {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.value.variance {
+  color: #DC143C;
+}
+
+.value.loss {
+  color: #DC143C;
+  font-family: monospace;
+  font-size: 1rem;
+}
+
+.meta {
+  display: flex;
+  gap: 24px;
+  padding-top: 16px;
+  border-top: 1px solid #E5E5E5;
+}
+
+.metaItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.metaItem svg {
+  color: #999999;
+}
+
+.actions {
+  margin-top: 16px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.viewBtn {
+  padding: 10px 20px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.viewBtn:hover {
+  background-color: #D08A4C;
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  .meta {
+    flex-direction: column;
+    gap: 12px;
+  }
+}

@@ -1,0 +1,269 @@
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  animation: fadeIn 200ms ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background-color: #FFFFFF;
+  border-radius: 16px;
+  max-width: 700px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideUp 300ms ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.header {
+  padding: 24px;
+  border-bottom: 1px solid #E5E5E5;
+  border-top: 4px solid #E5E5E5;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.headerLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon {
+  font-size: 2rem;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #999999;
+  padding: 4px;
+  transition: all 150ms ease;
+}
+
+.closeBtn:hover {
+  color: #1A1A1A;
+  transform: scale(1.1);
+}
+
+.content {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 0.875rem;
+}
+
+.productCard {
+  background-color: #F5F5F5;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.productName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 8px;
+}
+
+.productMessage {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.gridItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.gridLabel {
+  font-size: 0.75rem;
+  color: #999999;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.gridValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.gridValue.variance {
+  color: #DC143C;
+}
+
+.gridValue.loss {
+  color: #DC143C;
+  font-family: monospace;
+  font-size: 1.25rem;
+}
+
+.staffCard {
+  background-color: #F5F5F5;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.staffRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.staffLabel {
+  font-size: 0.875rem;
+  color: #666666;
+  font-weight: 600;
+}
+
+.staffValue {
+  font-size: 0.875rem;
+  color: #1A1A1A;
+}
+
+.textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #E5E5E5;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-family: inherit;
+  resize: vertical;
+  transition: all 150ms ease;
+}
+
+.textarea:focus {
+  outline: none;
+  border-color: #E29A5C;
+  box-shadow: 0 0 0 3px rgba(226, 154, 92, 0.1);
+}
+
+.resolveBtn {
+  width: 100%;
+  padding: 14px;
+  background-color: #50C878;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.resolveBtn:hover:not(:disabled) {
+  background-color: #40B868;
+  transform: translateY(-1px);
+}
+
+.resolveBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.resolvedBanner {
+  background-color: #F0FFF4;
+  border: 2px solid #50C878;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.resolvedBanner svg {
+  color: #50C878;
+  flex-shrink: 0;
+}
+
+.resolvedTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin-bottom: 4px;
+}
+
+.resolvedDate {
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .modal {
+    max-height: 95vh;
+  }
+}

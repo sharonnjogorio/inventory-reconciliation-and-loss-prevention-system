@@ -2,70 +2,46 @@ import api from '../api'
 
 export const reportsAPI = {
   /**
-   * Fetch Deviation and Estimated Loss Report
+   * Get Deviation Report
    * GET /reports/deviation
    */
   getDeviationReport: async (params = {}) => {
     const response = await api.get('/reports/deviation', {
-      params: {
-        start_date: params.startDate,
-        end_date: params.endDate
-      }
+      params
     })
     return response.data
   },
 
   /**
-   * Get Staff Performance Metrics (Owner Only)
+   * Get Staff Performance Report
    * GET /reports/staff-performance
    */
-  getStaffPerformance: async (params = {}) => {
+  getStaffPerformanceReport: async (params = {}) => {
     const response = await api.get('/reports/staff-performance', {
-      params: {
-        staff_id: params.staffId,
-        start_date: params.startDate,
-        end_date: params.endDate
-      }
+      params
     })
     return response.data
   },
 
   /**
-   * Get Sales Velocity Metrics for AI Anomaly Detection
-   * GET /reports/sales-velocity
+   * Get Inventory Turnover Report
+   * GET /reports/inventory-turnover
    */
-  getSalesVelocity: async (params = {}) => {
-    const response = await api.get('/reports/sales-velocity', {
-      params: {
-        sku_id: params.skuId
-      }
+  getInventoryTurnoverReport: async (params = {}) => {
+    const response = await api.get('/reports/inventory-turnover', {
+      params
     })
     return response.data
   },
 
   /**
-   * Export Deviation Report as CSV
-   * GET /reports/export
+   * Get Sales Trend Report
+   * GET /reports/sales-trend
    */
-  exportDeviationReport: async (params = {}) => {
-    const response = await api.get('/reports/export', {
-      params: {
-        start_date: params.startDate,
-        end_date: params.endDate,
-        format: 'csv'
-      },
-      responseType: 'blob'
+  getSalesTrendReport: async (params = {}) => {
+    const response = await api.get('/reports/sales-trend', {
+      params
     })
-    
-    // Download CSV file
-    const url = window.URL.createObjectURL(new Blob([response.data]))
-    const link = document.createElement('a')
-    link.href = url
-    link.setAttribute('download', `deviation-report-${Date.now()}.csv`)
-    document.body.appendChild(link)
-    link.click()
-    link.remove()
-    
     return response.data
   },
 }

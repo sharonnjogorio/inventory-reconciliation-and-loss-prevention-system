@@ -17,7 +17,7 @@ export const inventoryAPI = {
       ordered_qty: data.orderedQty,      // match Swagger
       received_qty: data.receivedQty,    // match Swagger
       cost_price: data.costPrice,
-      sell_price: data.sellPrice,
+      selling_price: data.sellPrice,     // Fixed: backend expects selling_price
       supplier_name: data.supplierName || null,
       reference_note: data.referenceNote || null,
     })
@@ -35,6 +35,19 @@ export const inventoryAPI = {
       to_sku_id: toSkuId,
       cartons,
       units_per_carton: unitsPerCarton,
+    })
+    return response.data
+  },
+
+  /**
+   * Update SKU Inventory Details (prices, reorder level)
+   * PATCH /inventory/skus/:sku_id
+   */
+  updateSKUInventory: async (skuId, data) => {
+    const response = await api.patch(`/inventory/skus/${skuId}`, {
+      cost_price: data.costPrice,
+      selling_price: data.sellingPrice,
+      reorder_level: data.reorderLevel,
     })
     return response.data
   },

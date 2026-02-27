@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { inventoryAPI } from '../../../services/endpoints/inventory'
+import EditInventoryModal from './EditInventoryModal'
 import styles from './Inventory.module.css'
 
 function Inventory() {
@@ -10,6 +11,7 @@ function Inventory() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [editingItem, setEditingItem] = useState(null)
 
   useEffect(() => {
     fetchInventory()
@@ -18,14 +20,34 @@ function Inventory() {
   const fetchInventory = async () => {
     try {
       const data = await inventoryAPI.getInventorySummary()
-      // data is already an array from backend
       console.log('✅ Inventory loaded:', data)
-      setInventory(Array.isArray(data) ? data : [])
+      
+      // Backend returns {success: true, inventory: [...]}
+      const inventoryList = data.inventory || data.data || data
+      setInventory(Array.isArray(inventoryList) ? inventoryList : [])
     } catch (err) {
       console.error('❌ Failed to load inventory:', err)
       setError('Failed to load inventory. Please refresh.')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleEditItem = (item) => {
+    setEditingItem(item)
+  }
+
+  const handleSaveEdit = async (skuId, data) => {
+    try {
+      await inventoryAPI.updateSKUInventory(skuId, data)
+      console.log('✅ Product updated successfully')
+      
+      // Refresh inventory
+      await fetchInventory()
+      setEditingItem(null)
+    } catch (err) {
+      console.error('❌ Failed to update product:', err)
+      throw err
     }
   }
   const getStatusColor = (quantity) => {
@@ -178,7 +200,12 @@ function Inventory() {
                     {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'N/A'}
                   </td>
                   <td>
-                    <button className={styles.editBtn}>Edit</button>
+                    <button 
+                      className={styles.editBtn}
+                      onClick={() => handleEditItem(item)}
+                    >
+                      Edit
+                    </button>
                   </td>
                 </tr>
               ))}
@@ -192,6 +219,14 @@ function Inventory() {
         <h2>Struggling to Track or Observe Work and Stock Levels Growth?</h2>
         <p>© 2025 Smart Loss Control • Your Data Security Matters To Us</p>
       </div>
+
+      {editingItem && (
+        <EditInventoryModal
+          item={editingItem}
+          onClose={() => setEditingItem(null)}
+          onSave={handleSaveEdit}
+        />
+      )}
     </div>
   )
 }

@@ -4,6 +4,14 @@ import styles from './LoginSelection.module.css'
 function LoginSelection() {
   const navigate = useNavigate()
 
+  // Staff Routing - Always show choice page
+  const handleStaffClick = () => {
+    // Always go to staff landing where they can choose:
+    // - Scan QR Code (first time)
+    // - Enter PIN (returning staff)
+    navigate('/staff/landing')
+  }
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
@@ -48,7 +56,7 @@ function LoginSelection() {
           {/* Staff Login */}
           <div 
             className={styles.optionCard}
-            onClick={() => navigate('/staff/scan')}
+            onClick={handleStaffClick}
           >
             <div className={styles.iconWrapper}>
               {/* Staff SVG Icon */}

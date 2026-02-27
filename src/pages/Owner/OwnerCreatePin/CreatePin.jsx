@@ -1,6 +1,7 @@
 // src/pages/Owner/CreatePin/OwnerCreatePin.jsx
 import { useState, useEffect, useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { authAPI } from '../../../services'
 import styles from './CreatePin.module.css'
 
 function OwnerCreatePin() {
@@ -99,12 +100,16 @@ function OwnerCreatePin() {
     setLoading(true)
 
     try {
-      // In this phase, we store PIN locally to be reused on /owner/login
-      // In production, you would also call backend to save PIN securely.
-      localStorage.setItem('ownerPin', pinValue)
+      console.log('📤 Setting PIN...')
+      
+      // Call backend API to set PIN
+      const response = await authAPI.setPin(pinValue)
+      
+      console.log('✅ PIN set successfully:', response)
 
+      // Store phone number for login
       if (phoneNumber) {
-        localStorage.setItem('phoneNumber', phoneNumber)
+        localStorage.setItem('ownerPhone', phoneNumber)
       }
       if (shopName) {
         localStorage.setItem('shopName', shopName)
@@ -112,11 +117,12 @@ function OwnerCreatePin() {
       if (fullName) {
         localStorage.setItem('fullName', fullName)
       }
-      // Redirect to owner login page
-      navigate('/owner/login')
+
+      // Redirect to product catalog selection
+      navigate('/owner/catalog')
     } catch (err) {
-      console.error('Error saving PIN:', err)
-      setError('Failed to save PIN. Please try again.')
+      console.error('❌ Error setting PIN:', err)
+      setError(err.response?.data?.message || 'Failed to save PIN. Please try again.')
     } finally {
       setLoading(false)
     }
