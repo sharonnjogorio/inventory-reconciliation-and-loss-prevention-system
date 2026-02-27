@@ -1,24 +1,15 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import styles from './EditInventoryModal.module.css'
 
 function EditInventoryModal({ item, onClose, onSave }) {
+  // ✅ initialize directly from prop instead of using useEffect + setState
   const [formData, setFormData] = useState({
-    costPrice: '',
-    sellingPrice: '',
-    reorderLevel: ''
+    costPrice: item?.cost_price || '',
+    sellingPrice: item?.selling_price || '',
+    reorderLevel: item?.reorder_level || 10
   })
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
-
-  useEffect(() => {
-    if (item) {
-      setFormData({
-        costPrice: item.cost_price || '',
-        sellingPrice: item.selling_price || '',
-        reorderLevel: item.reorder_level || 10
-      })
-    }
-  }, [item])
 
   const handleChange = (field, value) => {
     setFormData(prev => ({
@@ -31,7 +22,6 @@ function EditInventoryModal({ item, onClose, onSave }) {
     e.preventDefault()
     setError('')
 
-    // Validation
     if (!formData.costPrice || !formData.sellingPrice) {
       setError('Cost price and selling price are required')
       return
@@ -144,19 +134,10 @@ function EditInventoryModal({ item, onClose, onSave }) {
           )}
 
           <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.cancelBtn}
-              onClick={onClose}
-              disabled={saving}
-            >
+            <button type="button" className={styles.cancelBtn} onClick={onClose} disabled={saving}>
               Cancel
             </button>
-            <button
-              type="submit"
-              className={styles.saveBtn}
-              disabled={saving}
-            >
+            <button type="submit" className={styles.saveBtn} disabled={saving}>
               {saving ? 'Saving...' : 'Save Changes'}
             </button>
           </div>

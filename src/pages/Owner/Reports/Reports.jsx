@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { reportsAPI } from '../../../services'
 import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts'
 import styles from './Reports.module.css'
@@ -6,26 +6,22 @@ import styles from './Reports.module.css'
 const COLORS = ['#DC143C', '#FFC107', '#FF8C00', '#50C878', '#4169E1', '#9370DB']
 
 function Reports() {
-  const [activeTab, setActiveTab] = useState('deviation') // deviation, sales, staff, inventory
+  const [activeTab, setActiveTab] = useState('deviation')
   const [loading, setLoading] = useState(false)
-  const [dateRange, setDateRange] = useState('30') // days
-  
-  // Report data
+  const [dateRange, setDateRange] = useState('30')
+
   const [deviationData, setDeviationData] = useState(null)
   const [salesData, setSalesData] = useState(null)
   const [staffData, setStaffData] = useState(null)
   const [inventoryData, setInventoryData] = useState(null)
 
-  useEffect(() => {
-    loadReportData()
-  }, [activeTab, dateRange])
-
-  const loadReportData = async () => {
+  // ✅ wrapped in useCallback so it can be safely added to useEffect deps
+  const loadReportData = useCallback(async () => {
     setLoading(true)
     try {
       const endDate = new Date().toISOString()
       const startDate = new Date(Date.now() - parseInt(dateRange) * 24 * 60 * 60 * 1000).toISOString()
-      
+
       const params = {
         start_date: startDate,
         end_date: endDate,
@@ -33,21 +29,28 @@ function Reports() {
       }
 
       switch (activeTab) {
-        case 'deviation':
+        case 'deviation': {
+          // ✅ wrapped in {} to allow lexical declarations inside case
           const devReport = await reportsAPI.getDeviationReport(params)
           setDeviationData(devReport)
           break
-        case 'sales':
+        }
+        case 'sales': {
           const salesReport = await reportsAPI.getSalesTrendReport(params)
           setSalesData(salesReport)
           break
-        case 'staff':
+        }
+        case 'staff': {
           const staffReport = await reportsAPI.getStaffPerformanceReport(params)
           setStaffData(staffReport)
           break
-        case 'inventory':
+        }
+        case 'inventory': {
           const invReport = await reportsAPI.getInventoryTurnoverReport(params)
           setInventoryData(invReport)
+          break
+        }
+        default:
           break
       }
     } catch (error) {
@@ -55,7 +58,11 @@ function Reports() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [activeTab, dateRange])
+
+  useEffect(() => {
+    loadReportData()
+  }, [loadReportData]) // ✅ no more missing dependency warning
 
   const formatDate = (dateString) => {
     const date = new Date(dateString)
@@ -67,7 +74,8 @@ function Reports() {
     let filename = ''
 
     switch (activeTab) {
-      case 'deviation':
+      case 'deviation': {
+        // ✅ wrapped in {}
         if (!deviationData) return
         filename = `deviation-report-${dateRange}days.csv`
         csvContent = 'Product,Incidents,Avg Deviation %,Total Variance,Estimated Loss\n'
@@ -75,8 +83,8 @@ function Reports() {
           csvContent += `"${p.brand} ${p.size}",${p.incident_count},${p.avg_deviation_percent},${p.total_variance},${p.estimated_loss}\n`
         })
         break
-
-      case 'sales':
+      }
+      case 'sales': {
         if (!salesData) return
         filename = `sales-report-${dateRange}days.csv`
         csvContent = 'Date,Transactions,Units Sold,Revenue,Cost,Profit,Profit Margin\n'
@@ -84,8 +92,8 @@ function Reports() {
           csvContent += `${formatDate(t.period)},${t.transaction_count},${t.units_sold},${t.revenue},${t.cost},${t.profit},${t.profit_margin}%\n`
         })
         break
-
-      case 'staff':
+      }
+      case 'staff': {
         if (!staffData) return
         filename = `staff-performance-${dateRange}days.csv`
         csvContent = 'Staff Name,Sales,Units Sold,Revenue,Accuracy Score,Critical Incidents\n'
@@ -93,8 +101,8 @@ function Reports() {
           csvContent += `"${s.staff_name}",${s.sales.total_sales},${s.sales.units_sold},${s.sales.total_revenue},${s.accuracy.accuracy_score}%,${s.accuracy.critical_incidents}\n`
         })
         break
-
-      case 'inventory':
+      }
+      case 'inventory': {
         if (!inventoryData) return
         filename = `inventory-turnover-${dateRange}days.csv`
         csvContent = 'Product,Current Stock,Units Sold,Turnover Rate,Days to Sell,Status\n'
@@ -102,9 +110,11 @@ function Reports() {
           csvContent += `"${p.brand} ${p.size}",${p.current_stock},${p.units_sold},${p.turnover_rate},${p.days_to_sell},${p.stock_status}\n`
         })
         break
+      }
+      default:
+        break
     }
 
-    // Create blob and download
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
     const link = document.createElement('a')
     const url = URL.createObjectURL(blob)
@@ -124,11 +134,7 @@ function Reports() {
           <p className={styles.subtitle}>Business insights and performance metrics</p>
         </div>
         <div className={styles.headerActions}>
-          <select 
-            value={dateRange} 
-            onChange={(e) => setDateRange(e.target.value)}
-            className={styles.dateSelect}
-          >
+          <select value={dateRange} onChange={(e) => setDateRange(e.target.value)} className={styles.dateSelect}>
             <option value="7">Last 7 days</option>
             <option value="30">Last 30 days</option>
             <option value="90">Last 90 days</option>
@@ -145,30 +151,10 @@ function Reports() {
       </div>
 
       <div className={styles.tabs}>
-        <button 
-          className={`${styles.tab} ${activeTab === 'deviation' ? styles.active : ''}`}
-          onClick={() => setActiveTab('deviation')}
-        >
-          🚨 Deviation Report
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'sales' ? styles.active : ''}`}
-          onClick={() => setActiveTab('sales')}
-        >
-          📊 Sales Trend
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'staff' ? styles.active : ''}`}
-          onClick={() => setActiveTab('staff')}
-        >
-          👥 Staff Performance
-        </button>
-        <button 
-          className={`${styles.tab} ${activeTab === 'inventory' ? styles.active : ''}`}
-          onClick={() => setActiveTab('inventory')}
-        >
-          📦 Inventory Turnover
-        </button>
+        <button className={`${styles.tab} ${activeTab === 'deviation' ? styles.active : ''}`} onClick={() => setActiveTab('deviation')}>🚨 Deviation Report</button>
+        <button className={`${styles.tab} ${activeTab === 'sales' ? styles.active : ''}`} onClick={() => setActiveTab('sales')}>📊 Sales Trend</button>
+        <button className={`${styles.tab} ${activeTab === 'staff' ? styles.active : ''}`} onClick={() => setActiveTab('staff')}>👥 Staff Performance</button>
+        <button className={`${styles.tab} ${activeTab === 'inventory' ? styles.active : ''}`} onClick={() => setActiveTab('inventory')}>📦 Inventory Turnover</button>
       </div>
 
       <div className={styles.content}>
@@ -176,18 +162,10 @@ function Reports() {
           <div className={styles.loading}>Loading report...</div>
         ) : (
           <>
-            {activeTab === 'deviation' && deviationData && (
-              <DeviationReport data={deviationData} formatDate={formatDate} />
-            )}
-            {activeTab === 'sales' && salesData && (
-              <SalesReport data={salesData} formatDate={formatDate} />
-            )}
-            {activeTab === 'staff' && staffData && (
-              <StaffReport data={staffData} />
-            )}
-            {activeTab === 'inventory' && inventoryData && (
-              <InventoryReport data={inventoryData} />
-            )}
+            {activeTab === 'deviation' && deviationData && <DeviationReport data={deviationData} formatDate={formatDate} />}
+            {activeTab === 'sales' && salesData && <SalesReport data={salesData} formatDate={formatDate} />}
+            {activeTab === 'staff' && staffData && <StaffReport data={staffData} />}
+            {activeTab === 'inventory' && inventoryData && <InventoryReport data={inventoryData} />}
           </>
         )}
       </div>
@@ -200,22 +178,10 @@ function DeviationReport({ data, formatDate }) {
   return (
     <div className={styles.report}>
       <div className={styles.summaryCards}>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.total_incidents}</span>
-          <span className={styles.summaryLabel}>Total Incidents</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.avg_deviation_percent}%</span>
-          <span className={styles.summaryLabel}>Avg Deviation</span>
-        </div>
-        <div className={`${styles.summaryCard} ${styles.critical}`}>
-          <span className={styles.summaryValue}>${data.summary.total_loss}</span>
-          <span className={styles.summaryLabel}>Total Loss</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.by_severity.critical}</span>
-          <span className={styles.summaryLabel}>Critical Alerts</span>
-        </div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.total_incidents}</span><span className={styles.summaryLabel}>Total Incidents</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.avg_deviation_percent}%</span><span className={styles.summaryLabel}>Avg Deviation</span></div>
+        <div className={`${styles.summaryCard} ${styles.critical}`}><span className={styles.summaryValue}>${data.summary.total_loss}</span><span className={styles.summaryLabel}>Total Loss</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.by_severity.critical}</span><span className={styles.summaryLabel}>Critical Alerts</span></div>
       </div>
 
       <div className={styles.chartSection}>
@@ -250,15 +216,7 @@ function DeviationReport({ data, formatDate }) {
       <div className={styles.tableSection}>
         <h3 className={styles.tableTitle}>Detailed Breakdown by Product</h3>
         <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Incidents</th>
-              <th>Avg Deviation %</th>
-              <th>Total Variance</th>
-              <th>Estimated Loss</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Product</th><th>Incidents</th><th>Avg Deviation %</th><th>Total Variance</th><th>Estimated Loss</th></tr></thead>
           <tbody>
             {data.by_product.map((product, idx) => (
               <tr key={idx}>
@@ -281,22 +239,10 @@ function SalesReport({ data, formatDate }) {
   return (
     <div className={styles.report}>
       <div className={styles.summaryCards}>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>${data.totals.revenue}</span>
-          <span className={styles.summaryLabel}>Total Revenue</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>${data.totals.profit}</span>
-          <span className={styles.summaryLabel}>Total Profit</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.totals.profit_margin}%</span>
-          <span className={styles.summaryLabel}>Profit Margin</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.totals.units_sold}</span>
-          <span className={styles.summaryLabel}>Units Sold</span>
-        </div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>${data.totals.revenue}</span><span className={styles.summaryLabel}>Total Revenue</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>${data.totals.profit}</span><span className={styles.summaryLabel}>Total Profit</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.totals.profit_margin}%</span><span className={styles.summaryLabel}>Profit Margin</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.totals.units_sold}</span><span className={styles.summaryLabel}>Units Sold</span></div>
       </div>
 
       <div className={styles.chartSection}>
@@ -364,16 +310,7 @@ function StaffReport({ data }) {
       <div className={styles.tableSection}>
         <h3 className={styles.tableTitle}>Detailed Staff Performance</h3>
         <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Staff Name</th>
-              <th>Sales</th>
-              <th>Units Sold</th>
-              <th>Revenue</th>
-              <th>Accuracy Score</th>
-              <th>Critical Incidents</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Staff Name</th><th>Sales</th><th>Units Sold</th><th>Revenue</th><th>Accuracy Score</th><th>Critical Incidents</th></tr></thead>
           <tbody>
             {data.staff.map((staff, idx) => (
               <tr key={idx}>
@@ -381,12 +318,8 @@ function StaffReport({ data }) {
                 <td>{staff.sales.total_sales}</td>
                 <td>{staff.sales.units_sold}</td>
                 <td>${staff.sales.total_revenue}</td>
-                <td className={parseFloat(staff.accuracy.accuracy_score) >= 95 ? styles.good : styles.warning}>
-                  {staff.accuracy.accuracy_score}%
-                </td>
-                <td className={staff.accuracy.critical_incidents > 0 ? styles.critical : ''}>
-                  {staff.accuracy.critical_incidents}
-                </td>
+                <td className={parseFloat(staff.accuracy.accuracy_score) >= 95 ? styles.good : styles.warning}>{staff.accuracy.accuracy_score}%</td>
+                <td className={staff.accuracy.critical_incidents > 0 ? styles.critical : ''}>{staff.accuracy.critical_incidents}</td>
               </tr>
             ))}
           </tbody>
@@ -401,22 +334,10 @@ function InventoryReport({ data }) {
   return (
     <div className={styles.report}>
       <div className={styles.summaryCards}>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.total_stock}</span>
-          <span className={styles.summaryLabel}>Total Stock</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.total_sold}</span>
-          <span className={styles.summaryLabel}>Units Sold</span>
-        </div>
-        <div className={styles.summaryCard}>
-          <span className={styles.summaryValue}>{data.summary.avg_turnover_rate}</span>
-          <span className={styles.summaryLabel}>Avg Turnover Rate</span>
-        </div>
-        <div className={`${styles.summaryCard} ${styles.warning}`}>
-          <span className={styles.summaryValue}>{data.summary.low_stock_items}</span>
-          <span className={styles.summaryLabel}>Low Stock Items</span>
-        </div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.total_stock}</span><span className={styles.summaryLabel}>Total Stock</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.total_sold}</span><span className={styles.summaryLabel}>Units Sold</span></div>
+        <div className={styles.summaryCard}><span className={styles.summaryValue}>{data.summary.avg_turnover_rate}</span><span className={styles.summaryLabel}>Avg Turnover Rate</span></div>
+        <div className={`${styles.summaryCard} ${styles.warning}`}><span className={styles.summaryValue}>{data.summary.low_stock_items}</span><span className={styles.summaryLabel}>Low Stock Items</span></div>
       </div>
 
       <div className={styles.chartSection}>
@@ -435,16 +356,7 @@ function InventoryReport({ data }) {
       <div className={styles.tableSection}>
         <h3 className={styles.tableTitle}>Inventory Details</h3>
         <table className={styles.table}>
-          <thead>
-            <tr>
-              <th>Product</th>
-              <th>Current Stock</th>
-              <th>Units Sold</th>
-              <th>Turnover Rate</th>
-              <th>Days to Sell</th>
-              <th>Status</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Product</th><th>Current Stock</th><th>Units Sold</th><th>Turnover Rate</th><th>Days to Sell</th><th>Status</th></tr></thead>
           <tbody>
             {data.products.map((product, idx) => (
               <tr key={idx}>
@@ -453,11 +365,7 @@ function InventoryReport({ data }) {
                 <td>{product.units_sold}</td>
                 <td>{product.turnover_rate}</td>
                 <td>{product.days_to_sell}</td>
-                <td>
-                  <span className={`${styles.badge} ${styles[product.stock_status.toLowerCase()]}`}>
-                    {product.stock_status}
-                  </span>
-                </td>
+                <td><span className={`${styles.badge} ${styles[product.stock_status.toLowerCase()]}`}>{product.stock_status}</span></td>
               </tr>
             ))}
           </tbody>

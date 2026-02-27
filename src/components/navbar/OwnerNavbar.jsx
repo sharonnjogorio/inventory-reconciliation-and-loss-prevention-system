@@ -9,30 +9,35 @@ function OwnerNavbar() {
   const location = useLocation()
 
   const [newAlertsCount, setNewAlertsCount] = useState(0)
-  const [ownerName, setOwnerName] = useState('Owner')
-  const [shopName, setShopName] = useState('My Shop')
-  const [ownerInitial, setOwnerInitial] = useState('O')
-
-  // Load user data and fetch alerts count
-  useEffect(() => {
-    const userData = localStorage.getItem('userData')
-    
-    if (userData) {
-      try {
+  const [ownerName, setOwnerName] = useState(() => {
+    try {
+      const userData = localStorage.getItem('userData')
+      if (userData) {
         const user = JSON.parse(userData)
-        if (user.full_name) {
-          setOwnerName(user.full_name)
-          setOwnerInitial(user.full_name.charAt(0).toUpperCase())
-        }
-      } catch (err) {
-        console.error('Error parsing user data:', err)
+        return user.full_name || 'Owner'
       }
+    } catch {
+      // ignore parse errors
     }
-    
-    // Fetch shop name and alerts count
+    return 'Owner'
+  })
+  const [shopName, setShopName] = useState('My Shop')
+  const [ownerInitial, setOwnerInitial] = useState(() => {
+    try {
+      const userData = localStorage.getItem('userData')
+      if (userData) {
+        const user = JSON.parse(userData)
+        return user.full_name ? user.full_name.charAt(0).toUpperCase() : 'O'
+      }
+    } catch {
+      // ignore parse errors
+    }
+    return 'O'
+  })
+
+  useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch shop name
         const dashResponse = await fetch('http://192.168.8.27:5000/dashboard/overview', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('authToken')}`
@@ -43,7 +48,6 @@ function OwnerNavbar() {
           setShopName(dashData.shop.shop_name)
         }
 
-        // Fetch active alerts count
         const alertsResponse = await alertsAPI.getAlertsSummary()
         if (alertsResponse.success) {
           setNewAlertsCount(alertsResponse.summary.total_active || 0)
@@ -52,10 +56,9 @@ function OwnerNavbar() {
         console.error('Error fetching data:', err)
       }
     }
-    
+
     fetchData()
 
-    // Refresh alerts count every 30 seconds
     const interval = setInterval(async () => {
       try {
         const alertsResponse = await alertsAPI.getAlertsSummary()
@@ -75,82 +78,34 @@ function OwnerNavbar() {
   return (
     <nav className={styles.navbar}>
       <div className={styles.container}>
-        {/* Logo */}
         <div className={styles.logoSection} onClick={() => navigate('/owner/dashboard')}>
           <img src={logo} alt="Smart Loss Control" className={styles.logo} />
           <span className={styles.shopName}>{shopName}</span>
         </div>
 
-        {/* Nav Links */}
         <div className={styles.navLinks}>
-          <button 
-            className={`${styles.link} ${isActive('/owner/dashboard') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/dashboard')}
-          >
-            Dashboard
-          </button>
-          
-          <button 
-            className={`${styles.link} ${isActive('/owner/staff') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/staff')}
-          >
-            Staff
-          </button>
-          
-          <button 
-            className={`${styles.link} ${isActive('/owner/inventory') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/inventory')}
-          >
-            Inventory
-          </button>
-          
-          <button 
-            className={`${styles.link} ${isActive('/owner/sales-activity') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/sales-activity')}
-          >
-            Sales Activity
-          </button>
-          
-          <button 
-            className={`${styles.link} ${isActive('/owner/analytics') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/analytics')}
-          >
-            Analytics
-          </button>
-
-          <button 
-            className={`${styles.link} ${isActive('/owner/alerts') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/alerts')}
-          >
+          <button className={`${styles.link} ${isActive('/owner/dashboard') ? styles.active : ''}`} onClick={() => navigate('/owner/dashboard')}>Dashboard</button>
+          <button className={`${styles.link} ${isActive('/owner/staff') ? styles.active : ''}`} onClick={() => navigate('/owner/staff')}>Staff</button>
+          <button className={`${styles.link} ${isActive('/owner/inventory') ? styles.active : ''}`} onClick={() => navigate('/owner/inventory')}>Inventory</button>
+          <button className={`${styles.link} ${isActive('/owner/sales-activity') ? styles.active : ''}`} onClick={() => navigate('/owner/sales-activity')}>Sales Activity</button>
+          <button className={`${styles.link} ${isActive('/owner/analytics') ? styles.active : ''}`} onClick={() => navigate('/owner/analytics')}>Analytics</button>
+          <button className={`${styles.link} ${isActive('/owner/alerts') ? styles.active : ''}`} onClick={() => navigate('/owner/alerts')}>
             Alerts
-            {newAlertsCount > 0 && (
-             <span className={styles.badge}>{newAlertsCount}</span>
-            )}
+            {newAlertsCount > 0 && <span className={styles.badge}>{newAlertsCount}</span>}
           </button>
-          
-          <button 
-            className={`${styles.link} ${isActive('/owner/settings') ? styles.active : ''}`}
-            onClick={() => navigate('/owner/settings')}
-          >
-            Settings
-          </button>
+          <button className={`${styles.link} ${isActive('/owner/settings') ? styles.active : ''}`} onClick={() => navigate('/owner/settings')}>Settings</button>
         </div>
 
-        {/* Right Side - User Menu */}
         <div className={styles.userSection}>
           <div className={styles.userInfo}>
             <div className={styles.avatar}>{ownerInitial}</div>
             <span className={styles.userName}>{ownerName}</span>
           </div>
-          <button 
-            className={styles.logoutBtn}
-            onClick={() => {
-              // Clear auth data on logout
-              localStorage.removeItem('authToken')
-              localStorage.removeItem('userData')
-              navigate('/')
-            }}
-          >
+          <button className={styles.logoutBtn} onClick={() => {
+            localStorage.removeItem('authToken')
+            localStorage.removeItem('userData')
+            navigate('/')
+          }}>
             Logout
           </button>
         </div>
