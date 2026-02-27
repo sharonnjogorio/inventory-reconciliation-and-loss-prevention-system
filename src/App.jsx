@@ -8,7 +8,7 @@ import Welcome from './pages/Welcome'
 // Owner Pages
 import RegisterPage from "./pages/Owner/Register/Register";
 import VerifyPhone from "./pages/Owner/VerifyPhone/VerifyPhone";
-import Catalog from "./pages/Owner/Catalog/Catalog";
+// import Catalog from "./pages/Owner/Catalog/Catalog";
 import LoginSelection from './pages/LoginSelection/LoginSelection'
 import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
 import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
@@ -22,7 +22,7 @@ import Alerts from './pages/Owner/Alerts/Alerts'
 import SalesActivity from './pages/Owner/SalesActivity/SalesActivity'
 
 import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
-import Report from "./pages/Owner/Report/Report"
+// import Report from "./pages/Owner/Report/Report"
 
 // Staff Pages 
 import StaffLanding from './features/staff/pages/StaffLanding/StaffLanding'
@@ -40,7 +40,7 @@ import OwnerNavbar from './components/navbar/OwnerNavbar'
 // Context
 import { CartProvider } from "./components/context/CartProvider";
 import OwnerCreatePin from "./pages/Owner/OwnerCreatePin/CreatePin";
-import InventoryFlow2 from "./pages/Owner/Catalog/InventoryFlow2";
+// import InventoryFlow2 from "./pages/Owner/Catalog/InventoryFlow2";
 
 
 function App() {
@@ -78,8 +78,8 @@ function App() {
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/staff" element={<ManageStaff />} />
         <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
-         <Route path="/owner/inventory/flow" element={<InventoryFlow />} />
-         <Route path="/owner/inventory/flow2" element={<InventoryFlow2 />} />
+         {/* <Route path="/owner/inventory/flow" element={<InventoryFlow />} />
+         <Route path="/owner/inventory/flow2" element={<InventoryFlow2 />} /> */}
         <Route path="/owner/inventory" element={<Inventory />} />
         <Route path="/owner/settings" element={<Settings />} />
         <Route path="/owner/inventory/add" element={<AddStock />} />
