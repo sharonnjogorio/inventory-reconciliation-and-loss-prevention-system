@@ -100,6 +100,9 @@ function OwnerLogin() {
           <p style={{ color: '#666' }}>
             Don't have an account? <a href="/owner/register" style={{ color: '#667eea' }}>Register here</a>
           </p>
+          <p>
+            Forget Pin? <a href="/owner/createnewpin">Click here</a>
+          </p>
         </div>
       </div>
     </div>

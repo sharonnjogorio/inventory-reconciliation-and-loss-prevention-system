@@ -1,0 +1,114 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+.card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  padding: 28px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.label {
+  font-weight: 500;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  padding: 12px;
+  font-size: 15px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+.section {
+  margin-bottom: 20px;
+}
+
+.pinRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.pinInput {
+  width: 55px;
+  height: 55px;
+  font-size: 24px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.submitButton {
+  width: 100%;
+  padding: 14px;
+  background: var(--color-primary);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+}
+
+.errorBox {
+  background: #ffe5e5;
+  padding: 10px;
+  border-left: 4px solid #ff4d4d;
+  color: #b30000;
+  margin-bottom: 15px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.errorIcon {
+  font-size: 18px;
+}
+
+.infoBox {
+  background: #f7faff;
+  border-left: 4px solid var(--color-primary);
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 6px;
+  color: rgb(77, 75, 75);
+}
+
+.infoRow {
+  margin-bottom: 4px;
+  font-size: 15px;
+}
+
+.infoLabel {
+  font-weight: 600;
+  color: rgb(77, 75, 75);
+}
+
+.infoValue {
+  margin-left: 6px;
+}

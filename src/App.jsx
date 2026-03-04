@@ -11,6 +11,7 @@ import VerifyPhone from "./pages/Owner/VerifyPhone/VerifyPhone";
 // import Catalog from "./pages/Owner/Catalog/Catalog";
 import LoginSelection from './pages/LoginSelection/LoginSelection'
 import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
+import CreateNewPin from "./pages/Owner/OwnerForgetPin/CreateNewPin";
 import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
 import ManageStaff from './pages/Owner/ManageStaff/ManageStaff'
 import StaffQRCode from './pages/Owner/StaffQRCode/StaffQRCode'
@@ -52,6 +53,7 @@ function App() {
                        location.pathname !== '/owner/verify' &&
                        location.pathname !== '/owner/login' &&
                        location.pathname !== '/owner/createpin' &&
+                       location.pathname !== '/owner/createnewpin' &&
                        location.pathname !== '/owner/inventory/flow'
                        location.pathname !== '/owner/catalog'
   
@@ -75,6 +77,7 @@ function App() {
         <Route path="/owner/catalog" element={<ProductCatalog />} />
         <Route path="/owner/login" element={<OwnerLogin />} />
         <Route path="/owner/createpin" element={<OwnerCreatePin />} />
+        <Route path="/owner/createnewpin" element={<CreateNewPin />} />
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/staff" element={<ManageStaff />} />
         <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
