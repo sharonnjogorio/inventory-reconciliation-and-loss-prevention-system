@@ -60,13 +60,13 @@ function DeviceLinked() {
 
       const deviceId = generateDeviceId()
 
-      const response = await authAPI.linkStaff({
-        qr_token: qrToken,
-        staff_name: staffName.trim(),
-        phone: phone.trim(),
-        pin: pinString,
-        device_id: deviceId
-      })
+      const response = await authAPI.linkStaff(
+        qrToken,
+        deviceId,
+        staffName.trim(),
+        phone.trim(),
+        pinString
+      )
 
       const staffId = response.staff?.id
 
@@ -80,7 +80,7 @@ function DeviceLinked() {
         linked_at: new Date().toISOString()
       }
 
-      // ✅ IndexedDB failure won't block the flow
+  
       try {
         await db.staff.add(staffData)
       } catch (dbErr) {
