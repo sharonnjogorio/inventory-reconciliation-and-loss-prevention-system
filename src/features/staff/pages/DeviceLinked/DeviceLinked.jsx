@@ -60,7 +60,7 @@ function DeviceLinked() {
 
       const deviceId = generateDeviceId()
 
-      const response = await authAPI.linkStaff(
+      const response = await authAPI.linkStaffDevice(
         qrToken,
         deviceId,
         staffName.trim(),
