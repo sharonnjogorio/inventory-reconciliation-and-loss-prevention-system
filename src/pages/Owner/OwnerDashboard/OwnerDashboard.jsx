@@ -91,8 +91,8 @@ function OwnerDashboard() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1 className={styles.pageTitle}>Select Your Product Catalog</h1>
-        <button className={styles.welcomeBtn} onClick={() => navigate('/owner/catalog')}>
+        <h1 className={styles.pageTitle}>Owner Dashboard</h1>
+        <button className={styles.welcomeBtn} onClick={() => navigate('/owner/inventory')}>
           {shopData.owner ? `Welcome ${shopData.owner.split(' ')[0]}!` : 'Welcome Owner!'}
         </button>
       </div>

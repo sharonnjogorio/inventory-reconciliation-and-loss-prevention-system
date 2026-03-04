@@ -7,9 +7,8 @@ function OwnerLogin() {
   const navigate = useNavigate()
 
   const [shopName, setShopName] = useState(() => localStorage.getItem('shopName') || '')
-  const [phoneNumber, setPhoneNumber] = useState('')   // ✅ was missing
+  const [phoneNumber, setPhoneNumber] = useState('')
   const [pin, setPin] = useState(['', '', '', ''])
-  const [storedPin, setStoredPin] = useState(() => localStorage.getItem('ownerPin') || '')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -38,11 +37,30 @@ function OwnerLogin() {
   const handleLogin = async () => {
     if (!phoneNumber.trim()) { setError('Please enter your phone number'); return }
     if (!phoneNumber.startsWith('+')) { setError('Phone number must include country code (e.g., +254...)'); return }
-    if (!storedPin) { setError('No PIN found. Please create a PIN first.'); return }
+
+    const pinString = pin.join('')
+    if (pinString.length !== 4) { setError('Please enter your 4-digit PIN'); return }
 
     setLoading(true)
     setError('')
-    navigate('/owner/dashboard')
+
+    try {
+      const response = await authAPI.ownerLoginWithPin(phoneNumber.trim(), pinString)
+
+      if (response.token) {
+        localStorage.setItem('authToken', response.token)
+        localStorage.setItem('userData', JSON.stringify(response.user))
+        localStorage.setItem('shopId', response.user?.shop_id)
+        localStorage.setItem('fullName', response.user?.full_name)
+        localStorage.setItem('shopName', response.user?.shop_name)
+      }
+
+      navigate('/owner/dashboard')
+    } catch (err) {
+      setError(err.response?.data?.message || 'Invalid phone number or PIN')
+    } finally {
+      setLoading(false)
+    }
   }
 
   return (
