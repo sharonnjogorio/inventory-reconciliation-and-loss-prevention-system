@@ -16,9 +16,7 @@ function OwnerNavbar() {
         const user = JSON.parse(userData)
         return user.full_name || 'Owner'
       }
-    } catch {
-      // ignore parse errors
-    }
+    } catch { }
     return 'Owner'
   })
   const [shopName, setShopName] = useState('My Shop')
@@ -29,25 +27,13 @@ function OwnerNavbar() {
         const user = JSON.parse(userData)
         return user.full_name ? user.full_name.charAt(0).toUpperCase() : 'O'
       }
-    } catch {
-      // ignore parse errors
-    }
+    } catch { }
     return 'O'
   })
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const dashResponse = await fetch('http://192.168.8.27:5000/dashboard/overview', {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-          }
-        })
-        const dashData = await dashResponse.json()
-        if (dashData.success && dashData.shop) {
-          setShopName(dashData.shop.shop_name)
-        }
-
         const alertsResponse = await alertsAPI.getAlertsSummary()
         if (alertsResponse.success) {
           setNewAlertsCount(alertsResponse.summary.total_active || 0)
@@ -75,42 +61,54 @@ function OwnerNavbar() {
 
   const isActive = (path) => location.pathname === path
 
+  const navItems = [
+    { path: '/owner/dashboard', label: 'Dashboard', icon: '🏠' },
+    { path: '/owner/staff', label: 'Staff', icon: '👥' },
+    { path: '/owner/inventory', label: 'Inventory', icon: '📦' },
+    { path: '/owner/sales-activity', label: 'Sales Activity', icon: '💰' },
+    { path: '/owner/analytics', label: 'Analytics', icon: '📊' },
+    { path: '/owner/alerts', label: 'Alerts', icon: '🔔', badge: newAlertsCount },
+    { path: '/owner/settings', label: 'Settings', icon: '⚙️' },
+  ]
+
   return (
-    <nav className={styles.navbar}>
-      <div className={styles.container}>
-        <div className={styles.logoSection} onClick={() => navigate('/owner/dashboard')}>
-          <img src={logo} alt="Smart Loss Control" className={styles.logo} />
-          <span className={styles.shopName}>{shopName}</span>
-        </div>
-
-        <div className={styles.navLinks}>
-          <button className={`${styles.link} ${isActive('/owner/dashboard') ? styles.active : ''}`} onClick={() => navigate('/owner/dashboard')}>Dashboard</button>
-          <button className={`${styles.link} ${isActive('/owner/staff') ? styles.active : ''}`} onClick={() => navigate('/owner/staff')}>Staff</button>
-          <button className={`${styles.link} ${isActive('/owner/inventory') ? styles.active : ''}`} onClick={() => navigate('/owner/inventory')}>Inventory</button>
-          <button className={`${styles.link} ${isActive('/owner/sales-activity') ? styles.active : ''}`} onClick={() => navigate('/owner/sales-activity')}>Sales Activity</button>
-          <button className={`${styles.link} ${isActive('/owner/analytics') ? styles.active : ''}`} onClick={() => navigate('/owner/analytics')}>Analytics</button>
-          <button className={`${styles.link} ${isActive('/owner/alerts') ? styles.active : ''}`} onClick={() => navigate('/owner/alerts')}>
-            Alerts
-            {newAlertsCount > 0 && <span className={styles.badge}>{newAlertsCount}</span>}
-          </button>
-          <button className={`${styles.link} ${isActive('/owner/settings') ? styles.active : ''}`} onClick={() => navigate('/owner/settings')}>Settings</button>
-        </div>
-
-        <div className={styles.userSection}>
-          <div className={styles.userInfo}>
-            <div className={styles.avatar}>{ownerInitial}</div>
-            <span className={styles.userName}>{ownerName}</span>
-          </div>
-          <button className={styles.logoutBtn} onClick={() => {
-            localStorage.removeItem('authToken')
-            localStorage.removeItem('userData')
-            navigate('/')
-          }}>
-            Logout
-          </button>
-        </div>
+    <aside className={styles.sidebar}>
+      {/* Logo */}
+      <div className={styles.logoSection} onClick={() => navigate('/owner/dashboard')}>
+        <img src={logo} alt="Smart Loss Control" className={styles.logo} />
+        <span className={styles.shopName}>{shopName}</span>
       </div>
-    </nav>
+
+      {/* Nav Links */}
+      <nav className={styles.navLinks}>
+        {navItems.map(item => (
+          <button
+            key={item.path}
+            className={`${styles.link} ${isActive(item.path) ? styles.active : ''}`}
+            onClick={() => navigate(item.path)}
+          >
+            <span className={styles.icon}>{item.icon}</span>
+            <span className={styles.label}>{item.label}</span>
+            {item.badge > 0 && <span className={styles.badge}>{item.badge}</span>}
+          </button>
+        ))}
+      </nav>
+
+      {/* User Section */}
+      <div className={styles.userSection}>
+        <div className={styles.userInfo}>
+          <div className={styles.avatar}>{ownerInitial}</div>
+          <span className={styles.userName}>{ownerName}</span>
+        </div>
+        <button className={styles.logoutBtn} onClick={() => {
+          localStorage.removeItem('authToken')
+          localStorage.removeItem('userData')
+          navigate('/')
+        }}>
+          Logout
+        </button>
+      </div>
+    </aside>
   )
 }
 

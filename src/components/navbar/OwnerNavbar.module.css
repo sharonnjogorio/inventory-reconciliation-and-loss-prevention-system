@@ -1,131 +1,122 @@
-/* ── Navbar Container ───────────────────────────────────── */
-.navbar {
-  background-color: #FFFFFF;
-  border-bottom: 2px solid #E5E5E5;
-  position: sticky;
+/* ── Sidebar ───────────────────────────────────────────── */
+.sidebar {
+  position: fixed;
   top: 0;
-  z-index: 100;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-  overflow-x: hidden; /* Prevent horizontal scroll */
-}
-
-.container {
-  max-width: 1440px;
-  height: 70px;
-  margin: 0 auto;
-  padding: 0 24px; /* Reduced from 48px */
+  left: 0;
+  height: 100vh;
+  width: 240px;
+  background-color: #FFFFFF;
+  border-right: 2px solid #f0f0f0;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px; /* Reduced from 48px */
-  box-sizing: border-box; /* CRITICAL FIX */
+  flex-direction: column;
+  z-index: 100;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
 }
 
-/* ── Logo Section ───────────────────────────────────────── */
+/* ── Logo ──────────────────────────────────────────────── */
 .logoSection {
   display: flex;
   align-items: center;
   gap: 12px;
+  padding: 24px 20px;
   cursor: pointer;
-  flex-shrink: 0;
-  min-width: 0; /* Allow text to shrink */
+  border-bottom: 1px solid #f0f0f0;
 }
 
 .logo {
-  height: 36px; /* Slightly smaller */
+  height: 36px;
   width: auto;
   flex-shrink: 0;
 }
 
 .shopName {
-  font-size: 0.95rem; /* Slightly smaller */
+  font-size: 0.95rem;
   font-weight: 700;
-  color: #1A1A1A;
+  color: #1a1a1a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* ── Nav Links ──────────────────────────────────────────── */
+/* ── Nav Links ─────────────────────────────────────────── */
 .navLinks {
   display: flex;
-  gap: 4px; /* Reduced from 8px */
-  align-items: center;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 12px;
   flex: 1;
-  justify-content: center;
-  min-width: 0; /* Allow flex items to shrink */
-  overflow-x: auto; /* Allow scroll if absolutely necessary */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Hide scrollbar Firefox */
-  -ms-overflow-style: none; /* Hide scrollbar IE/Edge */
-}
-
-.navLinks::-webkit-scrollbar {
-  display: none; /* Hide scrollbar Chrome/Safari */
+  overflow-y: hidden;
 }
 
 .link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
   background: none;
   border: none;
   color: #666666;
-  padding: 8px 12px; /* Reduced from 10px 20px */
-  font-size: 0.85rem; /* Reduced from 0.95rem */
-  font-weight: 600;
+  padding: 12px 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
   cursor: pointer;
   transition: all 200ms ease;
-  border-radius: 6px;
+  border-radius: 8px;
+  text-align: left;
+  width: 100%;
   position: relative;
-  white-space: nowrap;
-  flex-shrink: 0; /* Prevent text wrapping */
 }
 
 .link:hover {
   color: #E29A5C;
-  background-color: #FFF8F0;
+  background-color:#FFF8F0;
 }
 
 .link.active {
-  color: #E29A5C;
-  background-color: #FFF8F0;
-}
-
-.link.active::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 60%;
-  height: 3px;
+  color: #FFFFFF;
   background-color: #E29A5C;
-  border-radius: 3px 3px 0 0;
+  font-weight: 600;
 }
 
-/* ── User Section ───────────────────────────────────────── */
-.userSection {
-  display: flex;
-  align-items: center;
-  gap: 12px; /* Reduced from 16px */
+.icon {
+  font-size: 1.1rem;
   flex-shrink: 0;
+}
+
+.label {
+  flex: 1;
+}
+
+.badge {
+  background-color: #EF4444;
+  color: #FFFFFF;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 18px;
+  text-align: center;
+}
+
+/* ── User Section ──────────────────────────────────────── */
+.userSection {
+  padding: 16px 12px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .userInfo {
   display: flex;
   align-items: center;
-  gap: 8px; /* Reduced from 10px */
-  padding: 6px 12px; /* Reduced from 8px 16px */
-  background-color: #F5F7FA;
+  gap: 10px;
+  padding: 8px;
   border-radius: 8px;
-  cursor: pointer;
-  transition: background-color 200ms ease;
-}
-
-.userInfo:hover {
-  background-color: #E8EEF4;
+  background-color: #F5F7FA;
 }
 
 .avatar {
-  width: 32px; /* Reduced from 36px */
+  width: 32px;
   height: 32px;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: #FFFFFF;
@@ -139,97 +130,66 @@
 }
 
 .userName {
-  font-size: 0.875rem; /* Reduced from 0.95rem */
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #1A1A1A;
+  color: #1a1a1a;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .logoutBtn {
-  padding: 8px 16px; /* Reduced from 10px 20px */
-  background-color: #FFFFFF;
+  width: 70%;
+  padding: 10px;
+  background-color: transparent;
   color: #EF4444;
-  border: 2px solid #EF4444;
+  border: 1px solid #EF4444;
   border-radius: 6px;
-  font-size: 0.85rem; /* Reduced from 0.9rem */
+  font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 200ms ease;
-  white-space: nowrap;
-  flex-shrink: 0;
 }
 
 .logoutBtn:hover {
   background-color: #EF4444;
   color: #FFFFFF;
-  transform: translateY(-2px);
 }
 
-/* ── Responsive ─────────────────────────────────────────── */
-@media (max-width: 1400px) {
-  .container {
-    gap: 12px;
-  }
-  
-  .navLinks {
-    gap: 2px;
+/* ── Responsive ────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 64px;
   }
 
-  .link {
-    padding: 8px 10px;
-    font-size: 0.8rem;
-  }
-}
-
-@media (max-width: 1200px) {
-  .container {
-    padding: 0 16px;
-  }
-
-  .navLinks {
-    gap: 0;
-  }
-
-  .link {
-    padding: 8px 8px;
-    font-size: 0.75rem;
-  }
-  
-  .userSection {
-    gap: 8px;
-  }
-}
-
-@media (max-width: 1024px) {
-  .shopName {
-    display: none;
-  }
-
+  .shopName,
+  .label,
   .userName {
     display: none;
   }
-  
+
+  .logoSection {
+    justify-content: center;
+    padding: 20px 12px;
+  }
+
   .link {
-    padding: 6px 8px;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 0 16px;
-    gap: 8px;
-  }
-
-  .navLinks {
-    display: none; /* Hide on mobile - implement hamburger menu */
+    justify-content: center;
+    padding: 12px;
   }
 
   .userInfo {
-    padding: 6px 8px;
+    justify-content: center;
   }
 
   .logoutBtn {
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    font-size: 0;
+    padding: 10px;
+  }
+
+  .logoutBtn::after {
+    content: '→';
+    font-size: 1rem;
+    color: #EF4444;
   }
 }

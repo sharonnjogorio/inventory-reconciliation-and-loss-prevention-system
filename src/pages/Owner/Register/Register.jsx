@@ -44,11 +44,11 @@ function Register() {
         phoneNumber: formData.phoneNumber.trim(),
       }
 
-      console.log('📤 Registration payload (to authAPI):', payload)
+      console.log(' Registration payload (to authAPI):', payload)
 
       const response = await authAPI.registerOwner(payload)
-      console.log('✅ Registration successful:', response)
-      console.log('🔐 Dev OTP:', response.dev_otp || '1234')
+      console.log(' Registration successful:', response)
+      console.log(' Dev OTP:', response.dev_otp || '1234')
 
       localStorage.setItem('phoneNumber', formData.phoneNumber)
       localStorage.setItem('shopName', formData.shopName)
@@ -85,7 +85,7 @@ function Register() {
         <div className={styles.overlay}>
           <h1>Smart Loss Control</h1>
           <h2>Stop Revenue Leaks</h2>
-          <p>Track every drop, save every naira</p>
+          <p>Track every drop, save every penny</p>
         </div>
       </div>
 
