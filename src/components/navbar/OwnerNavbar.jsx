@@ -16,7 +16,7 @@ function OwnerNavbar() {
         const user = JSON.parse(userData)
         return user.full_name || 'Owner'
       }
-    } catch { }
+    } catch { /* ignore invalid localStorage data */ }
     return 'Owner'
   })
   const [shopName, setShopName] = useState('My Shop')
@@ -27,7 +27,7 @@ function OwnerNavbar() {
         const user = JSON.parse(userData)
         return user.full_name ? user.full_name.charAt(0).toUpperCase() : 'O'
       }
-    } catch { }
+    } catch { /* ignore invalid localStorage data */ }
     return 'O'
   })
 

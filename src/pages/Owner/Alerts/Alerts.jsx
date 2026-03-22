@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { alertsAPI } from '../../../services'
 import AlertCard from '../../../components/AlertCard/AlertCard'
 import AlertDetailsModal from '../../../components/AlertDetailsModal/AlertDetailsModal'
@@ -10,15 +10,10 @@ function Alerts() {
   const [selectedAlert, setSelectedAlert] = useState(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
   
-  // Filters
-  const [statusFilter, setStatusFilter] = useState('active') // active, resolved, all
-  const [severityFilter, setSeverityFilter] = useState('all') // all, critical, warning, minor
+  const [statusFilter, setStatusFilter] = useState('active')
+  const [severityFilter, setSeverityFilter] = useState('all')
 
-  useEffect(() => {
-    fetchAlerts()
-  }, [statusFilter, severityFilter])
-
-  const fetchAlerts = async () => {
+  const fetchAlerts = useCallback(async () => {
     setLoading(true)
     try {
       const params = {}
@@ -32,7 +27,11 @@ function Alerts() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [statusFilter, severityFilter])
+
+  useEffect(() => {
+    fetchAlerts()
+  }, [fetchAlerts])
 
   const handleViewDetails = async (alertId) => {
     try {
@@ -49,7 +48,7 @@ function Alerts() {
     try {
       await alertsAPI.resolveAlert(alertId, notes)
       setShowDetailsModal(false)
-      fetchAlerts() // Refresh list
+      fetchAlerts()
     } catch (error) {
       console.error('Failed to resolve alert:', error)
       alert('Failed to resolve alert')

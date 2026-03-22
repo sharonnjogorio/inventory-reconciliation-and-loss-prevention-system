@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { salesAPI } from '../../../services'
 import styles from './SalesActivity.module.css'
 
@@ -7,18 +7,13 @@ function SalesActivity() {
   const [sales, setSales] = useState([])
   const [pagination, setPagination] = useState({ total: 0, pages: 0, limit: 50, offset: 0 })
   
-  // Filters
-  const [dateRange, setDateRange] = useState('today') // today, week, month, custom
+  const [dateRange, setDateRange] = useState('today') 
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
 
-  useEffect(() => {
-    loadSalesActivity()
-  }, [dateRange, currentPage])
-
-  const loadSalesActivity = async () => {
+  const loadSalesActivity = useCallback(async () => {
     setLoading(true)
     try {
       let start, end
@@ -55,7 +50,11 @@ function SalesActivity() {
     } finally {
       setLoading(false)
     }
-  }
+  }, [dateRange, startDate, endDate, currentPage])
+
+  useEffect(() => {
+    loadSalesActivity()
+  }, [loadSalesActivity])
 
   const formatDateTime = (dateString) => {
     const date = new Date(dateString)
@@ -90,7 +89,6 @@ function SalesActivity() {
     a.click()
   }
 
-  // Filter sales by search term
   const filteredSales = sales.filter(sale => {
     if (!searchTerm) return true
     const search = searchTerm.toLowerCase()

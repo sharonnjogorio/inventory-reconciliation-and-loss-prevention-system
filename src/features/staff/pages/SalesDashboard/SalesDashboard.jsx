@@ -230,7 +230,7 @@ function SalesDashboard() {
   }
 
   loadSessionRevenue()
-}, [staff, navigate])
+}, [staff, navigate, isLoggingOut])
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])

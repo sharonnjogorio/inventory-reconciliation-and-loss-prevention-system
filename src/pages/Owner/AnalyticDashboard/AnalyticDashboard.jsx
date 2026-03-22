@@ -1,4 +1,4 @@
-import React, { useState, useReducer, useEffect } from "react";
+import React, { useState, useReducer, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom'
 import styles from "./AnalyticDashboard.module.css";
 import AnalyticCard from "../../../components/card/AnalyticCard/AnalyticCard";
@@ -40,28 +40,21 @@ const AnalyticDashboard = () => {
   });
   const [state, dispatch] = useReducer(dashboardReducer, initialDashboardState);
 
-  useEffect(() => {
-    loadAnalyticsData()
-  }, [timeRange])
-
-  const loadAnalyticsData = async () => {
+  const loadAnalyticsData = useCallback(async () => {
     setLoading(true)
     try {
       const days = timeRange === '7d' ? 7 : 30
       const endDate = new Date().toISOString()
       const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 
-      // Get today's date range
       const today = new Date()
       const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString()
       const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString()
       
-      // Get yesterday's date range for comparison
       const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
       const yesterdayStart = new Date(yesterday.setHours(0, 0, 0, 0)).toISOString()
       const yesterdayEnd = new Date(yesterday.setHours(23, 59, 59, 999)).toISOString()
 
-      // Fetch real data from backend
       const [salesReport, deviationReport, dashData, todaySales, yesterdaySales] = await Promise.all([
         reportsAPI.getSalesTrendReport({ start_date: startDate, end_date: endDate, group_by: 'day' }),
         reportsAPI.getDeviationReport({ start_date: startDate, end_date: endDate, group_by: 'day' }),
@@ -70,36 +63,29 @@ const AnalyticDashboard = () => {
         reportsAPI.getSalesTrendReport({ start_date: yesterdayStart, end_date: yesterdayEnd, group_by: 'day' })
       ])
 
-      // Calculate today's revenue
       const todayRevenue = todaySales.summary?.total_revenue || 0
       const yesterdayRevenue = yesterdaySales.summary?.total_revenue || 0
       const todayTrend = yesterdayRevenue > 0 ? (((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100).toFixed(1) : 0
 
-      // Calculate total revenue
       const totalRevenue = salesReport.summary?.total_revenue || 0
       const prevRevenue = salesReport.summary?.prev_period_revenue || totalRevenue
       const revenueTrend = prevRevenue > 0 ? (((totalRevenue - prevRevenue) / prevRevenue) * 100).toFixed(1) : 0
 
-      // Calculate shrinkage rate
       const totalLoss = deviationReport.summary?.total_estimated_loss || 0
       const shrinkageRate = totalRevenue > 0 ? ((totalLoss / totalRevenue) * 100).toFixed(1) : 0
 
-      // Get incidents count
       const totalIncidents = deviationReport.summary?.total_incidents || 0
       const resolvedIncidents = deviationReport.summary?.resolved_incidents || 0
       const openIncidents = totalIncidents - resolvedIncidents
 
-      // Get spot checks count
       const spotChecks = deviationReport.summary?.total_audits || 0
 
-      // Build weekly loss trend
       const weeklyLossTrend = salesReport.trend?.map(day => ({
         label: new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
         losses: parseFloat(day.cost || 0),
         sales: parseFloat(day.revenue || 0)
       })) || []
 
-      // Build loss by category
       const lossByCategory = deviationReport.trend?.map(day => ({
         label: new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
         value: parseFloat(day.total_variance || 0)
@@ -144,7 +130,11 @@ const AnalyticDashboard = () => {
     } finally {
       setLoading(false)
     }
-  }
+  }, [timeRange])
+
+  useEffect(() => {
+    loadAnalyticsData()
+  }, [loadAnalyticsData])
 
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
