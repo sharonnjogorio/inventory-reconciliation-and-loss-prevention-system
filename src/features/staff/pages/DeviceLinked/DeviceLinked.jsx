@@ -61,7 +61,7 @@ function DeviceLinked() {
       const deviceId = generateDeviceId()
 
       // Make the actual API call to link the device
-      const response = await authAPI.linkStaff({
+      const response = await authAPI.linkStaffDevice({
         qr_token: qrToken,
         staff_name: staffName.trim(),
         phone: phone.trim(),

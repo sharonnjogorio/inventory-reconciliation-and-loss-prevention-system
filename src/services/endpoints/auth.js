@@ -68,22 +68,22 @@ export const authAPI = {
     return response.data
   },
 
-  linkStaffDevice: async (qrToken, deviceId, staffName, phone, pin) => {
-    const response = await api.post('/auth/staff/link', {
-      qr_token: qrToken,
-      device_id: deviceId,
-      staff_name: staffName,
-      phone: phone,
-      pin: pin
-    })
+  linkStaffDevice: async (data) => {
+  const response = await api.post('/auth/staff/link', {
+    qr_token: data.qr_token,
+    device_id: data.device_id,
+    staff_name: data.staff_name,
+    phone: data.phone,
+    pin: data.pin
+  })
 
-    if (response.data.token) {
-      localStorage.setItem('authToken', response.data.token)
-      localStorage.setItem('userData', JSON.stringify(response.data.staff))
-    }
+  if (response.data.token) {
+    localStorage.setItem('authToken', response.data.token)
+    localStorage.setItem('userData', JSON.stringify(response.data.staff))
+  }
 
-    return response.data
-  },
+  return response.data
+},
 
   generateQRCode: async () => {
     const response = await api.post('/auth/generate-qr')

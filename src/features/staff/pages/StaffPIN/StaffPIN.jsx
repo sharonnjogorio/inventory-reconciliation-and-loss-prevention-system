@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { authAPI } from '../../../../services'
 import useAuthStore from '../../../../store/useAuthStore'
@@ -16,13 +16,17 @@ function StaffPIN() {
 
   // Get phone and staff name from navigation state
   const phone = location.state?.phone || ''
-  const staffName = location.state?.staffName || ''
+const staffName = location.state?.staffName || ''
 
-  // Redirect if no phone provided
+useEffect(() => {
   if (!phone || !staffName) {
     navigate('/staff/phone')
-    return null
   }
+}, [phone, staffName, navigate])
+
+if (!phone || !staffName) {
+  return null
+}
 
   const handleDigitPress = (digit) => {
     if (pin.length < 4) {

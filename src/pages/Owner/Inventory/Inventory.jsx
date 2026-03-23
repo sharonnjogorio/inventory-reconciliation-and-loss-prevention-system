@@ -13,18 +13,24 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState('')
   const [editingItem, setEditingItem] = useState(null)
 
+  // --- Load inventory from localStorage first, then fetch from backend ---
   useEffect(() => {
-    fetchInventory()
+    const savedInventory = localStorage.getItem('inventory')
+    if (savedInventory) {
+      setInventory(JSON.parse(savedInventory))
+      setLoading(false)
+    }
+    fetchInventory() // Sync with backend
   }, [])
 
   const fetchInventory = async () => {
     try {
       const data = await inventoryAPI.getInventorySummary()
       console.log('✅ Inventory loaded:', data)
-      
-      // Backend returns {success: true, inventory: [...]}
       const inventoryList = data.inventory || data.data || data
-      setInventory(Array.isArray(inventoryList) ? inventoryList : [])
+      const finalInventory = Array.isArray(inventoryList) ? inventoryList : []
+      setInventory(finalInventory)
+      localStorage.setItem('inventory', JSON.stringify(finalInventory)) // Update localStorage
     } catch (err) {
       console.error('❌ Failed to load inventory:', err)
       setError('Failed to load inventory. Please refresh.')
@@ -33,6 +39,7 @@ function Inventory() {
     }
   }
 
+  // --- Handle editing a product ---
   const handleEditItem = (item) => {
     setEditingItem(item)
   }
@@ -41,15 +48,22 @@ function Inventory() {
     try {
       await inventoryAPI.updateSKUInventory(skuId, data)
       console.log('✅ Product updated successfully')
-      
-      // Refresh inventory
-      await fetchInventory()
+
+      // Update local state and localStorage
+      const updatedInventory = inventory.map(item =>
+        item.sku_id === skuId ? { ...item, ...data } : item
+      )
+      setInventory(updatedInventory)
+      localStorage.setItem('inventory', JSON.stringify(updatedInventory))
+
       setEditingItem(null)
     } catch (err) {
       console.error('❌ Failed to update product:', err)
       throw err
     }
   }
+
+  // --- Utility for status display ---
   const getStatusColor = (quantity) => {
     if (quantity === 0) return styles.statusRed
     if (quantity <= 10) return styles.statusYellow
@@ -62,6 +76,7 @@ function Inventory() {
     return 'In Stock'
   }
 
+  // --- Stats calculation ---
   const stats = {
     lowItems: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
     inStock: inventory.filter(item => item.quantity > 0).length,
@@ -73,7 +88,6 @@ function Inventory() {
     item.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.size?.toLowerCase().includes(searchTerm.toLowerCase())
   )
-
 
   if (loading) {
     return (
@@ -184,7 +198,7 @@ function Inventory() {
                       </span>
                     </div>
                   </td>
-                  <td>{/* Category/Unit if you have it, otherwise 'Oil' or 'N/A' */}Oil</td>
+                  <td>Oil</td>
                   <td>
                     <span className={styles.quantity}>
                       {item.quantity} units
@@ -194,7 +208,6 @@ function Inventory() {
                     <span className={`${styles.statusBadge} ${getStatusColor(item.quantity)}`}>
                       {getStatusText(item.quantity)}
                     </span>
-
                   </td>
                   <td className={styles.lastUpdated}>
                     {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'N/A'}
@@ -210,7 +223,6 @@ function Inventory() {
                 </tr>
               ))}
             </tbody>
-
           </table>
         )}
       </div>

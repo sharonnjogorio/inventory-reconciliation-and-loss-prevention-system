@@ -170,10 +170,10 @@ function Register() {
             </div>
           </form>
 
-          <div className={styles.devNote}>
+          {/* <div className={styles.devNote}>
             <strong>🔧 Development Mode</strong><br/>
             OTP will be <strong>1234</strong> (also visible in browser console)
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

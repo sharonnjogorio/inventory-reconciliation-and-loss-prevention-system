@@ -20,7 +20,7 @@ const AFRICAN_OIL_BRANDS = [
 
 function AddStock() {
   const navigate = useNavigate()
-  
+
   const [loading, setLoading] = useState(true)
   const [inventory, setInventory] = useState([])
   const [allSKUs, setAllSKUs] = useState([])
@@ -48,14 +48,18 @@ function AddStock() {
       setInventory(Array.isArray(inventoryList) ? inventoryList : [])
 
       // Fetch all SKUs
-      const skusResponse = await fetch(`${import.meta.env.VITE_API_URL || 'http://192.168.8.27:5000'}/inventory/skus`, {
+      const skusResponse = await fetch(`${import.meta.env.VITE_API_URL}/inventory/skus`, {
+        method: 'GET',
         headers: {
-          'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+          'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+          'Content-Type': 'application/json'
         }
-      })
+      });
+
+
       const skusData = await skusResponse.json()
       setAllSKUs(skusData.skus || skusData.data || [])
-      
+
       console.log('✅ Data loaded:', { inventory: inventoryList.length, skus: (skusData.skus || []).length })
     } catch (err) {
       console.error('❌ Failed to load data:', err)
@@ -66,7 +70,7 @@ function AddStock() {
   }
 
   const getProductStatus = (brand) => {
-    const existingItem = inventory.find(item => 
+    const existingItem = inventory.find(item =>
       item.brand.toLowerCase() === brand.toLowerCase() && item.size === '1L'
     )
     return existingItem
@@ -74,7 +78,7 @@ function AddStock() {
 
   const handleProductSelect = (product) => {
     const existingItem = getProductStatus(product.brand)
-    
+
     if (existingItem) {
       // Product exists - show restock option
       setSelectedProduct({ ...product, existing: existingItem })
@@ -106,88 +110,117 @@ function AddStock() {
         ...prev,
         [field]: parseFloat(value) || 0
       }
-      
+
       // Auto-calculate total bottles
       if (field === 'cartons' || field === 'bottlesPerCarton') {
         updated.totalBottles = updated.cartons * updated.bottlesPerCarton
       }
-      
+
       return updated
     })
   }
 
   const handleSubmit = async () => {
     if (!selectedProduct) {
-      setError('Please select a product')
-      return
+      setError('Please select a product');
+      return;
     }
 
     if (stockData.totalBottles === 0) {
-      setError('Please enter quantity')
-      return
+      setError('Please enter quantity');
+      return;
     }
 
     if (!stockData.costPrice || !stockData.sellingPrice) {
-      setError('Please enter cost and selling prices')
-      return
+      setError('Please enter cost and selling prices');
+      return;
     }
 
     if (stockData.sellingPrice < stockData.costPrice) {
-      setError('Selling price should be higher than cost price')
-      return
+      setError('Selling price should be higher than cost price');
+      return;
     }
 
-    setSubmitting(true)
-    setError('')
+    setSubmitting(true);
+    setError('');
 
     try {
-      // Find matching SKU
-      const matchingSKU = allSKUs.find(sku => 
-        sku.brand.toLowerCase() === selectedProduct.brand.toLowerCase() && 
-        sku.size === '1L'
-      )
+      let skuId = null;
 
-      if (!matchingSKU) {
-        throw new Error(`SKU not found for ${selectedProduct.brand} 1L`)
+      // Check if SKU exists
+      const matchingSKU = allSKUs.find(
+        sku =>
+          sku.brand.toLowerCase() === selectedProduct.brand.toLowerCase() &&
+          sku.size === '1L'
+      );
+
+      if (matchingSKU) {
+        skuId = matchingSKU.id;
+      } else {
+        // Create new SKU first
+        const createResponse = await fetch(`${import.meta.env.VITE_API_URL}/inventory/skus`, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('authToken')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            brand: selectedProduct.brand,
+            size: '1L',
+            is_carton: false,
+            units_per_carton: stockData.bottlesPerCarton
+          })
+        });
+
+        const createData = await createResponse.json();
+
+        if (!createResponse.ok) {
+          throw new Error(createData.message || 'Failed to create SKU');
+        }
+
+        skuId = createData.sku.id;
+
+        // Add new SKU to local state so next operations work
+        setAllSKUs(prev => [...prev, createData.sku]);
       }
 
       // Call restock API
       await inventoryAPI.recordRestock({
-        skuId: matchingSKU.id,
+        skuId,
         orderedQty: stockData.totalBottles,
         receivedQty: stockData.totalBottles,
         costPrice: stockData.costPrice,
         sellPrice: stockData.sellingPrice,
         supplierName: selectedProduct.existing ? 'Restock' : 'Initial Stock',
         referenceNote: `${stockData.cartons} cartons × ${stockData.bottlesPerCarton} bottles`
-      })
+      });
 
-      const action = selectedProduct.existing ? 'restocked' : 'added'
-      setSuccess(`✅ ${selectedProduct.name} ${action} successfully!`)
-      
+      const action = selectedProduct.existing ? 'restocked' : 'added';
+      setSuccess(`✅ ${selectedProduct.name} ${action} successfully!`);
+
       // Refresh data
-      await fetchData()
-      
+      await fetchData();
+
       // Reset form after 2 seconds
       setTimeout(() => {
-        setSelectedProduct(null)
+        setSelectedProduct(null);
         setStockData({
           cartons: 0,
           bottlesPerCarton: 12,
           totalBottles: 0,
           costPrice: 0,
           sellingPrice: 0
-        })
-        setSuccess('')
-      }, 2000)
-      
+        });
+        setSuccess('');
+      }, 2000);
+
     } catch (err) {
-      console.error('❌ Failed to add stock:', err)
-      setError(err.response?.data?.message || err.message || 'Failed to add stock')
+      console.error('❌ Failed to add stock:', err);
+      setError(err.response?.data?.message || err.message || 'Failed to add stock');
     } finally {
-      setSubmitting(false)
+      setSubmitting(false);
     }
-  }
+  };
 
   if (loading) {
     return (
