@@ -101,11 +101,14 @@ function OwnerCreatePin() {
 
     try {
       console.log('📤 Setting PIN...')
-      
+
       // Call backend API to set PIN
       const response = await authAPI.setPin(pinValue)
-      
+
       console.log('✅ PIN set successfully:', response)
+
+      // ✅ IMPORTANT: Persist PIN
+      localStorage.setItem('ownerPin', pinValue)
 
       // Store phone number for login
       if (phoneNumber) {
@@ -186,8 +189,8 @@ function OwnerCreatePin() {
             </div>
           </div>
 
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             className={styles.submitButton}
             disabled={loading}
           >

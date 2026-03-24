@@ -5,7 +5,7 @@ import styles from './ManageStaff.module.css'
 
 function ManageStaff() {
   const navigate = useNavigate()
-  
+
   const [activeStaff, setActiveStaff] = useState([])
   const [removedStaff, setRemovedStaff] = useState([])
   const [loading, setLoading] = useState(true)
@@ -20,12 +20,12 @@ function ManageStaff() {
       setLoading(true)
       const response = await shopsAPI.getStaffList()
       console.log('✅ Staff list loaded:', response)
-      
+
       if (response.success) {
         // Separate active and removed staff
         const active = response.staff.filter(s => s.is_active)
         const removed = response.staff.filter(s => !s.is_active)
-        
+
         setActiveStaff(active)
         setRemovedStaff(removed)
       }
@@ -78,7 +78,7 @@ function ManageStaff() {
 
   const formatLastLogin = (timestamp) => {
     if (!timestamp) return 'Never'
-    
+
     const date = new Date(timestamp)
     const now = new Date()
     const diffMs = now - date
@@ -121,7 +121,7 @@ function ManageStaff() {
             <h1 className={styles.title}>Manage Staff</h1>
             <p className={styles.subtitle}>Control who has access to your shop system</p>
           </div>
-          <button 
+          <button
             className={styles.addStaffBtn}
             onClick={() => navigate('/owner/staff/qr-code')}
           >
@@ -136,7 +136,7 @@ function ManageStaff() {
             <div className={styles.emptyState}>
               <div className={styles.emptyIcon}>👥</div>
               <p className={styles.emptyText}>No active staff members</p>
-              <button 
+              <button
                 className={styles.addStaffBtn}
                 onClick={() => navigate('/owner/staff/qr-code')}
               >
@@ -157,9 +157,29 @@ function ManageStaff() {
                         Active
                       </span>
                       <div className={styles.staffDetails}>
-                        <span>Device: {staff.device_id || 'Not linked'}</span>
-                        <span>Last Login: {formatLastLogin(staff.last_login_at)}</span>
-                        <span>Joined: {new Date(staff.created_at).toLocaleDateString()}</span>
+                        <span>
+                          Device: {staff.last_login_device || staff.device_id || 'Not linked'}
+                        </span>
+
+                        <span>
+                          Last Login: {staff.last_login_at
+                            ? new Date(staff.last_login_at).toLocaleString()
+                            : 'Never'}
+                        </span>
+
+                        <span>
+                          Session Status: {staff.last_logout_at ? 'Offline' : 'Online'}
+                        </span>
+
+                        <span>
+                          {staff.last_logout_at
+                            ? `Last Logout: ${new Date(staff.last_logout_at).toLocaleString()}`
+                            : 'Currently Active'}
+                        </span>
+
+                        <span>
+                          Joined: {new Date(staff.created_at).toLocaleDateString()}
+                        </span>
                       </div>
                     </div>
                   </div>

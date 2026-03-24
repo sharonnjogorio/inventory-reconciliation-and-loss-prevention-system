@@ -6,10 +6,9 @@ import styles from './OwnerLogin.module.css'
 function OwnerLogin() {
   const navigate = useNavigate()
 
-  const [shopName, setShopName] = useState(() => localStorage.getItem('shopName') || '')
+  
   const [phoneNumber, setPhoneNumber] = useState('')   // ✅ was missing
   const [pin, setPin] = useState(['', '', '', ''])
-  const [storedPin, setStoredPin] = useState(() => localStorage.getItem('ownerPin') || '')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
@@ -36,14 +35,43 @@ function OwnerLogin() {
   }, [])
 
   const handleLogin = async () => {
-    if (!phoneNumber.trim()) { setError('Please enter your phone number'); return }
-    if (!phoneNumber.startsWith('+')) { setError('Phone number must include country code (e.g., +254...)'); return }
-    if (!storedPin) { setError('No PIN found. Please create a PIN first.'); return }
-
-    setLoading(true)
-    setError('')
-    navigate('/owner/dashboard')
+  if (!phoneNumber.trim()) {
+    setError('Please enter your phone number')
+    return
   }
+
+  if (!phoneNumber.startsWith('+')) {
+    setError('Phone number must include country code')
+    return
+  }
+
+  const savedPin = localStorage.getItem('ownerPin')
+
+  if (!savedPin) {
+    setError('No PIN found. Please create a PIN first.')
+    return
+  }
+
+  const enteredPin = pin.join('')
+
+  if (enteredPin.length !== 4) {
+    setError('Enter your 4-digit PIN')
+    return
+  }
+
+  if (enteredPin !== savedPin) {
+    setError('Incorrect PIN')
+    return
+  }
+
+  setLoading(true)
+  setError('')
+
+  // Optionally store session
+  localStorage.setItem('isLoggedIn', 'true')
+
+  navigate('/owner/dashboard')
+}
 
   return (
     <div className={styles.container}>
