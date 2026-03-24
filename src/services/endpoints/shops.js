@@ -37,3 +37,17 @@ export const shopsAPI = {
     return response.data
   },
 }
+
+// -------------------------
+// Staff self-view API (logged-in staff)
+// -------------------------
+export const staffAPI = {
+  /**
+   * Fetch currently logged-in staff info
+   * GET /staff/me
+   */
+  getMyInfo: async () => {
+    const response = await api.get('/staff/me')
+    return response.data
+  },
+}

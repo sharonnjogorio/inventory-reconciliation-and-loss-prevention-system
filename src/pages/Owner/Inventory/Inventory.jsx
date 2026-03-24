@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { inventoryAPI } from '../../../services/endpoints/inventory'
 import EditInventoryModal from './EditInventoryModal'
@@ -13,57 +13,66 @@ function Inventory() {
   const [searchTerm, setSearchTerm] = useState('')
   const [editingItem, setEditingItem] = useState(null)
 
-  // --- Load inventory from localStorage first, then fetch from backend ---
-  useEffect(() => {
-    const savedInventory = localStorage.getItem('inventory')
-    if (savedInventory) {
-      setInventory(JSON.parse(savedInventory))
-      setLoading(false)
-    }
-    fetchInventory() // Sync with backend
-  }, [])
-
-  const fetchInventory = async () => {
+  // ✅ Fetch inventory (single source of truth)
+  const fetchInventory = useCallback(async () => {
     try {
+      setLoading(true)
+      setError('')
       const data = await inventoryAPI.getInventorySummary()
-      console.log('✅ Inventory loaded:', data)
       const inventoryList = data.inventory || data.data || data
-      const finalInventory = Array.isArray(inventoryList) ? inventoryList : []
-      setInventory(finalInventory)
-      localStorage.setItem('inventory', JSON.stringify(finalInventory)) // Update localStorage
+      setInventory(Array.isArray(inventoryList) ? inventoryList : [])
     } catch (err) {
       console.error('❌ Failed to load inventory:', err)
       setError('Failed to load inventory. Please refresh.')
     } finally {
       setLoading(false)
     }
-  }
+  }, [])
 
-  // --- Handle editing a product ---
-  const handleEditItem = (item) => {
-    setEditingItem(item)
-  }
+  useEffect(() => {
+    fetchInventory()
+  }, [fetchInventory])
 
-  const handleSaveEdit = async (skuId, data) => {
+  // ✅ Edit handlers
+  const handleEditItem = (item) => setEditingItem(item)
+
+  const handleSaveEdit = async (skuId, formData) => {
     try {
-      await inventoryAPI.updateSKUInventory(skuId, data)
-      console.log('✅ Product updated successfully')
+      const response = await inventoryAPI.updateSKUInventory(skuId, formData)
+      const updatedProduct = response.product
 
-      // Update local state and localStorage
-      const updatedInventory = inventory.map(item =>
-        item.sku_id === skuId ? { ...item, ...data } : item
-      )
-      setInventory(updatedInventory)
-      localStorage.setItem('inventory', JSON.stringify(updatedInventory))
+      // Update or append if missing
+      setInventory(prev => {
+        const exists = prev.find(i => i.sku_id === skuId)
+        if (exists) {
+          return prev.map(i => i.sku_id === skuId ? { ...i, ...updatedProduct } : i)
+        } else {
+          return [...prev, updatedProduct]
+        }
+      })
 
       setEditingItem(null)
     } catch (err) {
       console.error('❌ Failed to update product:', err)
-      throw err
+      alert('Failed to update product')
     }
   }
 
-  // --- Utility for status display ---
+  // ✅ Search filter
+  const filteredInventory = inventory.filter(item =>
+    item.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.size?.toLowerCase().includes(searchTerm.toLowerCase())
+  )
+
+  // ✅ Stats
+  const stats = {
+    lowItems: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
+    inStock: inventory.filter(item => item.quantity > 0).length,
+    lowStock: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
+    outOfStock: inventory.filter(item => item.quantity === 0).length
+  }
+
+  // ✅ Status helpers
   const getStatusColor = (quantity) => {
     if (quantity === 0) return styles.statusRed
     if (quantity <= 10) return styles.statusYellow
@@ -76,19 +85,7 @@ function Inventory() {
     return 'In Stock'
   }
 
-  // --- Stats calculation ---
-  const stats = {
-    lowItems: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
-    inStock: inventory.filter(item => item.quantity > 0).length,
-    lowStock: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
-    outOfStock: inventory.filter(item => item.quantity === 0).length
-  }
-
-  const filteredInventory = inventory.filter(item =>
-    item.brand?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.size?.toLowerCase().includes(searchTerm.toLowerCase())
-  )
-
+  // ✅ Loading state
   if (loading) {
     return (
       <div className={styles.container}>
@@ -100,6 +97,7 @@ function Inventory() {
     )
   }
 
+  // ✅ Error state
   if (error && inventory.length === 0) {
     return (
       <div className={styles.container}>
@@ -116,6 +114,7 @@ function Inventory() {
 
   return (
     <div className={styles.container}>
+      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Inventory Management</h1>
@@ -129,41 +128,28 @@ function Inventory() {
         </button>
       </div>
 
+      {/* Stats */}
       <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <h3>Low Items</h3>
-          <p className={styles.statValue}>{stats.lowItems}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>In Stock</h3>
-          <p className={styles.statValue}>{stats.inStock}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Low Stock</h3>
-          <p className={styles.statValue}>{stats.lowStock}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Out of Stock</h3>
-          <p className={styles.statValue}>{stats.outOfStock}</p>
-        </div>
+        {Object.entries(stats).map(([key, value]) => (
+          <div key={key} className={styles.statCard}>
+            <h3>{key.replace(/([A-Z])/g, ' $1')}</h3>
+            <p className={styles.statValue}>{value}</p>
+          </div>
+        ))}
       </div>
 
+      {/* Search */}
       <div className={styles.controls}>
-        <div className={styles.searchBox}>
-          <input
-            type="text"
-            placeholder="Search by product name or size..."
-            className={styles.searchInput}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <div className={styles.filterButtons}>
-          <button className={styles.filterBtn}>Filters</button>
-          <button className={styles.viewBtn}>Table View</button>
-        </div>
+        <input
+          type="text"
+          placeholder="Search by brand or size..."
+          className={styles.searchInput}
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
       </div>
 
+      {/* Inventory Table */}
       <div className={styles.tableWrapper}>
         {filteredInventory.length === 0 ? (
           <div className={styles.emptyState}>
@@ -181,7 +167,6 @@ function Inventory() {
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Category</th>
                 <th>Quantity</th>
                 <th>Status</th>
                 <th>Last Updated</th>
@@ -191,32 +176,16 @@ function Inventory() {
             <tbody>
               {filteredInventory.map(item => (
                 <tr key={item.sku_id}>
-                  <td>
-                    <div className={styles.productCell}>
-                      <span className={styles.productName}>
-                        {item.brand} {item.size}
-                      </span>
-                    </div>
-                  </td>
-                  <td>Oil</td>
-                  <td>
-                    <span className={styles.quantity}>
-                      {item.quantity} units
-                    </span>
-                  </td>
+                  <td>{item.brand} {item.size}</td>
+                  <td>{item.quantity} units</td>
                   <td>
                     <span className={`${styles.statusBadge} ${getStatusColor(item.quantity)}`}>
                       {getStatusText(item.quantity)}
                     </span>
                   </td>
-                  <td className={styles.lastUpdated}>
-                    {item.updated_at ? new Date(item.updated_at).toLocaleDateString() : 'N/A'}
-                  </td>
+                  <td>{item.updated_at ? new Date(item.updated_at).toLocaleString() : 'N/A'}</td>
                   <td>
-                    <button 
-                      className={styles.editBtn}
-                      onClick={() => handleEditItem(item)}
-                    >
+                    <button className={styles.editBtn} onClick={() => handleEditItem(item)}>
                       Edit
                     </button>
                   </td>
@@ -227,11 +196,7 @@ function Inventory() {
         )}
       </div>
 
-      <div className={styles.footerCta}>
-        <h2>Struggling to Track or Observe Work and Stock Levels Growth?</h2>
-        <p>© 2025 Smart Loss Control • Your Data Security Matters To Us</p>
-      </div>
-
+      {/* Edit Modal */}
       {editingItem && (
         <EditInventoryModal
           item={editingItem}
