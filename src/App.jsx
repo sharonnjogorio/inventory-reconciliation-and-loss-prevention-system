@@ -33,9 +33,9 @@ import SalesDashboard from './features/staff/pages/SalesDashboard/SalesDashboard
 import BulkDecant from './features/staff/pages/BulkDecant/BulkDecant'
 
 // Shared Components
-import Navbar from './components/Navbar/Navbar'
+import Navbar from './components/navbar/navbar'
 import Footer from './components/Footer/Footer'
-import OwnerNavbar from './components/Navbar/OwnerNavbar'
+import OwnerNavbar from './components/navbar/OwnerNavbar'
 import ScrollToTop from './components/ScrollToTop'
 import { CartProvider } from "./context/CartProvider";
 
