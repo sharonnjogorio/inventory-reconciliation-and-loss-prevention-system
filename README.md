@@ -2,6 +2,8 @@
 
 > An AI-powered inventory reconciliation and loss prevention system for cooking oil retailers and distributors.
 
+**Live App:** [https://smartlosscontrol.netlify.app](https://smartlosscontrol.netlify.app)
+
 Built as a Women Techsters Capstone Project — Smart Loss Control helps small retail businesses track sales in real time, detect inventory shrinkage through automated spot checks, and maintain accurate stock records even in low-connectivity environments.
 
 ---
