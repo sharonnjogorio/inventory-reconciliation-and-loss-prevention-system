@@ -83,15 +83,13 @@ function SalesDashboard() {
 
   useEffect(() => {
     const handleSyncComplete = async (result) => {
-      if (result.success) {
-        const count = await getPendingSalesCount()
-        setPendingSalesCount(count)
-        setLastSync(new Date())
-        setIsSyncing(false)
-      }
+      const count = await getPendingSalesCount()
+      setPendingSalesCount(count)
+      if (result.success) setLastSync(new Date())
+      setIsSyncing(false)
     }
 
-    const cleanup = setupAutoSync(handleSyncComplete)
+    const cleanup = setupAutoSync(handleSyncComplete, () => setIsSyncing(true))
     return cleanup
   }, [])
 
@@ -272,11 +270,7 @@ function SalesDashboard() {
       return
     }
 
-    setSelectedItems(prev => {
-      const updated = { ...prev, [productId]: (prev[productId] || 0) + 1 }
-      if (Object.keys(prev).length === 0) setIsCartOpen(true)
-      return updated
-    })
+    setSelectedItems(prev => ({ ...prev, [productId]: (prev[productId] || 0) + 1 }))
   }
 
   const handleRemoveProduct = (productId) => {
@@ -389,7 +383,7 @@ function SalesDashboard() {
       await refreshInventory()
 
       incrementSaleCounter()
-      const triggerResult = await shouldTriggerQuickCount()
+      const triggerResult = await shouldTriggerQuickCount(products)
 
       if (triggerResult.shouldTrigger && triggerResult.sku) {
         const productToCheck = products.find(p => p.id === triggerResult.sku.sku_id)

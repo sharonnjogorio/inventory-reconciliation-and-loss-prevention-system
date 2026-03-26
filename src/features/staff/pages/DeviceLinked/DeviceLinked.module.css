@@ -3,7 +3,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 24px 16px;
   background-color: #FAFAFA;
 }
 
@@ -168,15 +168,34 @@
   background-color: #D4D4D4;
 }
 
+.card form {
+  width: 100%;
+}
+
 @media (max-width: 480px) {
   .card {
-    padding: 32px 24px;
+    padding: 28px 16px;
   }
-  
+
   .pinBox {
     width: 48px;
     height: 48px;
     font-size: 1.25rem;
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .card {
+    padding: 24px 12px;
+  }
+
+  .pinBox {
+    width: 44px;
+    height: 44px;
   }
 }
 /* Add these new styles for name input */
@@ -190,6 +209,7 @@
 
 .nameInput {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px 16px;
   border: 2px solid #E5E5E5;
   border-radius: 8px;

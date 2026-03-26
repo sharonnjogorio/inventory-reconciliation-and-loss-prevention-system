@@ -137,9 +137,11 @@ export const syncPendingSales = async () => {
  * Auto-sync when connection returns.
  * Returns a cleanup function — call it in useEffect's return.
  */
-export const setupAutoSync = (onSyncComplete) => {
+export const setupAutoSync = (onSyncComplete, onSyncStart) => {
   const handleOnline = async () => {
-    console.log('🌐 Connection restored - syncing...')
+    const count = await getPendingSalesCount()
+    if (count === 0) return
+    if (onSyncStart) onSyncStart()
     const result = await syncPendingSales()
     if (onSyncComplete) onSyncComplete(result)
   }
@@ -150,7 +152,7 @@ export const setupAutoSync = (onSyncComplete) => {
     if (navigator.onLine) {
       const count = await getPendingSalesCount()
       if (count > 0) {
-        console.log(`🔄 Auto-sync: ${count} pending sales`)
+        if (onSyncStart) onSyncStart()
         const result = await syncPendingSales()
         if (onSyncComplete) onSyncComplete(result)
       }
