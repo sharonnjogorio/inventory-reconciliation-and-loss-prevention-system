@@ -2,19 +2,28 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { inventoryAPI } from '../../../../services/endpoints/inventory'
 import styles from './AddStock.module.css'
-import oilBottle from '../../../../assets/image/hero-oil-1.png'
+import kingsoilImg from '../../../../assets/image/kingsoil.png'
+import mamadorImg from '../../../../assets/image/mamador.svg'
+import goldenTerraImg from '../../../../assets/image/hero-oil-2.png'
+import devonkingImg from '../../../../assets/image/devonking.svg'
+import goldenpennyImg from '../../../../assets/image/goldenpenny.svg'
+import poweroilImg from '../../../../assets/image/poweroil.svg'
+import ginoImg from '../../../../assets/image/hero-oil-3.png'
+import soyaGoldImg from '../../../../assets/image/hero-oil-1.png'
+import tropicalImg from '../../../../assets/image/hero-oil-2.png'
+import grandPureImg from '../../../../assets/image/hero-oil-3.png'
 
 const AFRICAN_OIL_BRANDS = [
-  { id: 1,  name: "King's Oil",    brand: "King's Oil",    image: oilBottle, color: '#FFD700' },
-  { id: 2,  name: 'Mamador',       brand: 'Mamador',       image: oilBottle, color: '#8B008B' },
-  { id: 3,  name: 'Golden Terra',  brand: 'Golden Terra',  image: oilBottle, color: '#FF6347' },
-  { id: 4,  name: 'Devon Kings',   brand: 'Devon Kings',   image: oilBottle, color: '#4169E1' },
-  { id: 5,  name: 'Golden Penny',  brand: 'Golden Penny',  image: oilBottle, color: '#DAA520' },
-  { id: 6,  name: 'Power Oil',     brand: 'Power Oil',     image: oilBottle, color: '#DC143C' },
-  { id: 7,  name: 'Gino',          brand: 'Gino',          image: oilBottle, color: '#228B22' },
-  { id: 8,  name: 'Soya Gold',     brand: 'Soya Gold',     image: oilBottle, color: '#FF8C00' },
-  { id: 9,  name: 'Tropical',      brand: 'Tropical',      image: oilBottle, color: '#00CED1' },
-  { id: 10, name: 'Grand Pure',    brand: 'Grand Pure',    image: oilBottle, color: '#9370DB' },
+  { id: 1,  name: "King's Oil",   brand: "King's Oil",   image: kingsoilImg,    color: '#FFD700' },
+  { id: 2,  name: 'Mamador',      brand: 'Mamador',      image: mamadorImg,     color: '#8B008B' },
+  { id: 3,  name: 'Golden Terra', brand: 'Golden Terra', image: goldenTerraImg, color: '#FF6347' },
+  { id: 4,  name: 'Devon Kings',  brand: 'Devon Kings',  image: devonkingImg,   color: '#4169E1' },
+  { id: 5,  name: 'Golden Penny', brand: 'Golden Penny', image: goldenpennyImg, color: '#DAA520' },
+  { id: 6,  name: 'Power Oil',    brand: 'Power Oil',    image: poweroilImg,    color: '#DC143C' },
+  { id: 7,  name: 'Gino',         brand: 'Gino',         image: ginoImg,        color: '#228B22' },
+  { id: 8,  name: 'Soya Gold',    brand: 'Soya Gold',    image: soyaGoldImg,    color: '#FF8C00' },
+  { id: 9,  name: 'Tropical',     brand: 'Tropical',     image: tropicalImg,    color: '#00CED1' },
+  { id: 10, name: 'Grand Pure',   brand: 'Grand Pure',   image: grandPureImg,   color: '#9370DB' },
 ]
 
 function AddStock() {
@@ -25,11 +34,11 @@ function AddStock() {
   const [allSKUs, setAllSKUs] = useState([])
   const [selectedProduct, setSelectedProduct] = useState(null)
   const [stockData, setStockData] = useState({
-    cartons: 0,
+    cartons: '',
     bottlesPerCarton: 12,
     totalBottles: 0,
-    costPrice: 0,
-    sellingPrice: 0
+    costPrice: '',
+    sellingPrice: ''
   })
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
@@ -64,11 +73,11 @@ function AddStock() {
     const existingItem = getProductStatus(product.brand)
     setSelectedProduct({ ...product, existing: existingItem || null })
     setStockData({
-      cartons: 0,
+      cartons: '',
       bottlesPerCarton: 12,
       totalBottles: 0,
-      costPrice: existingItem?.cost_price || 0,
-      sellingPrice: existingItem?.selling_price || 0
+      costPrice: existingItem?.cost_price || '',
+      sellingPrice: existingItem?.selling_price || ''
     })
     setError('')
     setSuccess('')
@@ -76,6 +85,9 @@ function AddStock() {
 
   const updateStockData = (field, value) => {
     setStockData(prev => {
+      if (field === 'costPrice' || field === 'sellingPrice') {
+        return { ...prev, [field]: value }
+      }
       const updated = { ...prev, [field]: parseFloat(value) || 0 }
       if (field === 'cartons' || field === 'bottlesPerCarton') {
         updated.totalBottles = updated.cartons * updated.bottlesPerCarton
@@ -87,8 +99,10 @@ function AddStock() {
   const handleSubmit = async () => {
     if (!selectedProduct)            { setError('Please select a product'); return }
     if (stockData.totalBottles === 0) { setError('Please enter quantity'); return }
-    if (!stockData.costPrice || !stockData.sellingPrice) { setError('Please enter cost and selling prices'); return }
-    if (stockData.sellingPrice < stockData.costPrice)    { setError('Selling price should be higher than cost price'); return }
+    const costPrice = parseFloat(stockData.costPrice)
+    const sellingPrice = parseFloat(stockData.sellingPrice)
+    if (!costPrice || !sellingPrice) { setError('Please enter cost and selling prices'); return }
+    if (sellingPrice < costPrice)    { setError('Selling price should be higher than cost price'); return }
 
     setSubmitting(true)
     setError('')
@@ -103,8 +117,8 @@ function AddStock() {
         skuId: matchingSKU.id,
         orderedQty: stockData.totalBottles,
         receivedQty: stockData.totalBottles,
-        costPrice: stockData.costPrice,
-        sellPrice: stockData.sellingPrice,
+        costPrice: parseFloat(stockData.costPrice),
+        sellPrice: parseFloat(stockData.sellingPrice),
         supplierName: selectedProduct.existing ? 'Restock' : 'Initial Stock',
         referenceNote: `${stockData.cartons} cartons × ${stockData.bottlesPerCarton} bottles`
       })
@@ -114,7 +128,7 @@ function AddStock() {
 
       setTimeout(() => {
         setSelectedProduct(null)
-        setStockData({ cartons: 0, bottlesPerCarton: 12, totalBottles: 0, costPrice: 0, sellingPrice: 0 })
+        setStockData({ cartons: '', bottlesPerCarton: 12, totalBottles: 0, costPrice: '', sellingPrice: '' })
         setSuccess('')
       }, 2000)
     } catch (err) {

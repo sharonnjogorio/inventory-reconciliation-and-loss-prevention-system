@@ -2,19 +2,28 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { inventoryAPI } from '../../../../services'
 import styles from './ProductCatalog.module.css'
-import oilBottle from '../../../../assets/image/hero-oil-1.png'
+import kingsoilImg from '../../../../assets/image/kingsoil.png'
+import mamadorImg from '../../../../assets/image/mamador.svg'
+import goldenTerraImg from '../../../../assets/image/hero-oil-2.png'
+import devonkingImg from '../../../../assets/image/devonking.svg'
+import goldenpennyImg from '../../../../assets/image/goldenpenny.svg'
+import poweroilImg from '../../../../assets/image/poweroil.svg'
+import ginoImg from '../../../../assets/image/hero-oil-3.png'
+import soyaGoldImg from '../../../../assets/image/hero-oil-1.png'
+import tropicalImg from '../../../../assets/image/hero-oil-2.png'
+import grandPureImg from '../../../../assets/image/hero-oil-3.png'
 
 const AFRICAN_OIL_BRANDS = [
-  { id: 1, name: "King's Oil", brand: "King's Oil", image: oilBottle, color: '#FFD700' },
-  { id: 2, name: 'Mamador', brand: 'Mamador', image: oilBottle, color: '#8B008B' },
-  { id: 3, name: 'Golden Terra', brand: 'Golden Terra', image: oilBottle, color: '#FF6347' },
-  { id: 4, name: 'Devon Kings', brand: 'Devon Kings', image: oilBottle, color: '#4169E1' },
-  { id: 5, name: 'Golden Penny', brand: 'Golden Penny', image: oilBottle, color: '#DAA520' },
-  { id: 6, name: 'Power Oil', brand: 'Power Oil', image: oilBottle, color: '#DC143C' },
-  { id: 7, name: 'Gino', brand: 'Gino', image: oilBottle, color: '#228B22' },
-  { id: 8, name: 'Soya Gold', brand: 'Soya Gold', image: oilBottle, color: '#FF8C00' },
-  { id: 9, name: 'Tropical', brand: 'Tropical', image: oilBottle, color: '#00CED1' },
-  { id: 10, name: 'Grand Pure', brand: 'Grand Pure', image: oilBottle, color: '#9370DB' }
+  { id: 1,  name: "King's Oil",   brand: "King's Oil",   image: kingsoilImg,    color: '#FFD700' },
+  { id: 2,  name: 'Mamador',      brand: 'Mamador',      image: mamadorImg,     color: '#8B008B' },
+  { id: 3,  name: 'Golden Terra', brand: 'Golden Terra', image: goldenTerraImg, color: '#FF6347' },
+  { id: 4,  name: 'Devon Kings',  brand: 'Devon Kings',  image: devonkingImg,   color: '#4169E1' },
+  { id: 5,  name: 'Golden Penny', brand: 'Golden Penny', image: goldenpennyImg, color: '#DAA520' },
+  { id: 6,  name: 'Power Oil',    brand: 'Power Oil',    image: poweroilImg,    color: '#DC143C' },
+  { id: 7,  name: 'Gino',         brand: 'Gino',         image: ginoImg,        color: '#228B22' },
+  { id: 8,  name: 'Soya Gold',    brand: 'Soya Gold',    image: soyaGoldImg,    color: '#FF8C00' },
+  { id: 9,  name: 'Tropical',     brand: 'Tropical',     image: tropicalImg,    color: '#00CED1' },
+  { id: 10, name: 'Grand Pure',   brand: 'Grand Pure',   image: grandPureImg,   color: '#9370DB' },
 ]
 
 function ProductCatalog() {
@@ -36,7 +45,7 @@ function ProductCatalog() {
       } else {
         setStockSetup(prev => ({
           ...prev,
-          [productId]: { cartons: 0, bottlesPerCarton: 12, totalBottles: 0, costPrice: 0, sellingPrice: 0 }
+          [productId]: { cartons: '', bottlesPerCarton: 12, totalBottles: 0, costPrice: '', sellingPrice: '' }
         }))
         return [...prev, productId]
       }
@@ -45,6 +54,9 @@ function ProductCatalog() {
 
   const updateStockSetup = (productId, field, value) => {
     setStockSetup(prev => {
+      if (field === 'costPrice' || field === 'sellingPrice') {
+        return { ...prev, [productId]: { ...prev[productId], [field]: value } }
+      }
       const updated = {
         ...prev,
         [productId]: { ...prev[productId], [field]: parseFloat(value) || 0 }
@@ -103,8 +115,8 @@ function ProductCatalog() {
             skuId: matchingSKU.id,
             orderedQty: setup.totalBottles,
             receivedQty: setup.totalBottles,
-            costPrice: setup.costPrice,
-            sellPrice: setup.sellingPrice,
+            costPrice: parseFloat(setup.costPrice) || 0,
+            sellPrice: parseFloat(setup.sellingPrice) || 0,
             supplierName: 'Initial Setup',
             referenceNote: `${setup.cartons} cartons × ${setup.bottlesPerCarton} bottles`
           })
@@ -215,9 +227,9 @@ function ProductCatalog() {
                     <label>Number of Cartons</label>
                     <input
                       type="number" min="0"
-                      value={setup.cartons || 0}
+                      value={setup.cartons ?? ''}
                       onChange={(e) => updateStockSetup(productId, 'cartons', e.target.value)}
-                      placeholder="0"
+                      placeholder="e.g. 5"
                     />
                   </div>
 

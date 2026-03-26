@@ -52,7 +52,9 @@ function OwnerLogin() {
         localStorage.setItem('userData', JSON.stringify(response.user))
         localStorage.setItem('shopId', response.user?.shop_id)
         localStorage.setItem('fullName', response.user?.full_name)
-        localStorage.setItem('shopName', response.user?.shop_name)
+        if (response.user?.shop_name) {
+          localStorage.setItem('shopName', response.user.shop_name)
+        }
       }
 
       navigate('/owner/dashboard')

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { alertsAPI } from '../../services'
+import { alertsAPI, shopsAPI } from '../../services'
 import logo from '../../assets/image/logo.png'
 import styles from './OwnerNavbar.module.css'
 
@@ -83,7 +83,10 @@ function OwnerNavbar({ collapsed, onToggle }) {
     } catch { /* ignore invalid localStorage data */ }
     return 'Owner'
   })
-  const [shopName] = useState(() => localStorage.getItem('shopName') || 'My Shop')
+  const [shopName, setShopName] = useState(() => {
+    const stored = localStorage.getItem('shopName')
+    return stored && stored !== 'undefined' ? stored : ''
+  })
   const [ownerInitial] = useState(() => {
     try {
       const userData = localStorage.getItem('userData')
@@ -105,6 +108,14 @@ function OwnerNavbar({ collapsed, onToggle }) {
       } catch (err) {
         console.error('Error fetching data:', err)
       }
+
+      try {
+        const shopResponse = await shopsAPI.getShopProfile()
+        if (shopResponse.success && shopResponse.shop?.shop_name) {
+          setShopName(shopResponse.shop.shop_name)
+          localStorage.setItem('shopName', shopResponse.shop.shop_name)
+        }
+      } catch { /* silently fall back to stored value */ }
     }
 
     fetchData()
