@@ -59,11 +59,11 @@ function OwnerDashboard() {
     return {
       name: storedShopName || "Amina's Store",
       owner: storedOwnerName || 'Amina Yusuf',
-      healthScore: 92,
-      totalSales: 1867.83,
-      revenue: 1867.83,
-      lowStockCount: 14,
-      lastSynced: '1 minutes ago',
+      healthScore: null,
+      totalSales: null,
+      revenue: null,
+      lowStockCount: null,
+      lastSynced: null,
     }
   })
 
@@ -148,21 +148,21 @@ function OwnerDashboard() {
             <div className={styles.circleWrapper}>
               <svg className={styles.circle} viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="90" fill="none" stroke="#E5E5E5" strokeWidth="12" />
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#00A63E" strokeWidth="12" strokeDasharray={`${shopData.healthScore * 5.65} 565`} strokeLinecap="round" transform="rotate(-90 100 100)" />
+                <circle cx="100" cy="100" r="90" fill="none" stroke="#00A63E" strokeWidth="12" strokeDasharray={`${(shopData.healthScore ?? 0) * 5.65} 565`} strokeLinecap="round" transform="rotate(-90 100 100)" />
               </svg>
-              <div className={styles.scoreValue}>{shopData.healthScore}</div>
+              <div className={styles.scoreValue}>{shopData.healthScore ?? '—'}</div>
             </div>
             <p className={styles.healthLabel}>HEALTH SCORE</p>
           </div>
 
           <div className={styles.statsColumn}>
-            <div className={styles.statCard}><h3>TOTAL SALES</h3><p className={styles.statAmount}>{shopData.totalSales.toLocaleString()}</p></div>
-            <div className={styles.statCard}><h3>REVENUE</h3><p className={styles.statAmount}>${shopData.revenue.toLocaleString()}</p></div>
+            <div className={styles.statCard}><h3>TOTAL SALES</h3><p className={styles.statAmount}>{shopData.totalSales != null ? shopData.totalSales.toLocaleString() : '—'}</p></div>
+            <div className={styles.statCard}><h3>REVENUE</h3><p className={styles.statAmount}>{shopData.revenue != null ? `$${shopData.revenue.toLocaleString()}` : '—'}</p></div>
           </div>
 
           <div className={styles.statsColumn}>
-            <div className={styles.alertCard}><h3>LOW STOCK ALERT</h3><p className={styles.alertValue}>{shopData.lowStockCount}</p></div>
-            <div className={styles.syncCard}><h3>LAST SYNCED</h3><p className={styles.syncValue}>{shopData.lastSynced}</p></div>
+            <div className={styles.alertCard}><h3>LOW STOCK ALERT</h3><p className={styles.alertValue}>{shopData.lowStockCount ?? '—'}</p></div>
+            <div className={styles.syncCard}><h3>LAST SYNCED</h3><p className={styles.syncValue}>{shopData.lastSynced ?? '—'}</p></div>
           </div>
         </div>
 
