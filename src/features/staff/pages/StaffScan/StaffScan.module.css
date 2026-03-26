@@ -2,160 +2,71 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background-color: #FFFFFF;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
 }
 
+/* ── Header ─────────────────────────────────────────────── */
 .header {
-  padding: 24px;
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.backButton {
-  background: none;
-  border: none;
-  color: #FFFFFF;
-  font-size: 0.875rem;
-  cursor: pointer;
-  padding: 8px 0;
-  margin-bottom: 16px;
-  transition: opacity 150ms ease;
-}
-
-.backButton:hover {
-  opacity: 0.8;
+  background-color: #FFFFFF;
+  border-top: 3px solid #E29A5C;
+  border-bottom: 1px solid #F0EBE3;
+  padding: 24px 48px;
+  text-align: center;
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #E6A767;
+  color: #1A1A1A;
+  margin: 0 0 6px 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #999999;
   margin: 0;
 }
 
+/* ── Scanner Wrapper ────────────────────────────────────── */
 .scannerWrapper {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 40px 24px;
-  gap: 24px;
+  padding: 40px 24px 60px;
+  gap: 20px;
 }
 
-.scanner {
-  position: relative;
-  width: 320px;
-  height: 320px;
-  background-color: #FFFFFF;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.scanFrame {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 240px;
-  height: 240px;
-  border: 3px solid #4CAF50;
-  border-radius: 8px;
-  pointer-events: none;
-  animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
-  }
-  50% {
-    opacity: 0.6;
-    transform: translate(-50%, -50%) scale(1.05);
-  }
-}
-
-.corner {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  border: 4px solid #4CAF50;
-}
-
-.corner:nth-child(1) {
-  border-right: none;
-  border-bottom: none;
-  border-top-left-radius: 8px;
-}
-
-.corner:nth-child(2) {
-  border-left: none;
-  border-bottom: none;
-  border-top-right-radius: 8px;
-}
-
-.corner:nth-child(3) {
-  border-right: none;
-  border-top: none;
-  border-bottom-left-radius: 8px;
-}
-
-.corner:nth-child(4) {
-  border-left: none;
-  border-top: none;
-  border-bottom-right-radius: 8px;
-}
-
+/* ── Error Box ──────────────────────────────────────────── */
 .errorBox {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: rgba(220, 20, 60, 0.9);
-  padding: 24px;
+  background-color: #FFF0F0;
+  border: 1px solid rgba(220, 20, 60, 0.2);
   border-radius: 8px;
+  padding: 14px 20px;
   text-align: center;
-  color: #FFFFFF;
-}
-
-.retryButton {
-  margin-top: 16px;
-  padding: 12px 24px;
-  background-color: #FFFFFF;
   color: #DC143C;
-  border: none;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.instruction {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color:#E29A5C;
-  margin: 0;
-  text-align: center;
-}
-
-.subtext {
   font-size: 0.875rem;
-  color: #4CAF50;
+  font-weight: 500;
+  max-width: 500px;
+  width: 100%;
+}
+
+/* ── Status Text ────────────────────────────────────────── */
+.instruction {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #E29A5C;
   margin: 0;
   text-align: center;
 }
 
+/* ── Toggle Button ──────────────────────────────────────── */
 .mockButton {
-  margin-top: 32px;
-  padding: 12px 24px;
-  background-color: #E29A5C;
-  color: #FFFFFF;
-  border: none;
+  padding: 11px 24px;
+  background-color: #FFFFFF;
+  color: #666666;
+  border: 2px solid #E5E5E5;
   border-radius: 8px;
   font-size: 0.875rem;
   font-weight: 600;
@@ -164,17 +75,28 @@
 }
 
 .mockButton:hover {
-  background-color: #D4894A;
+  border-color: #E29A5C;
+  color: #E29A5C;
+  background-color: #FFFAF6;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 20px 24px;
+  }
+
+  .scannerWrapper {
+    padding: 32px 16px 48px;
+  }
 }
 
 @media (max-width: 480px) {
-  .scanner {
-    width: 280px;
-    height: 280px;
+  .header {
+    padding: 16px;
   }
-  
-  .scanFrame {
-    width: 200px;
-    height: 200px;
+
+  .title {
+    font-size: 1.5rem;
   }
 }

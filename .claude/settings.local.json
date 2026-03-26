@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -r import.*AnalyticDashboard c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(grep -r \"AnalyticProduct\\\\|AnalyticCard\\\\|StockActivities\\\\|Chart\" c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(grep -r \"import.*Footer\\\\|import.*FooterCard\\\\|import.*OverlayFooter\" c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(grep -r \"import.*Header\\\\|import.*HeaderItem\" c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(grep -r Header c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(grep -r Welcome c:/Users/njogo/OneDrive/Desktop/Capstone Project/src --include=*.jsx --include=*.js)",
+      "Bash(mkdir -p \"src/features/owner/pages\")",
+      "Bash(mkdir -p \"src/features/owner/components\")"
+    ]
+  }
+}

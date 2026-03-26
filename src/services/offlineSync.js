@@ -134,31 +134,34 @@ export const syncPendingSales = async () => {
 }
 
 /**
- * Auto-sync when connection returns
+ * Auto-sync when connection returns.
+ * Returns a cleanup function — call it in useEffect's return.
  */
 export const setupAutoSync = (onSyncComplete) => {
-  // Sync when online
-  window.addEventListener('online', async () => {
+  const handleOnline = async () => {
     console.log('🌐 Connection restored - syncing...')
     const result = await syncPendingSales()
-    if (onSyncComplete) {
-      onSyncComplete(result)
-    }
-  })
-  
-  // Periodic sync every 30 seconds if online
-  setInterval(async () => {
+    if (onSyncComplete) onSyncComplete(result)
+  }
+
+  window.addEventListener('online', handleOnline)
+
+  const intervalId = setInterval(async () => {
     if (navigator.onLine) {
       const count = await getPendingSalesCount()
       if (count > 0) {
         console.log(`🔄 Auto-sync: ${count} pending sales`)
         const result = await syncPendingSales()
-        if (onSyncComplete) {
-          onSyncComplete(result)
-        }
+        if (onSyncComplete) onSyncComplete(result)
       }
     }
-  }, 30000) // 30 seconds
+  }, 30000)
+
+  // Return cleanup so callers can tear down listeners
+  return () => {
+    window.removeEventListener('online', handleOnline)
+    clearInterval(intervalId)
+  }
 }
 
 /**

@@ -1,0 +1,195 @@
+/* ── Container ──────────────────────────────────────────── */
+.pageWrapper {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
+  padding: 40px 20px;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  border-top: 4px solid #E29A5C;
+  padding: 44px 36px 48px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+  max-width: 420px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ── Headings ───────────────────────────────────────────── */
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  text-align: center;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #666666;
+  text-align: center;
+  margin: 0 0 32px 0;
+  line-height: 1.5;
+}
+
+/* ── Form ───────────────────────────────────────────────── */
+.form {
+  width: 100%;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── PIN Row ────────────────────────────────────────────── */
+.pinRow {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.pinInput {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  background-color: #FAFAFA;
+  transition: all 150ms ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.pinInput:focus {
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.pinInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Hide browser password reveal icon */
+.pinInput::-ms-reveal,
+.pinInput::-ms-clear {
+  display: none;
+}
+
+/* ── Error Box ──────────────────────────────────────────── */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFF0F0;
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+
+.errorIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Submit Button ──────────────────────────────────────── */
+.submitButton {
+  width: 100%;
+  margin-top: 8px;
+  padding: 14px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.submitButton:hover:not(:disabled) {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.submitButton:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.submitButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .card {
+    padding: 36px 28px 40px;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .pinInput {
+    width: 56px;
+    height: 56px;
+    font-size: 1.25rem;
+  }
+
+  .pinRow {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageWrapper {
+    padding: 24px 16px;
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .card {
+    padding: 32px 20px 36px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .pinInput {
+    width: 48px;
+    height: 48px;
+    font-size: 1.125rem;
+    border-radius: 6px;
+  }
+
+  .pinRow {
+    gap: 8px;
+  }
+}

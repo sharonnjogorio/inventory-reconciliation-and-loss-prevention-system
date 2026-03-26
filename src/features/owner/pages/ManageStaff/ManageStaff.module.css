@@ -1,0 +1,360 @@
+.container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background-color: #FFFFFF;
+  padding: 20px 48px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 3px solid #E29A5C;
+  border-bottom: 1px solid #F0EBE3;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.addStaffBtn {
+  padding: 10px 24px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  letter-spacing: 0.3px;
+}
+
+.addStaffBtn:hover {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Content ────────────────────────────────────────────── */
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 32px 48px;
+}
+
+/* ── Sections ───────────────────────────────────────────── */
+.section {
+  margin-bottom: 32px;
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 16px 0;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #F0EBE3;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Staff Cards ────────────────────────────────────────── */
+.staffList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.staffCard {
+  background: #FFFFFF;
+  border: 1px solid #F0EBE3;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: all 200ms ease;
+}
+
+.staffCard:hover {
+  border-color: #E29A5C;
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.12);
+  transform: translateY(-1px);
+}
+
+.staffCardRemoved {
+  background-color: #FAFAFA;
+  border-color: #E5E5E5;
+  opacity: 0.8;
+}
+
+.staffMain {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #E29A5C 0%, #D4894A 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.staffInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.staffName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.badgeActive {
+  background-color: #D1FAE5;
+  color: #065F46;
+}
+
+.badgeLeave {
+  background-color: #FEF3C7;
+  color: #92400E;
+}
+
+.staffDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.staffDetails span {
+  font-size: 0.8rem;
+  color: #888888;
+}
+
+.removedDate {
+  color: #E29A5C !important;
+  font-weight: 600;
+}
+
+/* ── Action Buttons ─────────────────────────────────────── */
+.staffActions {
+  display: flex;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.actionBtn,
+.actionBtnDanger {
+  padding: 8px 18px;
+  border: 1.5px solid;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.actionBtn {
+  background-color: #FFFFFF;
+  color: #E29A5C;
+  border-color: #E29A5C;
+}
+
+.actionBtn:hover {
+  background-color: #FFF8F0;
+  transform: translateY(-1px);
+}
+
+.actionBtnDanger {
+  background-color: #FFFFFF;
+  color: #EF4444;
+  border-color: #EF4444;
+}
+
+.actionBtnDanger:hover {
+  background-color: #FEF2F2;
+  transform: translateY(-1px);
+}
+
+/* ── Empty State ────────────────────────────────────────── */
+.emptyState {
+  background: #FFFFFF;
+  border: 2px dashed #F0EBE3;
+  border-radius: 12px;
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+}
+
+.emptyText {
+  font-size: 0.9rem;
+  color: #999999;
+  margin: 0 0 16px 0;
+}
+
+/* ── Loading / Spinner ──────────────────────────────────── */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 400px;
+  font-size: 1rem;
+  color: #666666;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #F0EBE3;
+  border-top-color: #E29A5C;
+  border-radius: 50%;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ── Quick Actions ──────────────────────────────────────── */
+.quickActions {
+  background: #FFFFFF;
+  border-radius: 12px;
+  border-top: 4px solid #E29A5C;
+  padding: 24px 28px 28px;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.actionsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.quickActionCard {
+  background: #FAFAFA;
+  border: 2px solid #F0EBE3;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  cursor: pointer;
+  transition: all 200ms ease;
+  text-align: left;
+}
+
+.quickActionCard:hover {
+  border-color: #E29A5C;
+  background-color: #FFFAF6;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(226, 154, 92, 0.15);
+}
+
+.quickActionIcon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.quickActionText h4 {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 3px 0;
+}
+
+.quickActionText p {
+  font-size: 0.8rem;
+  color: #888888;
+  margin: 0;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .actionsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    padding: 16px 24px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .addStaffBtn {
+    width: 100%;
+  }
+
+  .content {
+    padding: 24px;
+  }
+
+  .staffCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .staffActions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .actionBtn,
+  .actionBtnDanger {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .actionsGrid {
+    grid-template-columns: 1fr;
+  }
+}

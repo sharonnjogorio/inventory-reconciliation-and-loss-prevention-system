@@ -1,8 +1,8 @@
 import { aiAPI } from './endpoints/ai'
 
 const TRIGGER_CONFIG = {
-  SALES_THRESHOLD: 3,                // Check backend every 3 sales (for demo)
-  TIME_THRESHOLD: 4 * 60 * 60 * 1000,  // Check backend every 4 hours
+  SALES_THRESHOLD: 3,                
+  TIME_THRESHOLD: 4 * 60 * 60 * 1000,  
 }
 
 /**

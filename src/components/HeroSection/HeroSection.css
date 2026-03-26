@@ -1,16 +1,17 @@
 .hero-section {
     display: flex;
     gap: 69px;
+    align-items: center;
 
-     /* Fixed dimensions from design */
     max-width: 1336px;
-    width: 100%;               /* ensure it doesn’t overflow screen */
-    height: 411px;
+    width: 100%;
+    min-height: 411px;
 
-    /* Positioning */
-    margin: 80px auto 0 auto;     /* top spacing 244px, horizontally centered */
+    margin: 80px auto 0 auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
     opacity: 1;
-    transform: rotate(0deg); 
+    transform: rotate(0deg);
 }
 
 
@@ -19,13 +20,14 @@
     display: flex;
     flex-direction: column;
     width: 600px;
+    max-width: 100%;
 }
 
 .hero-text h1 {
     font-size: 48px;
-    line-height: 70px;
+    line-height: 1.3;
     font-weight: 700;
-    
+
 }
 
 .hero-text p {
@@ -35,7 +37,7 @@
     max-width: 517px;
 }
 
-.hero-text .button { 
+.hero-text .button {
     border: 2px solid var(--color-primary);
 }
 
@@ -43,15 +45,114 @@
 .hero-images {
     display: flex;
     align-items: center;
-    width: 676.3px;
-   
+    justify-content: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.hero-product-img {
+    width: 100%;
+    max-width: 460px;
+    height: auto;
+    object-fit: contain;
+    animation: float 4s ease-in-out infinite;
+    filter: drop-shadow(0 20px 40px rgba(226, 154, 92, 0.2));
+}
+
+@keyframes float {
+    0%   { transform: translateY(0px); }
+    50%  { transform: translateY(-14px); }
+    100% { transform: translateY(0px); }
 }
 
 .hero-button{
     display: flex;
-    width: 549px;      /* from Figma */
-    height: 63px;      /* from Figma */
-    gap: 63px;
+    width: 100%;
+    max-width: 549px;
+    height: auto;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 1024px) {
+    .hero-section {
+        gap: 40px;
+        margin-top: 60px;
+    }
+
+    .hero-text {
+        width: 50%;
+    }
+
+    .hero-text h1 {
+        font-size: 38px;
+    }
+
+    .hero-text p {
+        font-size: 18px;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        flex-direction: column;
+        gap: 32px;
+        margin-top: 40px;
+        min-height: auto;
+        text-align: center;
+        align-items: center;
+    }
+
+    .hero-text {
+        width: 100%;
+        align-items: center;
+    }
+
+    .hero-text h1 {
+        font-size: 32px;
+        line-height: 1.3;
+    }
+
+    .hero-text p {
+        font-size: 17px;
+        max-width: 100%;
+    }
+
+    .hero-images {
+        width: 100%;
+        max-width: 400px;
+    }
+
+    .hero-button {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-section {
+        gap: 24px;
+        margin-top: 24px;
+        padding: 0 0.5rem;
+    }
+
+    .hero-text h1 {
+        font-size: 26px;
+    }
+
+    .hero-text p {
+        font-size: 15px;
+    }
+
+    .hero-images {
+        max-width: 300px;
+    }
+
+    .hero-button {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+    }
 }
 
 

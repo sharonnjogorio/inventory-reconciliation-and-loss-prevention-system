@@ -5,26 +5,26 @@
   background-color: #F5F5F5;
 }
 
-/* ── Staff Bar (Orange) ─────────────────────────────────── */
+/* ── Staff Bar ──────────────────────────────────────────── */
 .staffBar {
-   background: linear-gradient(135deg, #E29A5C 0%, #D4894A 50%, #C67839 100%);
-  color: #FFFFFF;
-  padding: 16px 48px;
+  background-color: #FFFFFF;
+  padding: 14px 48px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 2px solid #F5F5F5;
+  border-top: 3px solid #E29A5C;
+  border-bottom: 1px solid #F0EBE3;
 }
 
 .staffInfo {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .loggedInText {
-  font-size: 0.75rem;
-  opacity: 0.9;
+  font-size: 0.7rem;
+  color: #999999;
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -32,67 +32,38 @@
 .staffName {
   font-size: 1.125rem;
   font-weight: 700;
+  color: #1A1A1A;
 }
 
 .staffActions {
   display: flex;
-  gap: 12px;
+  gap: 8px;
+  align-items: center;
 }
 
 .statusBtn,
 .syncBtn {
-  padding: 8px 16px;
-  border: none;
+  padding: 7px 12px;
+  border: 1px solid #E5E5E5;
   border-radius: 6px;
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   display: flex;
   align-items: center;
   gap: 6px;
-}
-
-.statusBtn {
-  background-color: #1A1A1A;
-  color: #FFFFFF;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.statusDot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #50C878;
-  box-shadow: 0 0 10px rgba(80, 200, 120, 0.8);
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.5);
-    opacity: 0.5;
-  }
-  100% {
-    transform: scale(1);
-    opacity: 1;
-  }
+  white-space: nowrap;
+  background-color: #F9F9F9;
+  color: #555555;
+  transition: all 150ms ease;
 }
 
 .statusBtn.online {
-  background-color: rgba(80, 200, 120, 0.3);
+  background-color: #F0FDF4;
+  border-color: #BBF7D0;
+  color: #16A34A;
 }
 
 .statusDot {
@@ -100,36 +71,38 @@
   height: 8px;
   border-radius: 50%;
   background-color: #50C878;
+  flex-shrink: 0;
 }
 
-.syncBtn {
-  background-color: rgba(60, 40, 20, 0.9);
-  color: #FFFFFF;
-  padding: 10px 18px;
-  border: none;
-  border-radius: 8px;
-  font-size: 0.75rem;
-  font-weight: 700;
+.syncBtn:hover:not(:disabled) {
+  border-color: #E29A5C;
+  color: #E29A5C;
+  transform: translateY(-1px);
 }
 
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.6; }
+}
 
-/* ── Header Section ─────────────────────────── */
+/* ── Header Section ─────────────────────────────────────── */
 .header {
-  background-color: #D4894A;
-  color: #FFFFFF;
-  padding: 32px 48px;
+  background-color: #FFFAF6;
+  border-bottom: 2px solid #F0EBE3;
+  padding: 24px 48px;
 }
 
 .title {
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-  margin: 0 0 8px 0;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
 }
 
 .subtitle {
-  font-size: 1rem;
+  font-size: 0.875rem;
+  color: #999999;
   margin: 0;
-  opacity: 0.9;
 }
 
 /* ── Content Area ───────────────────────────────────────── */
@@ -729,5 +702,67 @@
   .cancelBtn,
   .confirmBtn {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .staffBar,
+  .header,
+  .content {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .staffBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .staffActions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .section {
+    padding: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 1.1rem;
+  }
+
+  .stockBoxes {
+    grid-template-columns: 1fr;
+  }
+
+  .conversionFlow {
+    gap: 16px;
+  }
+
+  .counterBtn {
+    width: 48px;
+    height: 48px;
+  }
+
+  .counterValue {
+    width: 60px;
+    height: 48px;
+    font-size: 1.5rem;
+  }
+
+  .previewGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .previewBoxValue {
+    font-size: 1.5rem;
+  }
+
+  .modal {
+    padding: 24px 16px;
   }
 }

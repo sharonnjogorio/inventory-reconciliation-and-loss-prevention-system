@@ -11,6 +11,36 @@
   flex-direction: column;
   z-index: 100;
   box-shadow: 2px 0 8px rgba(0, 0, 0, 0.06);
+  transition: width 250ms ease;
+}
+
+.sidebar.collapsed {
+  width: 68px;
+}
+
+/* ── Toggle Button ─────────────────────────────────────── */
+.toggleBtn {
+  position: absolute;
+  top: 68px;
+  right: -13px;
+  width: 26px;
+  height: 26px;
+  background-color: #FFFFFF;
+  border: 2px solid #f0f0f0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #999999;
+  transition: color 150ms ease, border-color 150ms ease;
+  z-index: 101;
+  padding: 0;
+}
+
+.toggleBtn:hover {
+  color: #E29A5C;
+  border-color: #E29A5C;
 }
 
 /* ── Logo ──────────────────────────────────────────────── */
@@ -45,7 +75,7 @@
   gap: 4px;
   padding: 16px 12px;
   flex: 1;
-  overflow-y: hidden;
+  overflow-y: auto;
 }
 
 .link {
@@ -68,7 +98,7 @@
 
 .link:hover {
   color: #E29A5C;
-  background-color:#FFF8F0;
+  background-color: #FFF8F0;
 }
 
 .link.active {
@@ -80,6 +110,8 @@
 .icon {
   font-size: 1.1rem;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
 }
 
 .label {
@@ -95,6 +127,17 @@
   border-radius: 10px;
   min-width: 18px;
   text-align: center;
+}
+
+.badgeDot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: #EF4444;
+  border-radius: 50%;
+  border: 2px solid #FFFFFF;
 }
 
 /* ── User Section ──────────────────────────────────────── */
@@ -139,16 +182,20 @@
 }
 
 .logoutBtn {
-  width: 70%;
+  background-color: #B01030;
+  color: #FFFFFF;
+  border: none;
+  width: 100%;
   padding: 10px;
-  background-color: transparent;
-  color: #EF4444;
-  border: 1px solid #EF4444;
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 200ms ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .logoutBtn:hover {
@@ -183,13 +230,11 @@
   }
 
   .logoutBtn {
-    font-size: 0;
     padding: 10px;
+    justify-content: center;
   }
 
-  .logoutBtn::after {
-    content: '→';
-    font-size: 1rem;
-    color: #EF4444;
+  .logoutBtn span {
+    display: none;
   }
 }

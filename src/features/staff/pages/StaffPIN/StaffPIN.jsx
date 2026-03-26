@@ -14,11 +14,9 @@ function StaffPIN() {
   const [isValidating, setIsValidating] = useState(false)
   const [pin, setPin] = useState('')
 
-  // Get phone and staff name from navigation state
   const phone = location.state?.phone || ''
   const staffName = location.state?.staffName || ''
 
-  // Redirect if no phone provided
   if (!phone || !staffName) {
     navigate('/staff/phone')
     return null
@@ -46,14 +44,8 @@ function StaffPIN() {
     setError('')
 
     try {
-      console.log('📤 Staff login:', { phone, pin: '****' })
-
-      // Call backend API to login with phone + PIN
       const response = await authAPI.staffLogin(phone, enteredPIN)
-      
-      console.log('✅ Staff login successful:', response)
 
-      // Save session to IndexedDB
       await db.sessions.add({
         staff_id: response.user.id,
         staff_name: response.user.name,
@@ -61,7 +53,6 @@ function StaffPIN() {
         login_time: new Date().toISOString()
       })
 
-      // Update auth store
       loginStaff(
         {
           id: response.user.id,
@@ -72,7 +63,6 @@ function StaffPIN() {
         response.token
       )
 
-      // Save to localStorage
       localStorage.setItem('authToken', response.token)
       localStorage.setItem('userData', JSON.stringify(response.user))
       localStorage.setItem('staffData', JSON.stringify({
@@ -81,10 +71,8 @@ function StaffPIN() {
         phone: response.user.phone
       }))
 
-      // Navigate to sales dashboard
       navigate('/staff/sales')
     } catch (err) {
-      console.error('❌ Staff login failed:', err)
       setError(err.response?.data?.message || 'Incorrect PIN. Try again.')
       setPin('')
       setIsValidating(false)
@@ -110,7 +98,7 @@ function StaffPIN() {
 
       <div className={styles.keypadWrapper}>
         <div className={keypadStyles.keypadContainer}>
-          
+
           <div className={keypadStyles.userIcon}>
             <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
@@ -148,7 +136,7 @@ function StaffPIN() {
                       </button>
                     )
                   }
-                  
+
                   if (key === 'submit') {
                     return (
                       <button

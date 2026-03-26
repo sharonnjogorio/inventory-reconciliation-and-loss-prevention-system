@@ -7,12 +7,11 @@ function StaffScan() {
   const navigate = useNavigate()
   const scannerRef = useRef(null)
   const [error, setError] = useState('')
-  const [scanning, setScanning] = useState(true) // ✅ default to true, no need to set inside effect
+  const [scanning, setScanning] = useState(true)
   const [manualMode, setManualMode] = useState(false)
   const [manualToken, setManualToken] = useState('')
 
   const onScanSuccess = useCallback((decodedText) => {
-    console.log('✅ QR Code scanned:', decodedText)
     if (scannerRef.current) {
       scannerRef.current.clear()
     }
@@ -22,7 +21,7 @@ function StaffScan() {
   const onScanError = useCallback((errorMessage) => {
     const errorStr = String(errorMessage || '')
     if (!errorStr.includes('NotFoundException')) {
-      console.error('QR Scan error:', errorMessage)
+      setError(errorStr)
     }
   }, [])
 
@@ -35,11 +34,10 @@ function StaffScan() {
 
     scanner.render(onScanSuccess, onScanError)
     scannerRef.current = scanner
-    // ✅ removed setScanning(true) — no longer needed since we default to true
 
     return () => {
       if (scannerRef.current) {
-        scannerRef.current.clear().catch(err => console.error('Scanner cleanup error:', err))
+        scannerRef.current.clear().catch(() => {})
       }
     }
   }, [onScanSuccess, onScanError])

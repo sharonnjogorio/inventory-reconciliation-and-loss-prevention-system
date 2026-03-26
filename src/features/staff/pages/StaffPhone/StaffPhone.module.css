@@ -1,129 +1,240 @@
 .container {
   min-height: 100vh;
-  background: linear-gradient(135deg, #e29a5c 0%, #d88a4c 100%);
   display: flex;
   flex-direction: column;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
 }
 
+/* ── Header — back button pinned top-left, title centred ─── */
 .header {
-  padding: 20px;
-  color: white;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 56px 24px 0;
+  gap: 10px;
 }
 
 .backButton {
-  background: rgba(255, 255, 255, 0.2);
+  position: absolute;
+  top: 24px;
+  left: 48px;
+  background: none;
   border: none;
-  color: white;
-  padding: 8px 16px;
-  border-radius: 8px;
+  color: #666666;
+  font-size: 0.875rem;
   cursor: pointer;
-  font-size: 14px;
-  margin-bottom: 20px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 150ms ease;
 }
 
 .backButton:hover {
-  background: rgba(255, 255, 255, 0.3);
+  color: #E29A5C;
 }
 
 .title {
-  font-size: 28px;
-  margin: 0 0 8px 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0;
+  text-align: center;
 }
 
 .subtitle {
-  font-size: 16px;
-  opacity: 0.9;
+  font-size: 1rem;
+  color: #666666;
   margin: 0;
+  text-align: center;
 }
 
+/* ── Content Area ───────────────────────────────────────── */
 .content {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 20px;
+  padding: 32px 20px 72px;
 }
 
+/* ── Card ───────────────────────────────────────────────── */
 .card {
-  background: white;
-  border-radius: 16px;
-  padding: 40px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border-top: 4px solid #E29A5C;
+  padding: 44px 36px 48px;
   width: 100%;
-  max-width: 400px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+  max-width: 360px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
 }
 
+/* ── User Icon ──────────────────────────────────────────── */
 .userIcon {
   display: flex;
   justify-content: center;
-  margin-bottom: 30px;
-  color: #e29a5c;
+  margin-bottom: 28px;
 }
 
+.userIcon svg {
+  width: 52px;
+  height: 52px;
+  padding: 12px;
+  background-color: #FFF5ED;
+  border-radius: 50%;
+  color: #E29A5C;
+}
+
+/* ── Input Section ──────────────────────────────────────── */
 .inputSection {
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .label {
   display: block;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 600;
-  color: #333;
+  color: #1A1A1A;
   margin-bottom: 8px;
 }
 
 .phoneInput {
   width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  border: 2px solid #e0e0e0;
+  padding: 14px 16px;
+  font-size: 1rem;
+  border: 2px solid #E5E5E5;
   border-radius: 8px;
   text-align: center;
-  transition: border-color 0.3s;
+  transition: border-color 150ms ease, background-color 150ms ease;
+  box-sizing: border-box;
+  color: #1A1A1A;
+  background-color: #FAFAFA;
+  letter-spacing: 0.5px;
+}
+
+.phoneInput::placeholder {
+  color: #BBBBBB;
+  letter-spacing: 0;
 }
 
 .phoneInput:focus {
   outline: none;
-  border-color: #e29a5c;
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
 }
 
-.error {
-  color: #f44336;
-  font-size: 14px;
-  margin: 16px 0;
+/* ── Divider hint ───────────────────────────────────────── */
+.inputSection::after {
+  content: 'We\'ll use this to find your account';
+  display: block;
+  margin-top: 8px;
+  font-size: 0.8rem;
+  color: #AAAAAA;
   text-align: center;
 }
 
-.continueButton {
-  width: 100%;
-  padding: 14px;
-  font-size: 16px;
-  font-weight: 600;
-  background: #e29a5c;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.continueButton:hover:not(:disabled) {
-  background: #d88a4c;
-}
-
-.continueButton:disabled {
-  background: #ccc;
-  cursor: not-allowed;
+/* ── Error / Success ────────────────────────────────────── */
+.error {
+  color: #DC143C;
+  font-size: 0.875rem;
+  margin: 0 0 16px 0;
+  text-align: center;
+  padding: 10px 12px;
+  background-color: #FFF0F0;
+  border-radius: 6px;
+  border: 1px solid rgba(220, 20, 60, 0.15);
 }
 
 .successMessage {
-  background: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  color: #16a34a;
+  background: #F0FDF4;
+  border: 1px solid #BBF7D0;
+  color: #16A34A;
   padding: 12px 16px;
   border-radius: 8px;
   margin-bottom: 20px;
   text-align: center;
-  font-size: 14px;
+  font-size: 0.875rem;
   font-weight: 500;
+}
+
+/* ── Continue Button ────────────────────────────────────── */
+.continueButton {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-top: 8px;
+}
+
+.continueButton:hover:not(:disabled) {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.continueButton:disabled {
+  background-color: #CCCCCC;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .header {
+    padding: 52px 24px 0;
+  }
+
+  .backButton {
+    left: 24px;
+    top: 20px;
+  }
+
+  .title {
+    font-size: 1.75rem;
+  }
+
+  .content {
+    padding: 28px 16px 56px;
+  }
+
+  .card {
+    padding: 36px 28px 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    padding: 48px 16px 0;
+  }
+
+  .backButton {
+    left: 16px;
+    top: 16px;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .content {
+    padding: 24px 16px 48px;
+    align-items: flex-start;
+  }
+
+  .card {
+    padding: 32px 24px 36px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  }
 }

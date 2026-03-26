@@ -3,11 +3,15 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 32px;  /* Gap between sections */
-  padding: 40px 24px;
-  width: 672px;
+  gap: 32px;
+  padding: 48px 32px;
+  width: 100%;
+  max-width: 480px;
   margin: 0 auto;
   background-color: #FFFFFF;
+  border-radius: 8px;
+  border-top: 4px solid #E29A5C;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
 }
 
 /* ── User Icon ──────────────────────────────────────────── */
@@ -15,11 +19,11 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #F5F5F5;
+  background-color: #FFF5ED;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #666666;
+  color: #E29A5C;
 }
 
 /* ── Instruction Text ───────────────────────────────────── */
@@ -42,17 +46,16 @@
 /* ── PIN Dots Display ───────────────────────────────────── */
 .pinDots {
   display: flex;
-  gap: 32px;  /* Figma: gap 32px */
+  gap: 16px;
   justify-content: center;
-  width: 672px;  /* Figma: width 672px */
-  height: 128px;  /* Figma: height 128px */
+  width: 100%;
   align-items: center;
 }
 
 .dot {
-  width: 80px;  /* Calculated: (672 - 3*32) / 4 = 144px */
-  height: 100px;  /* Proportional to container height */
-  border-radius: 0px;
+  width: 64px;
+  height: 72px;
+  border-radius: 8px;
   background-color: #F5F5F5;
   border: 2px solid #E5E5E5;
   transition: all 200ms ease;
@@ -107,13 +110,11 @@
 /* ── Keypad Grid ────────────────────────────────────────── */
 .keypad {
   display: grid;
-  grid-template-columns: repeat(3, 100px);  
-  grid-template-rows: repeat(4, 80px);     
-  gap: 16px;  
-  width: 324px;
-  height: 344px;  
- margin: 0 auto;
- justify-self: center; 
+  grid-template-columns: repeat(3, 100px);
+  grid-template-rows: repeat(4, 72px);
+  gap: 12px;
+  margin: 0 auto;
+  justify-self: center;
 }
 
 .keypadRow {
@@ -122,9 +123,9 @@
 
 /* ── Individual Key Buttons ─────────────────────────────── */
 .key {
-  width: 100px;  /* Calculated from grid */
-  height: 80px;  /* Calculated from grid */
-  border-radius: 0px;  /* Adjust to match Figma if different */
+  width: 100px;
+  height: 72px;
+  border-radius: 8px;
   background-color: #E6A767;
   color: #FFFFFF;
   font-size: 1.5rem;
@@ -206,35 +207,53 @@
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 768px) {
   .keypadContainer {
-    width: 100%;
-    max-width: 672px;
-    padding: 24px 16px;
+    padding: 36px 20px 40px;
   }
 
   .pinDots {
-    width: 100%;
-    max-width: 672px;
-    height: auto;
-    gap: 16px;
+    gap: 12px;
   }
 
   .dot {
-    width: calc((100% - 48px) / 4);
+    width: calc((100% - 36px) / 4);
     height: 60px;
   }
 
   .keypad {
-    width: 100%;
-    max-width: 512px;
-    height: auto;
-    margin-left: 30px;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 90px);
+    grid-template-rows: repeat(4, 72px);
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
   }
 
   .key {
     width: 100%;
-    height: 90px;
-    font-size: 1.5rem;
+    height: 72px;
+    font-size: 1.375rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .keypadContainer {
+    padding: 28px 16px 32px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  }
+
+  .dot {
+    height: 52px;
+    border-radius: 6px;
+  }
+
+  .keypad {
+    max-width: 300px;
+    grid-template-rows: repeat(4, 64px);
+  }
+
+  .key {
+    height: 64px;
+    font-size: 1.25rem;
+    border-radius: 6px;
   }
 }

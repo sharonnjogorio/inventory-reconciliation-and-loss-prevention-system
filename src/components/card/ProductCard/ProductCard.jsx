@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import styles from "./ProductCard.module.css";
-import { CartContext } from "../../context/CartContext"; // optional shared state
+import { CartContext } from "../../../context/CartContext";
 
 const ProductCard = ({ id, name, description, image }) => {
   const { cart, addItem, removeItem } = useContext(CartContext);

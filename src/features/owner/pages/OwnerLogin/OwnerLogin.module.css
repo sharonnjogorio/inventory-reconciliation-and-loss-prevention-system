@@ -1,0 +1,220 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
+  padding: 40px 20px;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  border-top: 4px solid #E29A5C;
+  padding: 44px 36px 48px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+  max-width: 420px;
+  width: 100%;
+}
+
+.card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+  text-align: center;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666666;
+  margin: 0 0 32px 0;
+  text-align: center;
+}
+
+/* ── Input Groups ───────────────────────────────────────── */
+.inputGroup {
+  margin-bottom: 20px;
+}
+
+.inputGroup label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1A1A1A;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  font-size: 1rem;
+  color: #1A1A1A;
+  background-color: #FAFAFA;
+  transition: all 150ms ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
+}
+
+.input::placeholder {
+  color: #BBBBBB;
+}
+
+/* ── PIN Input Boxes ────────────────────────────────────── */
+.pinInputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+}
+
+.pinBox {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  background-color: #FAFAFA;
+  transition: all 150ms ease;
+  box-sizing: border-box;
+}
+
+.pinBox:focus {
+  outline: none;
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+/* ── Login Button ───────────────────────────────────────── */
+.loginBtn {
+  width: 100%;
+  padding: 14px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 150ms ease;
+  margin-top: 24px;
+}
+
+.loginBtn:hover:not(:disabled) {
+  background-color: #D4894A;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+.loginBtn:active {
+  transform: translateY(0);
+}
+
+.loginBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Error Box ──────────────────────────────────────────── */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFF0F0;
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+}
+
+.errorIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #666666;
+}
+
+.link {
+  color: #E29A5C;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .card {
+    padding: 36px 28px 40px;
+  }
+
+  .card h1 {
+    font-size: 1.75rem;
+  }
+
+  .pinBox {
+    width: 56px;
+    height: 56px;
+    font-size: 1.25rem;
+  }
+
+  .pinInputs {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 24px 16px;
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .card {
+    padding: 32px 20px 36px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  }
+
+  .card h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 0.9rem;
+  }
+
+  .pinBox {
+    width: 48px;
+    height: 48px;
+    font-size: 1.125rem;
+    border-radius: 6px;
+  }
+
+  .pinInputs {
+    gap: 8px;
+  }
+}

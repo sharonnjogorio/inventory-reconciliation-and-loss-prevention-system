@@ -1,3 +1,22 @@
+/* ── Owner content margin (sidebar-aware) ─────────────── */
+.ownerContent {
+  transition: margin-left 250ms ease;
+  margin-left: 240px;
+}
+
+.ownerContent.collapsed {
+  margin-left: 68px;
+}
+
+/* On mobile the sidebar always shows icon-only at 64px (CSS override) */
+
+@media (max-width: 768px) {
+  .ownerContent,
+  .ownerContent.collapsed {
+    margin-left: 64px;
+  }
+}
+
 /* #root {
   max-width: 1280px;
   margin: 0 auto;

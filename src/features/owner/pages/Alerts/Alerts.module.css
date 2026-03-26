@@ -1,0 +1,281 @@
+.container {
+  min-height: 100vh;
+  background-color: #F5F5F5;
+  padding: 32px 48px;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  border-top: 3px solid #E29A5C;
+  padding: 24px 28px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #888888;
+  margin: 0;
+}
+
+/* ── Stat Cards ──────────────────────────────────────────── */
+.stats {
+  display: flex;
+  gap: 12px;
+}
+
+.statCard {
+  background-color: #FFFAF6;
+  border-radius: 8px;
+  padding: 14px 20px;
+  min-width: 110px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #F0EBE3;
+  border-bottom: 3px solid #E29A5C;
+}
+
+.statCard.critical {
+  background-color: #FFF8F8;
+  border-color: #FFE5E5;
+  border-bottom-color: #DC143C;
+}
+
+.statValue {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  font-family: 'Roboto', sans-serif;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.statCard.critical .statValue {
+  color: #DC143C;
+}
+
+.statLabel {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #AAAAAA;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ── Filters ─────────────────────────────────────────────── */
+.filters {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.filterGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.filterGroup label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #888888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.select {
+  padding: 7px 12px;
+  border: 1px solid #E5E5E5;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  background-color: #F9F9F9;
+  color: #444444;
+  cursor: pointer;
+  transition: all 150ms ease;
+  outline: none;
+}
+
+.select:hover,
+.select:focus {
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
+}
+
+.refreshBtn {
+  margin-left: auto;
+  padding: 8px 16px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.refreshBtn:hover {
+  background-color: #D08A4C;
+  transform: translateY(-1px);
+}
+
+/* ── Content ─────────────────────────────────────────────── */
+.content {
+  min-height: 400px;
+}
+
+.loading {
+  text-align: center;
+  padding: 80px 20px;
+  color: #888888;
+  font-size: 1rem;
+}
+
+.empty {
+  text-align: center;
+  padding: 80px 20px;
+  color: #888888;
+  background-color: #FFFFFF;
+  border-radius: 12px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+.empty svg {
+  color: #50C878;
+  margin-bottom: 20px;
+}
+
+.empty h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.empty p {
+  font-size: 0.9rem;
+  color: #888888;
+  margin: 0;
+}
+
+.alertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 1024px) {
+  .header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .stats {
+    width: 100%;
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .header {
+    padding: 20px 16px;
+  }
+
+  .filters {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+
+  .refreshBtn {
+    margin-left: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .stats {
+    flex-wrap: wrap;
+  }
+
+  .statCard {
+    flex: 1;
+    min-width: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .header {
+    padding: 16px 12px;
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 1.375rem;
+  }
+
+  .stats {
+    gap: 8px;
+  }
+
+  .statCard {
+    padding: 10px 12px;
+    min-width: 70px;
+  }
+
+  .statValue {
+    font-size: 1.25rem;
+  }
+
+  .filters {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .filterGroup {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    gap: 4px;
+  }
+
+  .select {
+    width: 100%;
+  }
+}

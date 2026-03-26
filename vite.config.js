@@ -18,17 +18,17 @@ export default defineConfig({
         name: 'Smart Loss Control',
         short_name: 'SLC',
         description: 'AI-powered inventory reconciliation for cooking oil retailers',
-        theme_color: '#B8860B',
-        background_color: '#0D0D0D',
+        theme_color: '#E29A5C',
+        background_color: '#FFFFFF',
         display: 'standalone',
         icons: [
           {
-            src: 'pwa-192x192.png',
+            src: 'logo.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'pwa-512x512.png',
+            src: 'logo.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
@@ -39,7 +39,7 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,jpg,jpeg}'],
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/api\.smartlosscontrol\.com\/.*/i,
+            urlPattern: /^https:\/\/smart-loss-control-backend\.onrender\.com\/.*/i,
             handler: 'NetworkFirst',
             options: {
               cacheName: 'api-cache',

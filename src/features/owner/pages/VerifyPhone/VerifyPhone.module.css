@@ -1,0 +1,267 @@
+/* ── Container ──────────────────────────────────────────── */
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #F5F7FA 0%, #E8EEF4 100%);
+  padding: 40px 20px;
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+.card {
+  background: #FFFFFF;
+  border-radius: 8px;
+  border-top: 4px solid #E29A5C;
+  padding: 44px 36px 48px;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.09);
+  max-width: 420px;
+  width: 100%;
+  text-align: center;
+}
+
+.card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 8px 0;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: #666666;
+  margin: 0 0 28px 0;
+  line-height: 1.5;
+}
+
+/* ── OTP Inputs ─────────────────────────────────────────── */
+.otpInputs {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.otpBox {
+  width: 64px;
+  height: 64px;
+  border: 2px solid #E5E5E5;
+  border-radius: 8px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  background-color: #FAFAFA;
+  transition: all 150ms ease;
+  box-sizing: border-box;
+  outline: none;
+}
+
+.otpBox:focus {
+  border-color: #E29A5C;
+  background-color: #FFFFFF;
+  transform: scale(1.05);
+}
+
+.otpBox:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Timer ──────────────────────────────────────────────── */
+.timer {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #E29A5C;
+  margin: 0 0 16px 0;
+}
+
+/* ── Resend ─────────────────────────────────────────────── */
+.resendText {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+.resendBtn {
+  background: none;
+  border: none;
+  color: #E29A5C;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+  transition: opacity 150ms ease;
+}
+
+.resendBtn:hover:not(:disabled) {
+  text-decoration: underline;
+}
+
+.resendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ── Error Box ──────────────────────────────────────────── */
+.errorBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #FFF0F0;
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.15);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.errorIcon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+/* ── Success Box ────────────────────────────────────────── */
+.successBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: #F0FDF4;
+  color: #16A34A;
+  border: 1px solid rgba(22, 163, 74, 0.2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.successIcon {
+  font-size: 1.1rem;
+}
+
+/* ── Verifying text ─────────────────────────────────────── */
+.verifyingText {
+  font-size: 0.875rem;
+  color: #999999;
+  margin: 0 0 12px 0;
+}
+
+/* ── Dev OTP Toast ──────────────────────────────────────── */
+.toast {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  background: #1A1A1A;
+  color: #FFFFFF;
+  border-radius: 10px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: slideIn 0.3s ease;
+  max-width: 280px;
+}
+
+.toastContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.toastLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #E29A5C;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toastCode {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 6px;
+  color: #FFFFFF;
+}
+
+.toastClose {
+  background: none;
+  border: none;
+  color: #999999;
+  cursor: pointer;
+  font-size: 0.875rem;
+  padding: 0;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: color 150ms ease;
+}
+
+.toastClose:hover {
+  color: #FFFFFF;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ── Responsive ─────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .card {
+    padding: 36px 28px 40px;
+  }
+
+  .card h1 {
+    font-size: 1.75rem;
+  }
+
+  .otpBox {
+    width: 56px;
+    height: 56px;
+    font-size: 1.25rem;
+  }
+
+  .otpInputs {
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 24px 16px;
+    align-items: flex-start;
+    padding-top: 48px;
+  }
+
+  .card {
+    padding: 32px 20px 36px;
+  }
+
+  .card h1 {
+    font-size: 1.5rem;
+  }
+
+  .otpBox {
+    width: 48px;
+    height: 48px;
+    font-size: 1.125rem;
+    border-radius: 6px;
+  }
+
+  .otpInputs {
+    gap: 8px;
+  }
+
+  .toast {
+    top: 12px;
+    right: 12px;
+    left: 12px;
+    max-width: none;
+  }
+}

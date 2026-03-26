@@ -1,60 +1,54 @@
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 import './App.css'
 
-// Landing/Welcome Pages
+// Landing
 import LandingPage from './pages/LandingPage/Landing'
-import Welcome from './pages/Welcome'
 
 // Owner Pages
-import RegisterPage from "./pages/Owner/Register/Register";
-import VerifyPhone from "./pages/Owner/VerifyPhone/VerifyPhone";
-// import Catalog from "./pages/Owner/Catalog/Catalog";
+import RegisterPage from "./features/owner/pages/Register/Register";
+import VerifyPhone from "./features/owner/pages/VerifyPhone/VerifyPhone";
 import LoginSelection from './pages/LoginSelection/LoginSelection'
-import OwnerLogin from './pages/Owner/OwnerLogin/OwnerLogin'
-import CreateNewPin from "./pages/Owner/OwnerForgetPin/CreateNewPin";
-import OwnerDashboard from './pages/Owner/OwnerDashboard/OwnerDashboard'
-import ManageStaff from './pages/Owner/ManageStaff/ManageStaff'
-import StaffQRCode from './pages/Owner/StaffQRCode/StaffQRCode'
-import ProductCatalog from './pages/Owner/ProductCatalog/ProductCatalog'
-import Inventory from './pages/Owner/Inventory/Inventory'
-import Settings from './pages/Owner/Settings/Settings'
-import AddStock from './pages/Owner/AddStock/AddStock'
-import Alerts from './pages/Owner/Alerts/Alerts'
-import SalesActivity from './pages/Owner/SalesActivity/SalesActivity'
-import AnalyticDashboard from "./pages/Owner/AnalyticDashboard/AnalyticDashboard";
-// import Report from "./pages/Owner/Report/Report"
+import OwnerLogin from './features/owner/pages/OwnerLogin/OwnerLogin'
+import CreateNewPin from "./features/owner/pages/OwnerForgetPin/CreateNewPin";
+import OwnerCreatePin from "./features/owner/pages/OwnerCreatePin/CreatePin";
+import OwnerDashboard from './features/owner/pages/OwnerDashboard/OwnerDashboard'
+import ManageStaff from './features/owner/pages/ManageStaff/ManageStaff'
+import StaffQRCode from './features/owner/pages/StaffQRCode/StaffQRCode'
+import ProductCatalog from './features/owner/pages/ProductCatalog/ProductCatalog'
+import Inventory from './features/owner/pages/Inventory/Inventory'
+import Settings from './features/owner/pages/Settings/Settings'
+import AddStock from './features/owner/pages/AddStock/AddStock'
+import Alerts from './features/owner/pages/Alerts/Alerts'
+import SalesActivity from './features/owner/pages/SalesActivity/SalesActivity'
+import AnalyticDashboard from "./features/owner/pages/AnalyticDashboard/AnalyticDashboard";
 
-// Staff Pages 
+// Staff Pages
 import StaffLanding from './features/staff/pages/StaffLanding/StaffLanding'
 import StaffPhone from './features/staff/pages/StaffPhone/StaffPhone'
 import StaffScan from './features/staff/pages/StaffScan/StaffScan'
-import DeviceLinked from './features/staff/pages/DeviceLinked/DeviceLinked'
 import StaffPIN from './features/staff/pages/StaffPIN/StaffPIN'
+import DeviceLinked from './features/staff/pages/DeviceLinked/DeviceLinked'
 import SalesDashboard from './features/staff/pages/SalesDashboard/SalesDashboard'
 import BulkDecant from './features/staff/pages/BulkDecant/BulkDecant'
 
 // Shared Components
-import Navbar from './components/navbar/navbar'
-import Footer from './components/footer/footer'
-import OwnerNavbar from './components/navbar/OwnerNavbar'
-
-// Context
-import { CartProvider } from "./components/context/CartProvider";
-import OwnerCreatePin from "./pages/Owner/OwnerCreatePin/CreatePin";
-// import InventoryFlow2 from "./pages/Owner/Catalog/InventoryFlow2";
-
+import Navbar from './components/Navbar/Navbar'
+import Footer from './components/Footer/Footer'
+import OwnerNavbar from './components/Navbar/OwnerNavbar'
+import ScrollToTop from './components/ScrollToTop'
+import { CartProvider } from "./context/CartProvider";
 
 function App() {
   const location = useLocation()
+  const [navCollapsed, setNavCollapsed] = useState(false)
 
-  // Pages that should have NO navbar or footer at all
   const noLayoutRoutes = [
     '/owner/register',
     '/owner/verify',
     '/owner/login',
     '/owner/createpin',
     '/owner/createnewpin',
-    'owner/inventory/flow',
     '/owner/catalog',
     '/login'
   ]
@@ -62,52 +56,51 @@ function App() {
   const isNoLayout = noLayoutRoutes.includes(location.pathname) ||
                      location.pathname.startsWith('/staff')
 
-  const isOwnerRoute = location.pathname.startsWith('/owner') && 
+  const isOwnerRoute = location.pathname.startsWith('/owner') &&
                        !noLayoutRoutes.includes(location.pathname)
 
   return (
     <CartProvider>
-      {!isNoLayout && (isOwnerRoute ? <OwnerNavbar /> : <Navbar />)}
-      <div style={isOwnerRoute ? { marginLeft: '240px' } : {}}>
+      <ScrollToTop />
+      {!isNoLayout && (isOwnerRoute ? <OwnerNavbar collapsed={navCollapsed} onToggle={() => setNavCollapsed(v => !v)} /> : <Navbar />)}
+      <div className={isOwnerRoute ? `ownerContent${navCollapsed ? ' collapsed' : ''}` : ''}>
 
-      <Routes>
-        {/* Landing */}
-        <Route path="/" element={<LandingPage />} />
-        <Route path="/login" element={<LoginSelection />} />
+        <Routes>
+          {/* Landing */}
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/login" element={<LoginSelection />} />
 
-        {/* Owner Routes */}
-        <Route path="/owner/register" element={<RegisterPage />} />
-        <Route path="/owner/verify" element={<VerifyPhone />} />
-        <Route path="/owner/catalog" element={<ProductCatalog />} />
-        <Route path="/owner/login" element={<OwnerLogin />} />
-        <Route path="/owner/createpin" element={<OwnerCreatePin />} />
-        <Route path="/owner/createnewpin" element={<CreateNewPin />} />
-        <Route path="/owner/dashboard" element={<OwnerDashboard />} />
-        <Route path="/owner/staff" element={<ManageStaff />} />
-        <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
-         {/* <Route path="/owner/inventory/flow" element={<InventoryFlow />} />
-         <Route path="/owner/inventory/flow2" element={<InventoryFlow2 />} /> */}
-        <Route path="/owner/inventory" element={<Inventory />} />
-        <Route path="/owner/settings" element={<Settings />} />
-        <Route path="/owner/inventory/add" element={<AddStock />} />
-        <Route path="/owner/alerts" element={<Alerts />} />
-        <Route path="/owner/sales-activity" element={<SalesActivity />} />
-        <Route path="/owner/analytics" element={<AnalyticDashboard />} />
+          {/* Owner Routes */}
+          <Route path="/owner/register" element={<RegisterPage />} />
+          <Route path="/owner/verify" element={<VerifyPhone />} />
+          <Route path="/owner/catalog" element={<ProductCatalog />} />
+          <Route path="/owner/login" element={<OwnerLogin />} />
+          <Route path="/owner/createpin" element={<OwnerCreatePin />} />
+          <Route path="/owner/createnewpin" element={<CreateNewPin />} />
+          <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+          <Route path="/owner/staff" element={<ManageStaff />} />
+          <Route path="/owner/staff/qr-code" element={<StaffQRCode />} />
+          <Route path="/owner/inventory" element={<Inventory />} />
+          <Route path="/owner/inventory/add" element={<AddStock />} />
+          <Route path="/owner/alerts" element={<Alerts />} />
+          <Route path="/owner/sales-activity" element={<SalesActivity />} />
+          <Route path="/owner/analytics" element={<AnalyticDashboard />} />
+          <Route path="/owner/settings" element={<Settings />} />
 
-        {/* Staff Routes */}
-        <Route path="/staff/landing" element={<StaffLanding />} />
-        <Route path="/staff/phone" element={<StaffPhone />} />
-        <Route path="/staff/scan" element={<StaffScan />} />
-        <Route path="/staff/linked" element={<DeviceLinked />} />
-        <Route path="/staff/pin" element={<StaffPIN />} />
-        <Route path="/staff/sales" element={<SalesDashboard />} />
-        <Route path="/staff/bulk-decant" element={<BulkDecant />} />
+          {/* Staff Routes */}
+          <Route path="/staff/landing" element={<StaffLanding />} />
+          <Route path="/staff/phone" element={<StaffPhone />} />
+          <Route path="/staff/scan" element={<StaffScan />} />
+          <Route path="/staff/pin" element={<StaffPIN />} />
+          <Route path="/staff/linked" element={<DeviceLinked />} />
+          <Route path="/staff/sales" element={<SalesDashboard />} />
+          <Route path="/staff/bulk-decant" element={<BulkDecant />} />
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+          {/* Fallback */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
 
-      {!isNoLayout && !isOwnerRoute && <Footer />}
+        {!isNoLayout && !isOwnerRoute && <Footer />}
       </div>
     </CartProvider>
   )

@@ -1,22 +1,28 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../../../store/useAuthStore'
 import db from '../../../../services/db'
 import { salesAPI, inventoryAPI } from '../../../../services'
-import { 
-  saveSaleOffline, 
-  syncPendingSales, 
+import {
+  saveSaleOffline,
+  syncPendingSales,
   getPendingSalesCount,
-  setupAutoSync 
+  setupAutoSync
 } from '../../../../services/offlineSync'
 import ProductTile from '../../components/ProductTile/ProductTile'
 import QuickCountOverlay from '../../components/QuickCountOverlay/QuickCountOverlay'
-import heroOil1 from '../../../../assets/hero-oil-1.png'
-import heroOil2 from '../../../../assets/hero-oil-2.png'
-import heroOil3 from '../../../../assets/hero-oil-3.png'
+import Toast from '../../../../components/Toast/Toast'
+import mamadorImg from '../../../../assets/image/mamador.svg'
+import devonkingImg from '../../../../assets/image/devonking.svg'
+import goldenpennySvg from '../../../../assets/image/goldenpenny.svg'
+import poweroilImg from '../../../../assets/image/poweroil.svg'
+import kingsoilImg from '../../../../assets/image/kingsoil.png'
+import heroOil1 from '../../../../assets/image/hero-oil-1.png'
+import heroOil2 from '../../../../assets/image/hero-oil-2.png'
+import heroOil3 from '../../../../assets/image/hero-oil-3.png'
 import styles from './SalesDashboard.module.css'
-import { 
-  shouldTriggerQuickCount, 
+import {
+  shouldTriggerQuickCount,
   incrementSaleCounter
 } from '../../../../services/quickCountTrigger'
 
@@ -24,10 +30,34 @@ function SalesDashboard() {
   const navigate = useNavigate()
   const { getCurrentStaff, isOnline, logout } = useAuthStore()
   const [selectedItems, setSelectedItems] = useState({})
-  const [sessionRevenue, setSessionRevenue] = useState(0)
   const [sessionStart] = useState(new Date())
-  const [transactionCount, setTransactionCount] = useState(0)
-  const [lastSaleTime, setLastSaleTime] = useState('--')
+
+  const getStatsKey = () => {
+    const today = new Date().toISOString().split('T')[0]
+    const staffId = getCurrentStaff()?.id || 'unknown'
+    return `session_stats_${staffId}_${today}`
+  }
+
+  const loadStats = () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(getStatsKey()) || '{}')
+      return {
+        revenue: parseFloat(saved.revenue || 0),
+        count: parseInt(saved.count || 0),
+        lastSale: saved.lastSale || '--'
+      }
+    } catch { return { revenue: 0, count: 0, lastSale: '--' } }
+  }
+
+  const saveStats = (revenue, count, lastSale) => {
+    localStorage.setItem(getStatsKey(), JSON.stringify({ revenue, count, lastSale }))
+  }
+
+  const initial = loadStats()
+  const [sessionRevenue, setSessionRevenue] = useState(initial.revenue)
+  const [transactionCount, setTransactionCount] = useState(initial.count)
+  const [lastSaleTime, setLastSaleTime] = useState(initial.lastSale)
+  const [isCartOpen, setIsCartOpen] = useState(false)
   const [showQuickCount, setShowQuickCount] = useState(false)
   const [quickCountProduct, setQuickCountProduct] = useState(null)
   const [quickCountExpected, setQuickCountExpected] = useState(50)
@@ -37,10 +67,13 @@ function SalesDashboard() {
   const [lastSync, setLastSync] = useState(null)
   const [isSyncing, setIsSyncing] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
+  const [toast, setToast] = useState(null)
+
+  const showToast = (message, type = 'info') => setToast({ message, type })
+  const closeToast = () => setToast(null)
 
   const staff = getCurrentStaff()
 
-  // Load pending sales count on mount
   useEffect(() => {
     const loadPendingCount = async () => {
       const count = await getPendingSalesCount()
@@ -49,7 +82,6 @@ function SalesDashboard() {
     loadPendingCount()
   }, [])
 
-  // Setup auto-sync
   useEffect(() => {
     const handleSyncComplete = async (result) => {
       if (result.success) {
@@ -59,18 +91,17 @@ function SalesDashboard() {
         setIsSyncing(false)
       }
     }
-    
-    setupAutoSync(handleSyncComplete)
+
+    const cleanup = setupAutoSync(handleSyncComplete)
+    return cleanup
   }, [])
 
-  // Fetch products from inventory
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await inventoryAPI.getInventorySummary()
         const inventory = response.inventory || response.data || response
-        
-        // Map inventory to product format
+
         const productList = inventory.map(item => ({
           id: item.sku_id,
           brand: item.brand,
@@ -82,11 +113,10 @@ function SalesDashboard() {
           textColor: '#FFFFFF',
           image: getBrandImage(item.brand)
         }))
-        
+
         setProducts(productList)
         setLoading(false)
       } catch (err) {
-        console.error('Failed to load products:', err)
         setLoading(false)
       }
     }
@@ -95,13 +125,12 @@ function SalesDashboard() {
       fetchProducts()
     }
   }, [staff])
-  
-  // Function to refresh inventory after sale
+
   const refreshInventory = async () => {
     try {
       const response = await inventoryAPI.getInventorySummary()
       const inventory = response.inventory || response.data || response
-      
+
       const productList = inventory.map(item => ({
         id: item.sku_id,
         brand: item.brand,
@@ -113,44 +142,43 @@ function SalesDashboard() {
         textColor: '#FFFFFF',
         image: getBrandImage(item.brand)
       }))
-      
+
       setProducts(productList)
-      console.log('✅ Inventory refreshed')
     } catch (err) {
-      console.error('Failed to refresh inventory:', err)
+      // silently fail — products remain from last fetch
     }
   }
 
   const getBrandColor = (brand) => {
-    const colors = {
-      'kings': '#FFD700',
-      'mamador': '#8B008B',
-      'terra': '#FF6347',
-      'devon': '#4169E1',
-      'goldenpenny': '#DAA520',
-      'power': '#DC143C',
-      'gino': '#228B22',
-      'soyagold': '#FF8C00',
-      'tropical': '#00CED1',
-      'grandpure': '#9370DB'
-    }
-    return colors[brand.toLowerCase()] || '#e29a5c'
+    const b = brand.toLowerCase()
+    if (b.includes('mamador'))    return '#8B008B'
+    if (b.includes('king'))       return '#DAA520'
+    if (b.includes('terra'))      return '#FF6347'
+    if (b.includes('devon'))      return '#1A56DB'
+    if (b.includes('golden') || b.includes('penny')) return '#B8860B'
+    if (b.includes('power'))      return '#DC143C'
+    if (b.includes('gino'))       return '#228B22'
+    if (b.includes('soya'))       return '#FF8C00'
+    if (b.includes('tropical'))   return '#00879E'
+    if (b.includes('grand'))      return '#7C3AED'
+    return '#E29A5C'
   }
 
   const getBrandImage = (brand) => {
-    // Use different images based on brand
-    const images = {
-      'mamador': heroOil1,
-      'kings': heroOil2,
-      'terra': heroOil3
-    }
-    return images[brand.toLowerCase()] || heroOil1
+    const b = brand.toLowerCase()
+    if (b.includes('mamador'))                       return mamadorImg
+    if (b.includes('king'))                          return kingsoilImg
+    if (b.includes('devon'))                         return devonkingImg
+    if (b.includes('golden') || b.includes('penny')) return goldenpennySvg
+    if (b.includes('power'))                         return poweroilImg
+    if (b.includes('terra'))                         return heroOil3
+    if (b.includes('gino'))                          return heroOil2
+    return heroOil1
   }
 
-  // Sync pending sales manually
   const handleManualSync = async () => {
     if (isSyncing || pendingSalesCount === 0) return
-    
+
     setIsSyncing(true)
     try {
       const result = await syncPendingSales()
@@ -158,123 +186,100 @@ function SalesDashboard() {
         const count = await getPendingSalesCount()
         setPendingSalesCount(count)
         setLastSync(new Date())
-        alert(`✅ Synced ${result.synced} sales successfully!`)
+        showToast(`Synced ${result.synced} sale${result.synced !== 1 ? 's' : ''} successfully!`, 'success')
       } else {
-        alert('❌ Sync failed. Will retry automatically.')
+        showToast('Sync failed. Will retry automatically.', 'error')
       }
     } catch (error) {
-      console.error('Manual sync error:', error)
-      alert('❌ Sync failed. Check your connection.')
+      showToast('Sync failed. Check your connection.', 'error')
     } finally {
       setIsSyncing(false)
     }
   }
 
-  // Online/offline listener removed - handled by setupAutoSync
+  useEffect(() => {
+    if (!staff && !isLoggingOut) {
+      navigate('/staff/pin')
+      return
+    }
 
- useEffect(() => {
-  if (!staff && !isLoggingOut) {
-    navigate('/staff/pin')
-    return
-  }
+    if (!staff) return
 
-  if (!staff) return
-
-  const loadSessionRevenue = async () => {
-    try {
-      // Load today's sales from backend API
-      const today = new Date().toISOString().split('T')[0]
-      const response = await salesAPI.getSalesHistory(today, today)
-      
-      if (response.success && response.sales) {
-        // Calculate total revenue and count for this staff member
-        const staffSales = response.sales.filter(sale => sale.staff_id === staff.id)
-        const total = staffSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount || 0), 0)
-        setSessionRevenue(total)
-        setTransactionCount(staffSales.length)
-        console.log(`📊 Loaded ${staffSales.length} sales, total: $${total.toFixed(2)}`)
-      } else {
-        // Fallback to IndexedDB if API fails
-        const todaySales = await db.sales
-          .where('timestamp')
-          .between(
-            new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999)
-          )
-          .toArray()
-        
-        const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
-        setSessionRevenue(total)
-        setTransactionCount(todaySales.length)
-      }
-    } catch (err) {
-      console.error('Error loading revenue from API, trying IndexedDB:', err)
-      
-      // Fallback to IndexedDB
+    const loadSessionRevenue = async () => {
       try {
-        const todaySales = await db.sales
-          .where('timestamp')
-          .between(
-            new Date().setHours(0, 0, 0, 0),
-            new Date().setHours(23, 59, 59, 999)
-          )
-          .toArray()
-        
-        const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
-        setSessionRevenue(total)
-        setTransactionCount(todaySales.length)
-      } catch (dbErr) {
-        console.error('Error loading revenue from IndexedDB:', dbErr)
+        const today = new Date().toISOString().split('T')[0]
+        const response = await salesAPI.getSalesHistory(today, today)
+
+        if (response.success && response.sales) {
+          const staffSales = response.sales.filter(sale => sale.staff_id === staff.id)
+          const total = staffSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount || 0), 0)
+          setSessionRevenue(total)
+          setTransactionCount(staffSales.length)
+        } else {
+          const todaySales = await db.sales
+            .where('timestamp')
+            .between(
+              new Date().setHours(0, 0, 0, 0),
+              new Date().setHours(23, 59, 59, 999)
+            )
+            .toArray()
+
+          const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
+          setSessionRevenue(total)
+          setTransactionCount(todaySales.length)
+        }
+      } catch (err) {
+        try {
+          const todaySales = await db.sales
+            .where('timestamp')
+            .between(
+              new Date().setHours(0, 0, 0, 0),
+              new Date().setHours(23, 59, 59, 999)
+            )
+            .toArray()
+
+          const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
+          setSessionRevenue(total)
+          setTransactionCount(todaySales.length)
+        } catch (dbErr) {
+          // fall through with defaults
+        }
       }
     }
-  }
 
-  loadSessionRevenue()
-}, [staff, navigate, isLoggingOut])
+    loadSessionRevenue()
+  }, [staff, navigate, isLoggingOut])
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [])
 
-  
-
   const handleProductTap = (productId) => {
-    // Prevent interaction during quick count
-    if (showQuickCount) {
-      return
-    }
-    
+    if (showQuickCount) return
+
     const product = products.find(p => p.id === productId)
-    
-    // Check if product has stock
+
     if (!product || product.quantity <= 0) {
-      alert('⚠️ This product is out of stock!')
+      showToast('This product is out of stock!', 'warning')
       return
     }
-    
-    // Check if adding would exceed available stock
+
     const currentInCart = selectedItems[productId] || 0
     if (currentInCart >= product.quantity) {
-      alert(`⚠️ Only ${product.quantity} units available in stock!`)
+      showToast(`Only ${product.quantity} unit${product.quantity !== 1 ? 's' : ''} available in stock!`, 'warning')
       return
     }
-    
-    // Check for low stock warning (10 or less)
-    if (product.quantity <= 10 && currentInCart === 0) {
-      console.warn(`⚠️ Low stock alert: ${product.name} has only ${product.quantity} units left`)
-    }
-    
-    setSelectedItems(prev => ({
-      ...prev,
-      [productId]: (prev[productId] || 0) + 1
-    }))
+
+    setSelectedItems(prev => {
+      const updated = { ...prev, [productId]: (prev[productId] || 0) + 1 }
+      if (Object.keys(prev).length === 0) setIsCartOpen(true)
+      return updated
+    })
   }
 
   const handleRemoveProduct = (productId) => {
-    // Prevent interaction during quick count
-    if (showQuickCount) {
-      return
-    }
-    
+    if (showQuickCount) return
+
     setSelectedItems(prev => {
       const newItems = { ...prev }
       if (newItems[productId] > 1) {
@@ -311,21 +316,18 @@ function SalesDashboard() {
   }
 
   const handleRecordSale = async () => {
-    // Prevent recording sale during quick count
     if (showQuickCount) {
-      alert('⚠️ Please complete the quick count before recording sales')
+      showToast('Please complete the quick count before recording sales', 'warning')
       return
     }
-    
+
     if (Object.keys(selectedItems).length === 0) {
-      alert('Please select at least one product')
+      showToast('Please select at least one product', 'warning')
       return
     }
 
     try {
       const saleTotal = calculateTotal()
-      
-      // Prepare sales data
       const deviceId = localStorage.getItem('deviceId') || 'web-' + Date.now()
       const salesData = Object.entries(selectedItems).map(([productId, quantity]) => {
         const product = products.find(p => p.id === productId)
@@ -338,49 +340,29 @@ function SalesDashboard() {
         }
       })
 
-      // Try to sync with backend if online
       let syncSuccess = false
       const isActuallyOnline = navigator.onLine && isOnline
-      
-      console.log('🔍 Sync attempt:', { 
-        navigatorOnline: navigator.onLine, 
-        isOnline, 
-        isActuallyOnline,
-        salesCount: salesData.length 
-      })
-      
+
       if (isActuallyOnline) {
         try {
-          // Try to log each sale
           for (const saleData of salesData) {
-            console.log('📤 Sending sale to backend:', saleData)
-            const result = await salesAPI.logSale(saleData)
-            console.log('✅ Backend response:', result)
+            await salesAPI.logSale(saleData)
           }
           syncSuccess = true
           setLastSync(new Date())
-          console.log('✅ All sales synced to backend successfully - syncSuccess =', syncSuccess)
         } catch (err) {
-          console.error('❌ Failed to sync sale:', err)
-          console.error('Error details:', err.response?.data || err.message)
-          // Even if online, API might fail - treat as offline
           syncSuccess = false
         }
-      } else {
-        console.log('📴 Device is offline, skipping backend sync')
       }
-      
-      // If offline or sync failed, save to IndexedDB
+
       if (!syncSuccess) {
         for (const saleData of salesData) {
           await saveSaleOffline(saleData)
         }
         const count = await getPendingSalesCount()
         setPendingSalesCount(count)
-        console.log('💾 Sales saved offline')
       }
 
-      // Save to local sales history
       await db.sales.add({
         id: 'sale_' + Date.now(),
         staff_id: staff.id,
@@ -391,71 +373,54 @@ function SalesDashboard() {
         synced: syncSuccess
       })
 
-      // Update session stats
-      setSessionRevenue(prev => prev + saleTotal)
-      setTransactionCount(prev => prev + 1)
-      setLastSaleTime('Now')
+      const newRevenue = sessionRevenue + saleTotal
+      const newCount = transactionCount + 1
+      const newLastSale = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      setSessionRevenue(newRevenue)
+      setTransactionCount(newCount)
+      setLastSaleTime(newLastSale)
+      saveStats(newRevenue, newCount, newLastSale)
 
-      // Clear cart
       setSelectedItems({})
-      
-      // Refresh inventory to show updated stock
+      setIsCartOpen(false)
+
       await refreshInventory()
-      
-      // Check if AI spot check should trigger
+
       incrementSaleCounter()
       const triggerResult = await shouldTriggerQuickCount()
-      
+
       if (triggerResult.shouldTrigger && triggerResult.sku) {
-        // Find the product from the SKU returned by backend
         const productToCheck = products.find(p => p.id === triggerResult.sku.sku_id)
-        
+
         if (productToCheck) {
           setQuickCountProduct(productToCheck)
           setQuickCountExpected(triggerResult.sku.current_stock)
           setShowQuickCount(true)
-          console.log(`🔔 Spot check triggered: ${triggerResult.reason}`)
         } else {
-          // Show success message based on actual sync status
-          const statusMsg = syncSuccess 
-            ? '✅ Sale recorded and synced!' 
-            : '💾 Sale recorded offline (will sync when online)'
-          alert(statusMsg)
+          const statusMsg = syncSuccess ? 'Sale recorded and synced!' : 'Sale recorded offline — will sync when online'
+          showToast(statusMsg, syncSuccess ? 'success' : 'info')
         }
       } else {
-        // Show success message based on actual sync status
-        const statusMsg = syncSuccess 
-          ? '✅ Sale recorded and synced!' 
-          : '💾 Sale recorded offline (will sync when online)'
-        alert(statusMsg)
+        const statusMsg = syncSuccess ? 'Sale recorded and synced!' : 'Sale recorded offline — will sync when online'
+        showToast(statusMsg, syncSuccess ? 'success' : 'info')
       }
     } catch (err) {
-      console.error('Error recording sale:', err)
-      alert('Failed to record sale. Please try again.')
+      showToast('Failed to record sale. Please try again.', 'error')
     }
   }
 
   const handleLogout = () => {
-  // Set logging out flag to prevent redirect
-  setIsLoggingOut(true)
-  
-  // Clear device linking flags
-  localStorage.removeItem('deviceLinked')
-  localStorage.removeItem('staffData')
-  localStorage.removeItem('authToken')
-  
-  // Clear auth store
-  logout()
-  
-  console.log('✅ Staff logged out - device unlinked')
-  
-  // Redirect to landing page
-  navigate('/')
-}
+    setIsLoggingOut(true)
+    localStorage.removeItem('deviceLinked')
+    localStorage.removeItem('staffData')
+    localStorage.removeItem('authToken')
+    localStorage.removeItem(getStatsKey())
+    logout()
+    navigate('/')
+  }
 
   if (!staff) return null
 
-  // Format sync time
   const getSyncTime = () => {
     if (!lastSync) return 'Never'
     const seconds = Math.floor((new Date() - lastSync) / 1000)
@@ -466,7 +431,6 @@ function SalesDashboard() {
     return `${hours}h ago`
   }
 
-  // Get sync status icon
   const getSyncStatus = () => {
     if (isSyncing) return '🔄'
     if (pendingSalesCount > 0) return '🟡'
@@ -485,14 +449,14 @@ function SalesDashboard() {
             <span className={styles.statusDot}></span>
             {isOnline ? 'ONLINE' : 'OFFLINE'}
           </button>
-          <button 
+          <button
             className={`${styles.syncBtn} ${pendingSalesCount > 0 ? styles.pending : ''}`}
             onClick={handleManualSync}
             disabled={isSyncing || pendingSalesCount === 0}
           >
             {getSyncStatus()} {isSyncing ? 'Syncing...' : pendingSalesCount > 0 ? `${pendingSalesCount} Pending` : `Synced ${getSyncTime()}`}
           </button>
-          <button 
+          <button
             className={styles.logoutBtn}
             onClick={handleLogout}
             title="End Shift & Logout"
@@ -526,135 +490,150 @@ function SalesDashboard() {
       </div>
 
       <div className={styles.content}>
-        <h2 className={styles.sectionTitle}>Quick Sale</h2>
-        
-        {/* Cart Display */}
-        {Object.keys(selectedItems).length > 0 && (
-          <div className={styles.cartSection}>
-            <div className={styles.cartHeader}>
-              <h3 className={styles.cartTitle}>🛒 Current Cart ({Object.keys(selectedItems).length} items)</h3>
-              <button 
-                className={styles.cartClearBtn}
-                onClick={() => setSelectedItems({})}
-              >
-                Clear All
-              </button>
-            </div>
-            <div className={styles.cartItems}>
-              {Object.entries(selectedItems).map(([productId, quantity]) => {
-                const product = products.find(p => p.id === productId)
-                if (!product) return null
-                return (
-                  <div key={productId} className={styles.cartItem}>
-                    <div className={styles.cartItemInfo}>
-                      <span className={styles.cartItemName}>{product.name}</span>
-                      <span className={styles.cartItemQty}>× {quantity}</span>
-                    </div>
-                    <div className={styles.cartItemRight}>
-                      <span className={styles.cartItemPrice}>{formatCurrency(product.price * quantity)}</span>
-                      <button 
-                        className={styles.cartItemRemove}
-                        onClick={() => handleRemoveProduct(productId)}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  </div>
-                )
-              })}
-            </div>
-            <div className={styles.cartTotal}>
-              <span className={styles.cartTotalLabel}>Subtotal:</span>
-              <span className={styles.cartTotalAmount}>{formatCurrency(calculateTotal())}</span>
-            </div>
+        <div className={styles.productsPane}>
+          <div className={styles.productsPaneHeader}>
+            <h2 className={styles.sectionTitle}>Quick Sale</h2>
+            <button
+              className={styles.cartToggleBtn}
+              onClick={() => setIsCartOpen(true)}
+            >
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              {Object.keys(selectedItems).length > 0 && (
+                <span className={styles.cartBadge}>{Object.values(selectedItems).reduce((a, b) => a + b, 0)}</span>
+              )}
+            </button>
           </div>
-        )}
-        
-        {loading ? (
-          <div className={styles.loading}>Loading products...</div>
-        ) : products.length === 0 ? (
-          <div className={styles.emptyProducts}>
-            <p>No products available</p>
-            <p className={styles.emptyHint}>Ask your manager to add products to inventory</p>
+          {loading ? (
+            <div className={styles.loading}>Loading products...</div>
+          ) : products.length === 0 ? (
+            <div className={styles.emptyProducts}>
+              <p>No products available</p>
+              <p className={styles.emptyHint}>Ask your manager to add products to inventory</p>
+            </div>
+          ) : (
+            <div className={styles.productGrid}>
+              {products.map(product => (
+                <ProductTile
+                  key={product.id}
+                  product={product}
+                  quantity={selectedItems[product.id] || 0}
+                  onTap={() => handleProductTap(product.id)}
+                  onRemove={() => handleRemoveProduct(product.id)}
+                />
+              ))}
+            </div>
+          )}
+
+          <div className={styles.actionButtons}>
+            <button className={styles.actionBtn} onClick={() => navigate('/staff/bulk-decant')}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+              </svg>
+              Bulk Convert
+            </button>
+            <button
+              className={styles.actionBtn}
+              onClick={() => {
+                const summary = Object.keys(selectedItems).length > 0
+                  ? Object.entries(selectedItems).map(([id, qty]) => {
+                      const product = products.find(p => p.id === id)
+                      return product ? `${product.name}: ${qty} units` : ''
+                    }).filter(Boolean).join('\n') + `\n\nTotal: ${formatCurrency(calculateTotal())}`
+                  : `Revenue: ${formatCurrency(sessionRevenue)}\nTransactions: ${transactionCount}\nShift Time: ${getShiftDuration()}`
+                showToast(summary, 'info')
+              }}
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+              </svg>
+              View History
+            </button>
+            <button className={`${styles.actionBtn} ${styles.endShift}`} onClick={handleLogout}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+              End Shift
+            </button>
           </div>
-        ) : (
-          <div className={styles.productGrid}>
-            {products.map(product => (
-              <ProductTile
-                key={product.id}
-                product={product}
-                quantity={selectedItems[product.id] || 0}
-                onTap={() => handleProductTap(product.id)}
-                onRemove={() => handleRemoveProduct(product.id)}
-              />
-            ))}
-          </div>
-        )}
-
-        <div className={styles.actionButtons}>
-          <button 
-            className={styles.actionBtn}
-            onClick={() => navigate('/staff/bulk-decant')}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-            </svg>
-            Bulk Convert
-          </button>
-
-          <button 
-            className={styles.actionBtn}
-            onClick={() => {
-              // Show today's sales history
-              const todaySales = Object.entries(selectedItems).map(([id, qty]) => {
-                const product = products.find(p => p.id === id)
-                return product ? `${product.name}: ${qty} units` : ''
-              }).filter(Boolean).join('\n')
-              
-              if (todaySales) {
-                alert(`Today's Sales:\n\n${todaySales}\n\nTotal: ${formatCurrency(calculateTotal())}\nTransactions: ${transactionCount}`)
-              } else {
-                alert(`Today's Summary:\n\nRevenue: ${formatCurrency(sessionRevenue)}\nTransactions: ${transactionCount}\nShift Time: ${getShiftDuration()}`)
-              }
-            }}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10"/>
-              <polyline points="12 6 12 12 16 14"/>
-            </svg>
-            View History
-          </button>
-
-          <button 
-            className={`${styles.actionBtn} ${styles.endShift}`}
-            onClick={handleLogout}
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            End Shift
-          </button>
         </div>
       </div>
 
-      <div className={styles.bottomBar}>
-        <div className={styles.totalSection}>
-          <span className={styles.totalLabel}>Total:</span>
-          <span className={styles.totalAmount}>{formatCurrency(calculateTotal())}</span>
+      {isCartOpen && (
+        <div className={styles.cartOverlay} onClick={() => setIsCartOpen(false)} />
+      )}
+      <div className={`${styles.cartDrawer} ${isCartOpen ? styles.cartDrawerOpen : ''}`}>
+        <div className={styles.cartDrawerHeader}>
+          <h3 className={styles.cartTitle}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            Cart ({Object.values(selectedItems).reduce((a, b) => a + b, 0)} items)
+          </h3>
+          <button className={styles.cartCloseBtn} onClick={() => setIsCartOpen(false)}>✕</button>
         </div>
-        <div className={styles.buttonGroup}>
-          <button 
-            className={styles.clearButton}
-            onClick={() => setSelectedItems({})}
-            disabled={Object.keys(selectedItems).length === 0}
-          >
-            Clear
-          </button>
-          <button 
+
+        <div className={styles.cartBody}>
+          {Object.keys(selectedItems).length === 0 ? (
+            <div className={styles.cartEmpty}>
+              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#CCCCCC" strokeWidth="1.5">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+              </svg>
+              <p>Tap products to add them here</p>
+            </div>
+          ) : (
+            <>
+              <div className={styles.cartItemsHeader}>
+                <span className={styles.cartItemsCount}>{Object.keys(selectedItems).length} product{Object.keys(selectedItems).length > 1 ? 's' : ''}</span>
+                <button
+                  className={styles.cartClearBtn}
+                  onClick={() => setSelectedItems({})}
+                >
+                  Clear All
+                </button>
+              </div>
+              <div className={styles.cartItems}>
+                {Object.entries(selectedItems).map(([productId, quantity]) => {
+                  const product = products.find(p => p.id === productId)
+                  if (!product) return null
+                  return (
+                    <div key={productId} className={styles.cartItem}>
+                      <div className={styles.cartItemInfo}>
+                        <span className={styles.cartItemName}>{product.name}</span>
+                        <span className={styles.cartItemQty}>× {quantity}</span>
+                      </div>
+                      <div className={styles.cartItemRight}>
+                        <span className={styles.cartItemPrice}>{formatCurrency(product.price * quantity)}</span>
+                        <button
+                          className={styles.cartItemRemove}
+                          onClick={() => handleRemoveProduct(productId)}
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+              <div className={styles.cartTotal}>
+                <span className={styles.cartTotalLabel}>Subtotal</span>
+                <span className={styles.cartTotalAmount}>{formatCurrency(calculateTotal())}</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className={styles.cartDrawerFooter}>
+          <button
             className={styles.recordButton}
-            onClick={handleRecordSale}
+            onClick={() => { handleRecordSale(); setIsCartOpen(false) }}
             disabled={Object.keys(selectedItems).length === 0}
           >
             Record Sale
@@ -662,17 +641,35 @@ function SalesDashboard() {
         </div>
       </div>
 
+      {Object.keys(selectedItems).length > 0 && (
+        <div className={styles.bottomBar}>
+          <div className={styles.totalSection}>
+            <span className={styles.totalLabel}>Total:</span>
+            <span className={styles.totalAmount}>{formatCurrency(calculateTotal())}</span>
+          </div>
+          <button
+            className={styles.viewCartBtn}
+            onClick={() => setIsCartOpen(true)}
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            View Cart ({Object.values(selectedItems).reduce((a, b) => a + b, 0)})
+          </button>
+        </div>
+      )}
+
       {showQuickCount && quickCountProduct && (
         <QuickCountOverlay
           product={quickCountProduct}
           expectedCount={quickCountExpected}
           onComplete={(result) => {
-            console.log('Count result:', result)
             setSelectedItems({})
             if (result.isMatch) {
-              alert('✅ Sale recorded! Count verified.')
+              showToast('Sale recorded! Count verified.', 'success')
             } else {
-              alert(`⚠️ Sale recorded! Variance detected: ${result.gap} units (${result.variance}%)`)
+              showToast(`Sale recorded! Variance detected: ${result.gap} units (${result.variance}%)`, 'warning')
             }
           }}
           onClose={() => {
@@ -680,6 +677,14 @@ function SalesDashboard() {
             setQuickCountProduct(null)
             setSelectedItems({})
           }}
+        />
+      )}
+
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={closeToast}
         />
       )}
     </div>

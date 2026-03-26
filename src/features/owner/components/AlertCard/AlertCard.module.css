@@ -1,0 +1,185 @@
+.card {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  border-left: 4px solid #E5E5E5;
+  padding: 20px 24px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+  transition: all 150ms ease;
+}
+
+.card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-1px);
+}
+
+.card.resolved {
+  opacity: 0.65;
+  background-color: #F9F9F9;
+}
+
+/* ── Card Header ─────────────────────────────────────────── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.severity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.severityText {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: #555555;
+}
+
+.resolvedBadge {
+  background-color: #ECFDF5;
+  color: #16A34A;
+  border: 1px solid #BBF7D0;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* ── Product Info ────────────────────────────────────────── */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.productInfo {
+  border-bottom: 1px solid #F0F0F0;
+  padding-bottom: 14px;
+}
+
+.productName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1A1A1A;
+  margin: 0 0 4px 0;
+}
+
+.message {
+  font-size: 0.875rem;
+  color: #666666;
+  margin: 0;
+}
+
+/* ── Loss Badge ──────────────────────────────────────────── */
+.lossBadge {
+  background-color: #FFF0F0;
+  color: #DC143C;
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* ── Summary Row ─────────────────────────────────────────── */
+.summary {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.summaryItem {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.summaryLabel {
+  font-size: 0.7rem;
+  color: #AAAAAA;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.summaryValue {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+.summaryValue.variance {
+  color: #DC143C;
+}
+
+/* ── Actions ─────────────────────────────────────────────── */
+.actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.viewBtn {
+  padding: 8px 18px;
+  background-color: #E29A5C;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 150ms ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.viewBtn:hover {
+  background-color: #D08A4C;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(226, 154, 92, 0.3);
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .card {
+    padding: 16px;
+  }
+
+  .details {
+    grid-template-columns: 1fr;
+  }
+
+  .meta {
+    flex-direction: column;
+    gap: 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .card {
+    padding: 14px 12px;
+  }
+
+  .summary {
+    gap: 12px;
+  }
+
+  .productName {
+    font-size: 1rem;
+  }
+
+  .viewBtn {
+    padding: 10px 16px;
+    min-height: 44px;
+  }
+}

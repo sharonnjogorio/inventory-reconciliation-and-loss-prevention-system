@@ -5,43 +5,31 @@ import CheckedIcon from '../../assets/icon/circle-check.svg'
 import ChartIcon from '../../assets/icon/chart.svg'
 import UserIcon from '../../assets/icon/user.svg'
 import TrendIcon from '../../assets/icon/trend.svg'
-import MetricCard from '../../components/card/WorkingMetricCard/MetricCard'
-import { HeroSection } from '../../components/HeroSection/Herosection'
+import MetricCard from '../../components/card/MetricCard/MetricCard'
+import { HeroSection } from '../../components/HeroSection/HeroSection'
 import Button from '../../components/ui/button/button'
 
 export default function LandingPage() {
   const navigate = useNavigate()
 
-  // ✅ Smart Staff Routing
   const handleStaffClick = () => {
-    // Check if staff device is already linked
     const deviceLinked = localStorage.getItem('deviceLinked')
     const staffData = localStorage.getItem('staffData')
-    
+
     if (deviceLinked === 'true' && staffData) {
-      // Staff already onboarded → Go directly to PIN login
-      console.log('✅ Returning staff → Redirecting to PIN')
       navigate('/staff/pin')
     } else {
-      // New staff → Show options (Scan QR or Manual PIN)
-      console.log('✅ New staff → Redirecting to landing')
       navigate('/staff/landing')
     }
   }
 
-  // ✅ Smart Owner Routing
   const handleOwnerClick = () => {
-    // Check if owner is logged in
     const authToken = localStorage.getItem('authToken')
     const userData = localStorage.getItem('userData')
-    
+
     if (authToken && userData) {
-      // Owner already logged in → Go to dashboard
-      console.log('✅ Logged in owner → Redirecting to dashboard')
       navigate('/owner/dashboard')
     } else {
-      // Owner needs to login/register
-      console.log('✅ New owner → Redirecting to register')
       navigate('/owner/register')
     }
   }
@@ -111,18 +99,16 @@ export default function LandingPage() {
         <div className='prevention-description'>
           <h1>Start Preventing Losses Today</h1>
           <p>Join retail SMEs protecting their profits with data-driven loss prevention</p>
-          
+
           <div className='cta-buttons'>
-            {/* ✅ Smart Owner Button */}
-            <Button 
+            <Button
               className='prevention-btn register-btn'
               onClick={handleOwnerClick}
             >
               Continue as Owner
             </Button>
-            
-            {/* ✅ Smart Staff Button */}
-            <Button 
+
+            <Button
               className='prevention-btn login-btn'
               onClick={handleStaffClick}
             >
