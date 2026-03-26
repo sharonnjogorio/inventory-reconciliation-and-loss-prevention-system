@@ -386,10 +386,19 @@ function SalesDashboard() {
       setSelectedItems({})
       setIsCartOpen(false)
 
-      await refreshInventory()
+      // Optimistically decrement stock so tiles update immediately
+      setProducts(prev => prev.map(p => {
+        const sold = selectedItems[p.id]
+        if (!sold) return p
+        return { ...p, quantity: Math.max(0, p.quantity - sold) }
+      }))
+
+      // Then reconcile with server (background, no await needed)
+      refreshInventory()
 
       incrementSaleCounter()
-      const triggerResult = await shouldTriggerQuickCount(products)
+      const stockedProducts = products.filter(p => p.quantity > 0)
+      const triggerResult = await shouldTriggerQuickCount(stockedProducts)
 
       if (triggerResult.shouldTrigger && triggerResult.sku) {
         const productToCheck = products.find(p => p.id === triggerResult.sku.sku_id)

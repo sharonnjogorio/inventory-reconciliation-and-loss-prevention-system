@@ -178,8 +178,8 @@
 }
 
 .stock {
-  font-size: 0.7rem;
-  font-weight: 600;
+  font-size: 0.875rem;
+  font-weight: 700;
   margin: 4px 0 0 0;
   /* Color applied via inline style (status color) */
 }
