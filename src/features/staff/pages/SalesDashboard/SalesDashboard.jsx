@@ -85,7 +85,13 @@ function SalesDashboard() {
     const handleSyncComplete = async (result) => {
       const count = await getPendingSalesCount()
       setPendingSalesCount(count)
-      if (result.success) setLastSync(new Date())
+      if (result.success) {
+        setLastSync(new Date())
+        // Refresh inventory after a delay so the backend has time to commit
+        // the synced sales. The merge in refreshInventory ensures optimistic
+        // decrements are never overwritten by stale server quantities.
+        setTimeout(refreshInventory, 2000)
+      }
       setIsSyncing(false)
     }
 
@@ -128,20 +134,28 @@ function SalesDashboard() {
       const response = await inventoryAPI.getInventorySummary()
       const inventory = response.inventory || response.data || response
 
-      const productList = inventory.map(item => ({
-        id: item.sku_id,
-        brand: item.brand,
-        name: `${item.brand} ${item.size}`,
-        size: item.size,
-        price: parseFloat(item.selling_price),
-        quantity: item.quantity,
-        color: getBrandColor(item.brand),
-        textColor: '#FFFFFF',
-        image: getBrandImage(item.brand)
-      }))
+      // Merge API quantities with current optimistic state:
+      // never let the server push a quantity HIGHER than what we currently
+      // show — that would undo optimistic decrements from offline sales.
+      setProducts(prev => {
+        const currentQty = {}
+        prev.forEach(p => { currentQty[p.id] = p.quantity })
 
-      setProducts(productList)
-    } catch (err) {
+        return inventory.map(item => ({
+          id: item.sku_id,
+          brand: item.brand,
+          name: `${item.brand} ${item.size}`,
+          size: item.size,
+          price: parseFloat(item.selling_price),
+          quantity: item.sku_id in currentQty
+            ? Math.min(item.quantity, currentQty[item.sku_id])
+            : item.quantity,
+          color: getBrandColor(item.brand),
+          textColor: '#FFFFFF',
+          image: getBrandImage(item.brand)
+        }))
+      })
+    } catch {
       // silently fail — products remain from last fetch
     }
   }
@@ -190,6 +204,7 @@ function SalesDashboard() {
         setPendingSalesCount(count)
         setLastSync(new Date())
         showToast(`Synced ${result.synced} sale${result.synced !== 1 ? 's' : ''} successfully!`, 'success')
+        setTimeout(refreshInventory, 2000)
       } else {
         showToast('Sync failed. Will retry automatically.', 'error')
       }
