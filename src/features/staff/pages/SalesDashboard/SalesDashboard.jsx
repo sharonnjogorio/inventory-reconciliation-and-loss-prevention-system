@@ -28,13 +28,14 @@ import {
 
 function SalesDashboard() {
   const navigate = useNavigate()
-  const { getCurrentStaff, isOnline, logout } = useAuthStore()
+  const staff = useAuthStore(state => state.user)
+  const { isOnline, logout } = useAuthStore()
   const [selectedItems, setSelectedItems] = useState({})
   const [sessionStart] = useState(new Date())
 
   const getStatsKey = () => {
     const today = new Date().toISOString().split('T')[0]
-    const staffId = getCurrentStaff()?.id || 'unknown'
+    const staffId = staff?.id || 'unknown'
     return `session_stats_${staffId}_${today}`
   }
 
@@ -71,8 +72,6 @@ function SalesDashboard() {
 
   const showToast = (message, type = 'info') => setToast({ message, type })
   const closeToast = () => setToast(null)
-
-  const staff = getCurrentStaff()
 
   useEffect(() => {
     const loadPendingCount = async () => {
@@ -199,7 +198,10 @@ function SalesDashboard() {
 
   useEffect(() => {
     if (!staff && !isLoggingOut) {
-      navigate('/staff/pin')
+      const token = localStorage.getItem('authToken')
+      if (!token) {
+        navigate('/staff/pin')
+      }
       return
     }
 
