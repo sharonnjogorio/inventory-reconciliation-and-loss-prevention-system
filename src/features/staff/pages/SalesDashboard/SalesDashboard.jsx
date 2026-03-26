@@ -69,6 +69,7 @@ function SalesDashboard() {
   const [isSyncing, setIsSyncing] = useState(false)
   const [isLoggingOut, setIsLoggingOut] = useState(false)
   const [toast, setToast] = useState(null)
+  const [, setTick] = useState(0)
 
   const showToast = (message, type = 'info') => setToast({ message, type })
   const closeToast = () => setToast(null)
@@ -146,6 +147,12 @@ function SalesDashboard() {
     }
   }
 
+  // Tick every minute so shift time and last-sale age stay current
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 60000)
+    return () => clearInterval(id)
+  }, [])
+
   const getBrandColor = (brand) => {
     const b = brand.toLowerCase()
     if (b.includes('mamador'))    return '#8B008B'
@@ -206,44 +213,28 @@ function SalesDashboard() {
     if (!staff) return
 
     const loadSessionRevenue = async () => {
+      // localStorage is the authoritative record for this session —
+      // only update from the API if it returns a higher value (e.g. another device)
+      const stored = loadStats()
+
       try {
         const today = new Date().toISOString().split('T')[0]
         const response = await salesAPI.getSalesHistory(today, today)
 
         if (response.success && response.sales) {
           const staffSales = response.sales.filter(sale => sale.staff_id === staff.id)
-          const total = staffSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount || 0), 0)
-          setSessionRevenue(total)
-          setTransactionCount(staffSales.length)
-        } else {
-          const todaySales = await db.sales
-            .where('timestamp')
-            .between(
-              new Date().setHours(0, 0, 0, 0),
-              new Date().setHours(23, 59, 59, 999)
-            )
-            .toArray()
+          const apiTotal = staffSales.reduce((sum, sale) => sum + parseFloat(sale.total_amount || 0), 0)
+          const apiCount = staffSales.length
 
-          const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
-          setSessionRevenue(total)
-          setTransactionCount(todaySales.length)
+          // Only overwrite if API has more data than what's stored locally
+          if (apiTotal > stored.revenue) {
+            setSessionRevenue(apiTotal)
+            setTransactionCount(apiCount)
+            saveStats(apiTotal, apiCount, stored.lastSale)
+          }
         }
-      } catch (err) {
-        try {
-          const todaySales = await db.sales
-            .where('timestamp')
-            .between(
-              new Date().setHours(0, 0, 0, 0),
-              new Date().setHours(23, 59, 59, 999)
-            )
-            .toArray()
-
-          const total = todaySales.reduce((sum, sale) => sum + sale.total, 0)
-          setSessionRevenue(total)
-          setTransactionCount(todaySales.length)
-        } catch (dbErr) {
-          // fall through with defaults
-        }
+      } catch {
+        // Network or API error — keep localStorage values, no update needed
       }
     }
 
@@ -309,6 +300,21 @@ function SalesDashboard() {
     const hours = Math.floor(diffMs / (1000 * 60 * 60))
     const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60))
     return `${hours}h ${minutes}m`
+  }
+
+  const getLastSaleRelative = () => {
+    if (!lastSaleTime || lastSaleTime === '--') return null
+    // lastSaleTime is stored as a locale time string (e.g. "10:30 AM")
+    // parse it back against today's date
+    const today = new Date().toDateString()
+    const saleDate = new Date(`${today} ${lastSaleTime}`)
+    if (isNaN(saleDate)) return null
+    const diffMin = Math.floor((Date.now() - saleDate) / 60000)
+    if (diffMin < 1) return 'Just now'
+    if (diffMin === 1) return '1 min ago'
+    if (diffMin < 60) return `${diffMin} min ago`
+    const hrs = Math.floor(diffMin / 60)
+    return `${hrs}h ago`
   }
 
   const handleRecordSale = async () => {
@@ -476,7 +482,7 @@ function SalesDashboard() {
         <div className={styles.stat}>
           <span className={styles.statLabel}>LAST SALE</span>
           <span className={styles.statValue}>{lastSaleTime}</span>
-          <span className={styles.statSub}>Now</span>
+          <span className={styles.statSub}>{getLastSaleRelative() || 'No sales yet'}</span>
         </div>
         <div className={styles.stat}>
           <span className={styles.statLabel}>SHIFT TIME</span>

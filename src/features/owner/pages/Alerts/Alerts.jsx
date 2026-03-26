@@ -49,6 +49,7 @@ function Alerts() {
       await alertsAPI.resolveAlert(alertId, notes)
       setShowDetailsModal(false)
       fetchAlerts()
+      window.dispatchEvent(new CustomEvent('alert-resolved'))
     } catch (error) {
       console.error('Failed to resolve alert:', error)
       alert('Failed to resolve alert')

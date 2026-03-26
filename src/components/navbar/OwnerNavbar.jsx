@@ -120,7 +120,7 @@ function OwnerNavbar({ collapsed, onToggle }) {
 
     fetchData()
 
-    const interval = setInterval(async () => {
+    const refreshCount = async () => {
       try {
         const alertsResponse = await alertsAPI.getAlertsSummary()
         if (alertsResponse.success) {
@@ -129,9 +129,15 @@ function OwnerNavbar({ collapsed, onToggle }) {
       } catch (err) {
         console.error('Error refreshing alerts:', err)
       }
-    }, 30000)
+    }
 
-    return () => clearInterval(interval)
+    const interval = setInterval(refreshCount, 30000)
+    window.addEventListener('alert-resolved', refreshCount)
+
+    return () => {
+      clearInterval(interval)
+      window.removeEventListener('alert-resolved', refreshCount)
+    }
   }, [])
 
   const isActive = (path) => location.pathname === path
