@@ -392,8 +392,11 @@ function SalesDashboard() {
         return { ...p, quantity: Math.max(0, p.quantity - sold) }
       }))
 
-      // Then reconcile with server (background, no await needed)
-      refreshInventory()
+      // Only reconcile with server for online sales, and only after a short
+      // delay so the backend has time to commit before we re-fetch
+      if (syncSuccess) {
+        setTimeout(refreshInventory, 1500)
+      }
 
       incrementSaleCounter()
       const stockedProducts = products.filter(p => p.quantity > 0)
