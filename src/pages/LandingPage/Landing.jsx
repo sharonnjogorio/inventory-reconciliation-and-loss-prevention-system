@@ -6,7 +6,7 @@ import ChartIcon from '../../assets/icon/chart.svg'
 import UserIcon from '../../assets/icon/user.svg'
 import TrendIcon from '../../assets/icon/trend.svg'
 import MetricCard from '../../components/card/MetricCard/MetricCard'
-import { HeroSection } from '../../components/HeroSection/HeroSection'
+import { HeroSection } from '../../components/HeroSection/Herosection'
 import Button from '../../components/ui/button/button'
 
 export default function LandingPage() {
