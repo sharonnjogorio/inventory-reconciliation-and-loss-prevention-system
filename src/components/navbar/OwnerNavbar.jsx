@@ -101,9 +101,9 @@ function OwnerNavbar({ collapsed, onToggle }) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const alertsResponse = await alertsAPI.getAlertsSummary()
-        if (alertsResponse.success) {
-          setNewAlertsCount(alertsResponse.summary.total_active || 0)
+        const alertsResponse = await alertsAPI.getAlerts({ severity: 'CRITICAL', status: 'active' })
+        if (alertsResponse.alerts) {
+          setNewAlertsCount(alertsResponse.alerts.length)
         }
       } catch (err) {
         console.error('Error fetching data:', err)
@@ -122,9 +122,9 @@ function OwnerNavbar({ collapsed, onToggle }) {
 
     const refreshCount = async () => {
       try {
-        const alertsResponse = await alertsAPI.getAlertsSummary()
-        if (alertsResponse.success) {
-          setNewAlertsCount(alertsResponse.summary.total_active || 0)
+        const alertsResponse = await alertsAPI.getAlerts({ severity: 'CRITICAL', status: 'active' })
+        if (alertsResponse.alerts) {
+          setNewAlertsCount(alertsResponse.alerts.length)
         }
       } catch (err) {
         console.error('Error refreshing alerts:', err)
