@@ -3,6 +3,59 @@ import { useNavigate } from 'react-router-dom'
 import { shopsAPI } from '../../../../services'
 import styles from './ManageStaff.module.css'
 
+const UsersIcon = () => (
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+)
+
+const ClipboardIcon = () => (
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+    <rect x="9" y="3" width="6" height="4" rx="1"/>
+    <line x1="9" y1="12" x2="15" y2="12"/>
+    <line x1="9" y1="16" x2="13" y2="16"/>
+  </svg>
+)
+
+const CheckIcon = () => (
+  <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+    <polyline points="22 4 12 14.01 9 11.01"/>
+  </svg>
+)
+
+const AddStockIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 16V8a2 2 0 0 0-1-1.73L13 2.27a2 2 0 0 0-2 0L4 6.27A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+    <line x1="12" y1="22.08" x2="12" y2="12"/>
+    <line x1="12" y1="7" x2="12" y2="3"/>
+    <line x1="10" y1="5" x2="14" y2="5"/>
+  </svg>
+)
+
+const ReportIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="20" x2="18" y2="10"/>
+    <line x1="12" y1="20" x2="12" y2="4"/>
+    <line x1="6" y1="20" x2="6" y2="14"/>
+    <line x1="2" y1="20" x2="22" y2="20"/>
+  </svg>
+)
+
+const ManageStaffIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#E29A5C" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+    <circle cx="9" cy="7" r="4"/>
+    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+  </svg>
+)
+
 function ManageStaff() {
   const navigate = useNavigate()
 
@@ -112,7 +165,7 @@ function ManageStaff() {
           <h2 className={styles.sectionTitle}>Active Staff Members ({activeStaff.length})</h2>
           {activeStaff.length === 0 ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>👥</div>
+              <div className={styles.emptyIcon}><UsersIcon /></div>
               <p className={styles.emptyText}>No active staff members</p>
               <button
                 className={styles.addStaffBtn}
@@ -153,7 +206,7 @@ function ManageStaff() {
         <section className={styles.section}>
           <h2 className={styles.sectionTitle}>Pending Invitations (0)</h2>
           <div className={styles.emptyState}>
-            <div className={styles.emptyIcon}>📋</div>
+            <div className={styles.emptyIcon}><ClipboardIcon /></div>
             <p className={styles.emptyText}>No pending invitations</p>
           </div>
         </section>
@@ -162,7 +215,7 @@ function ManageStaff() {
           <h2 className={styles.sectionTitle}>Removed Staff ({removedStaff.length})</h2>
           {removedStaff.length === 0 ? (
             <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>✓</div>
+              <div className={styles.emptyIcon}><CheckIcon /></div>
               <p className={styles.emptyText}>No removed staff</p>
             </div>
           ) : (
@@ -197,24 +250,24 @@ function ManageStaff() {
         <section className={styles.quickActions}>
           <h2 className={styles.sectionTitle}>Quick Actions</h2>
           <div className={styles.actionsGrid}>
-            <button className={styles.quickActionCard}>
-              <div className={styles.quickActionIcon}>📦</div>
+            <button className={styles.quickActionCard} onClick={() => navigate('/owner/inventory/add')}>
+              <div className={styles.quickActionIcon}><AddStockIcon /></div>
               <div className={styles.quickActionText}>
                 <h4>Add Stock</h4>
                 <p>Record new inventory</p>
               </div>
             </button>
 
-            <button className={styles.quickActionCard}>
-              <div className={styles.quickActionIcon}>📊</div>
+            <button className={styles.quickActionCard} onClick={() => navigate('/owner/inventory')}>
+              <div className={styles.quickActionIcon}><ReportIcon /></div>
               <div className={styles.quickActionText}>
                 <h4>View Inventory/Report</h4>
                 <p>Generate Inventory Reports</p>
               </div>
             </button>
 
-            <button className={styles.quickActionCard}>
-              <div className={styles.quickActionIcon}>👥</div>
+            <button className={styles.quickActionCard} onClick={() => navigate('/owner/staff')}>
+              <div className={styles.quickActionIcon}><ManageStaffIcon /></div>
               <div className={styles.quickActionText}>
                 <h4>Manage Staff</h4>
                 <p>Add or remove staff</p>

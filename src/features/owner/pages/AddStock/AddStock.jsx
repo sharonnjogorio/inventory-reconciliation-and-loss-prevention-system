@@ -47,20 +47,18 @@ function AddStock() {
   useEffect(() => { fetchData() }, [])
 
   const fetchData = async () => {
+    setLoading(true)
     try {
-      const inventoryData = await inventoryAPI.getInventorySummary()
+      const [inventoryData, skusData] = await Promise.all([
+        inventoryAPI.getInventorySummary(),
+        inventoryAPI.getSKUs(),
+      ])
       const inventoryList = inventoryData.inventory || inventoryData.data || []
       setInventory(Array.isArray(inventoryList) ? inventoryList : [])
-
-      const skusResponse = await fetch(
-        `${import.meta.env.VITE_API_URL || 'http://192.168.8.27:5000'}/inventory/skus`,
-        { headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` } }
-      )
-      const skusData = await skusResponse.json()
       setAllSKUs(skusData.skus || skusData.data || [])
     } catch (err) {
-      console.error('❌ Failed to load data:', err)
-      setError('Failed to load data. Please refresh.')
+      console.error('Failed to load data:', err)
+      setError('Failed to load inventory data. Please check your connection and try again.')
     } finally {
       setLoading(false)
     }
@@ -76,8 +74,8 @@ function AddStock() {
       cartons: '',
       bottlesPerCarton: 12,
       totalBottles: 0,
-      costPrice: existingItem?.cost_price || '',
-      sellingPrice: existingItem?.selling_price || ''
+      costPrice: existingItem?.cost_price?.toString() || '',
+      sellingPrice: existingItem?.selling_price?.toString() || ''
     })
     setError('')
     setSuccess('')
@@ -97,28 +95,35 @@ function AddStock() {
   }
 
   const handleSubmit = async () => {
-    if (!selectedProduct)            { setError('Please select a product'); return }
+    if (!selectedProduct)             { setError('Please select a product'); return }
     if (stockData.totalBottles === 0) { setError('Please enter quantity'); return }
     const costPrice = parseFloat(stockData.costPrice)
     const sellingPrice = parseFloat(stockData.sellingPrice)
-    if (!costPrice || !sellingPrice) { setError('Please enter cost and selling prices'); return }
-    if (sellingPrice < costPrice)    { setError('Selling price should be higher than cost price'); return }
+    if (!costPrice || !sellingPrice)  { setError('Please enter cost and selling prices'); return }
+    if (sellingPrice < costPrice)     { setError('Selling price should be higher than cost price'); return }
 
     setSubmitting(true)
     setError('')
 
     try {
-      const matchingSKU = allSKUs.find(sku =>
-        sku.brand.toLowerCase() === selectedProduct.brand.toLowerCase() && sku.size === '1L'
-      )
-      if (!matchingSKU) throw new Error(`SKU not found for ${selectedProduct.brand} 1L`)
+      // For existing products use the sku_id we already have from inventory
+      // For new products look it up from the SKUs list
+      let skuId = selectedProduct.existing?.sku_id
+
+      if (!skuId) {
+        const matchingSKU = allSKUs.find(sku =>
+          sku.brand.toLowerCase() === selectedProduct.brand.toLowerCase() && sku.size === '1L'
+        )
+        if (!matchingSKU) throw new Error(`No SKU found for ${selectedProduct.brand} 1L. Please contact support.`)
+        skuId = matchingSKU.id
+      }
 
       await inventoryAPI.recordRestock({
-        skuId: matchingSKU.id,
+        skuId,
         orderedQty: stockData.totalBottles,
         receivedQty: stockData.totalBottles,
-        costPrice: parseFloat(stockData.costPrice),
-        sellPrice: parseFloat(stockData.sellingPrice),
+        costPrice,
+        sellPrice: sellingPrice,
         supplierName: selectedProduct.existing ? 'Restock' : 'Initial Stock',
         referenceNote: `${stockData.cartons} cartons × ${stockData.bottlesPerCarton} bottles`
       })
@@ -132,7 +137,7 @@ function AddStock() {
         setSuccess('')
       }, 2000)
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Failed to add stock')
+      setError(err.response?.data?.message || err.message || 'Failed to add stock. Please try again.')
     } finally {
       setSubmitting(false)
     }
@@ -140,7 +145,6 @@ function AddStock() {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
         <div>
           <h1 className={styles.title}>Add Stock</h1>
@@ -154,18 +158,16 @@ function AddStock() {
       {loading ? (
         <div className={styles.loading}>
           <div className={styles.spinner}></div>
-          Loading...
+          Loading inventory...
         </div>
       ) : (
-      <div className={styles.content}>
-        {error && <div className={styles.error}>⚠️ {error}</div>}
-        {success && <div className={styles.successMsg}>✅ {success}</div>}
+        <div className={styles.content}>
+          {error && <div className={styles.error}>⚠️ {error}</div>}
+          {success && <div className={styles.successMsg}>✅ {success}</div>}
 
-        <div className={`${styles.layout} ${selectedProduct ? styles.layoutWithForm : ''}`}>
-          {/* Products panel */}
           <div className={styles.productsSection}>
             <h2 className={styles.sectionTitle}>Select Product</h2>
-            <div className={styles.productsGrid}>
+            <div className={`${styles.productsGrid} ${selectedProduct ? styles.productsGridCompact : ''}`}>
               {AFRICAN_OIL_BRANDS.map(product => {
                 const existingItem = getProductStatus(product.brand)
                 const isSelected = selectedProduct?.id === product.id
@@ -175,7 +177,7 @@ function AddStock() {
                     key={product.id}
                     className={`${styles.productCard} ${isSelected ? styles.selected : ''}`}
                     onClick={() => handleProductSelect(product)}
-                    style={isSelected ? { borderColor: product.color, boxShadow: `0 0 0 3px ${product.color}22` } : {}}
+                    style={isSelected ? { borderColor: product.color, boxShadow: `0 0 0 3px ${product.color}33` } : {}}
                   >
                     {existingItem && (
                       <div className={styles.stockBadge}>{existingItem.quantity}</div>
@@ -199,88 +201,94 @@ function AddStock() {
             </div>
           </div>
 
-          {/* Form panel */}
           {selectedProduct && (
             <div className={styles.formSection}>
-              <div className={styles.formHeader}>
-                <h2 className={styles.formTitle}>
-                  {selectedProduct.existing ? 'Restock' : 'Add'} {selectedProduct.name}
-                </h2>
-                {selectedProduct.existing && (
-                  <p className={styles.currentStock}>
-                    Current stock: <strong>{selectedProduct.existing.quantity}</strong> bottles
-                  </p>
-                )}
-              </div>
-
-              <div className={styles.form}>
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label>Cartons</label>
-                    <input
-                      type="number" min="0"
-                      value={stockData.cartons || ''}
-                      onChange={(e) => updateStockData('cartons', e.target.value)}
-                      placeholder="0"
-                    />
+              <div className={styles.formInner}>
+                <div className={styles.formHeader}>
+                  <div className={styles.formHeaderLeft}>
+                    <img src={selectedProduct.image} alt={selectedProduct.name} className={styles.formProductImage} />
+                    <div>
+                      <h2 className={styles.formTitle}>
+                        {selectedProduct.existing ? 'Restock' : 'Add'} {selectedProduct.name}
+                      </h2>
+                      <p className={styles.currentStock}>
+                        Current stock: <strong>{selectedProduct.existing?.quantity ?? 0}</strong> bottles
+                      </p>
+                    </div>
                   </div>
-                  <div className={styles.formGroup}>
-                    <label>Bottles / Carton</label>
-                    <input
-                      type="number" min="1"
-                      value={stockData.bottlesPerCarton}
-                      onChange={(e) => updateStockData('bottlesPerCarton', e.target.value)}
-                    />
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label>Total Bottles</label>
-                    <input type="number" value={stockData.totalBottles} disabled className={styles.calculated} />
-                  </div>
+                  <button className={styles.closeFormBtn} onClick={() => setSelectedProduct(null)}>✕</button>
                 </div>
 
-                <div className={styles.formRow}>
-                  <div className={styles.formGroup}>
-                    <label>Cost Price (₦)</label>
-                    <input
-                      type="number" step="0.01" min="0"
-                      value={stockData.costPrice || ''}
-                      onChange={(e) => updateStockData('costPrice', e.target.value)}
-                      placeholder="0.00"
-                    />
+                <div className={styles.form}>
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label>Cartons</label>
+                      <input
+                        type="number" min="0"
+                        value={stockData.cartons}
+                        onChange={(e) => updateStockData('cartons', e.target.value)}
+                        placeholder="e.g. 5"
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Bottles / Carton</label>
+                      <input
+                        type="number" min="1"
+                        value={stockData.bottlesPerCarton}
+                        onChange={(e) => updateStockData('bottlesPerCarton', e.target.value)}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Total Bottles</label>
+                      <input
+                        type="number"
+                        value={stockData.totalBottles}
+                        disabled
+                        className={styles.calculated}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Cost Price (₦)</label>
+                      <input
+                        type="number" step="0.01" min="0"
+                        value={stockData.costPrice}
+                        onChange={(e) => updateStockData('costPrice', e.target.value)}
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>Selling Price (₦)</label>
+                      <input
+                        type="number" step="0.01" min="0"
+                        value={stockData.sellingPrice}
+                        onChange={(e) => updateStockData('sellingPrice', e.target.value)}
+                        placeholder="0.00"
+                      />
+                    </div>
+
+                    {stockData.totalBottles > 0 && (
+                      <div className={styles.formGroup}>
+                        <label>New Total</label>
+                        <div className={styles.newTotalDisplay}>
+                          <strong>{(selectedProduct.existing?.quantity ?? 0) + stockData.totalBottles}</strong>
+                          <span className={styles.increase}>&nbsp;(+{stockData.totalBottles})</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className={styles.formGroup}>
-                    <label>Selling Price (₦)</label>
-                    <input
-                      type="number" step="0.01" min="0"
-                      value={stockData.sellingPrice || ''}
-                      onChange={(e) => updateStockData('sellingPrice', e.target.value)}
-                      placeholder="0.00"
-                    />
-                  </div>
+
+                  <button
+                    className={styles.submitBtn}
+                    onClick={handleSubmit}
+                    disabled={submitting || stockData.totalBottles === 0}
+                  >
+                    {submitting ? 'Processing...' : selectedProduct.existing ? 'Restock Product' : 'Add to Inventory'}
+                  </button>
                 </div>
-
-                {selectedProduct.existing && stockData.totalBottles > 0 && (
-                  <div className={styles.restockSummary}>
-                    <span>New total</span>
-                    <strong className={styles.newTotal}>
-                      {selectedProduct.existing.quantity + stockData.totalBottles} bottles
-                      <span className={styles.increase}>&nbsp;(+{stockData.totalBottles})</span>
-                    </strong>
-                  </div>
-                )}
-
-                <button
-                  className={styles.submitBtn}
-                  onClick={handleSubmit}
-                  disabled={submitting || stockData.totalBottles === 0}
-                >
-                  {submitting ? 'Processing...' : selectedProduct.existing ? 'Restock Product' : 'Add to Inventory'}
-                </button>
               </div>
             </div>
           )}
         </div>
-      </div>
       )}
     </div>
   )

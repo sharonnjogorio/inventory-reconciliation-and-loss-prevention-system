@@ -26,6 +26,26 @@ import {
   incrementSaleCounter
 } from '../../../../services/quickCountTrigger'
 
+const getStatsKey = (staffId) => {
+  const today = new Date().toISOString().split('T')[0]
+  return `session_stats_${staffId || 'unknown'}_${today}`
+}
+
+const loadStats = (staffId) => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(getStatsKey(staffId)) || '{}')
+    return {
+      revenue: parseFloat(saved.revenue || 0),
+      count: parseInt(saved.count || 0),
+      lastSale: saved.lastSale || '--'
+    }
+  } catch { return { revenue: 0, count: 0, lastSale: '--' } }
+}
+
+const saveStats = (staffId, revenue, count, lastSale) => {
+  localStorage.setItem(getStatsKey(staffId), JSON.stringify({ revenue, count, lastSale }))
+}
+
 function SalesDashboard() {
   const navigate = useNavigate()
   const staff = useAuthStore(state => state.user)
@@ -33,28 +53,7 @@ function SalesDashboard() {
   const [selectedItems, setSelectedItems] = useState({})
   const [sessionStart] = useState(new Date())
 
-  const getStatsKey = () => {
-    const today = new Date().toISOString().split('T')[0]
-    const staffId = staff?.id || 'unknown'
-    return `session_stats_${staffId}_${today}`
-  }
-
-  const loadStats = () => {
-    try {
-      const saved = JSON.parse(localStorage.getItem(getStatsKey()) || '{}')
-      return {
-        revenue: parseFloat(saved.revenue || 0),
-        count: parseInt(saved.count || 0),
-        lastSale: saved.lastSale || '--'
-      }
-    } catch { return { revenue: 0, count: 0, lastSale: '--' } }
-  }
-
-  const saveStats = (revenue, count, lastSale) => {
-    localStorage.setItem(getStatsKey(), JSON.stringify({ revenue, count, lastSale }))
-  }
-
-  const initial = loadStats()
+  const initial = loadStats(staff?.id)
   const [sessionRevenue, setSessionRevenue] = useState(initial.revenue)
   const [transactionCount, setTransactionCount] = useState(initial.count)
   const [lastSaleTime, setLastSaleTime] = useState(initial.lastSale)
@@ -215,7 +214,7 @@ function SalesDashboard() {
     const loadSessionRevenue = async () => {
       // localStorage is the authoritative record for this session —
       // only update from the API if it returns a higher value (e.g. another device)
-      const stored = loadStats()
+      const stored = loadStats(staff.id)
 
       try {
         const today = new Date().toISOString().split('T')[0]
@@ -230,7 +229,7 @@ function SalesDashboard() {
           if (apiTotal > stored.revenue) {
             setSessionRevenue(apiTotal)
             setTransactionCount(apiCount)
-            saveStats(apiTotal, apiCount, stored.lastSale)
+            saveStats(staff.id, apiTotal, apiCount, stored.lastSale)
           }
         }
       } catch {
@@ -381,7 +380,7 @@ function SalesDashboard() {
       setSessionRevenue(newRevenue)
       setTransactionCount(newCount)
       setLastSaleTime(newLastSale)
-      saveStats(newRevenue, newCount, newLastSale)
+      saveStats(staff.id, newRevenue, newCount, newLastSale)
 
       setSelectedItems({})
       setIsCartOpen(false)

@@ -7,6 +7,11 @@ export const inventoryAPI = {
     return response.data
   },
 
+  getSKUs: async () => {
+    const response = await api.get('/inventory/skus')
+    return response.data
+  },
+
   /**
    * Record Restock (Ordered vs Received)
    * POST /inventory/restock

@@ -51,6 +51,9 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 32px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 /* ── Alerts ─────────────────────────────────────────────── */
@@ -61,7 +64,6 @@
   border-radius: 8px;
   color: #DC2626;
   font-size: 0.875rem;
-  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -74,22 +76,9 @@
   border-radius: 8px;
   color: #16A34A;
   font-size: 0.875rem;
-  margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-/* ── Layout ─────────────────────────────────────────────── */
-.layout {
-  display: block;
-}
-
-.layoutWithForm {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 24px;
-  align-items: start;
 }
 
 /* ── Products panel ──────────────────────────────────────── */
@@ -116,6 +105,12 @@
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 14px;
+  transition: grid-template-columns 200ms ease;
+}
+
+/* Compact mode when form is open — show fewer columns */
+.productsGridCompact {
+  grid-template-columns: repeat(5, 1fr);
 }
 
 /* ── Product card ────────────────────────────────────────── */
@@ -147,7 +142,7 @@
   right: 8px;
   background: #E29A5C;
   color: #FFFFFF;
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   font-weight: 700;
   padding: 3px 7px;
   border-radius: 10px;
@@ -199,28 +194,46 @@
   letter-spacing: 0.3px;
 }
 
-/* ── Form panel ──────────────────────────────────────────── */
+/* ── Form panel (full width below grid) ─────────────────── */
 .formSection {
   background: #FFFFFF;
   border-radius: 12px;
-  padding: 24px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid #F0EBE3;
-  position: sticky;
-  top: 24px;
+  border-top: 3px solid #E29A5C;
+  overflow: hidden;
+}
+
+.formInner {
+  padding: 24px 32px;
 }
 
 .formHeader {
-  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
   padding-bottom: 16px;
   border-bottom: 2px solid #F0EBE3;
 }
 
+.formHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.formProductImage {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+}
+
 .formTitle {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: #1A1A1A;
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
 }
 
 .currentStock {
@@ -229,16 +242,38 @@
   margin: 0;
 }
 
+.closeFormBtn {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: #F5F5F5;
+  border-radius: 50%;
+  font-size: 1rem;
+  color: #666666;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+  flex-shrink: 0;
+}
+
+.closeFormBtn:hover {
+  background: #E5E5E5;
+  color: #1A1A1A;
+}
+
 .form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px;
 }
 
 .formRow {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  align-items: end;
 }
 
 .formGroup {
@@ -256,17 +291,20 @@
 }
 
 .formGroup input {
-  padding: 9px 12px;
+  padding: 10px 14px;
   border: 1.5px solid #E5E5E5;
-  border-radius: 6px;
-  font-size: 0.875rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
   color: #1A1A1A;
   transition: border-color 150ms ease;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .formGroup input:focus {
   outline: none;
   border-color: #E29A5C;
+  background: #FFFAF5;
 }
 
 .formGroup input:disabled {
@@ -280,37 +318,29 @@
   color: #E29A5C !important;
 }
 
-.restockSummary {
-  background: #FFFAF6;
-  border: 1px solid #F0EBE3;
+.newTotalDisplay {
+  padding: 10px 14px;
+  background: #F0FDF4;
+  border: 1.5px solid #BBF7D0;
   border-radius: 8px;
-  padding: 14px 16px;
+  font-size: 0.9rem;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 0.875rem;
-  color: #666666;
-}
-
-.newTotal {
-  font-size: 1rem;
-  font-weight: 700;
-  color: #1A1A1A;
 }
 
 .increase {
   color: #16A34A;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 .submitBtn {
   width: 100%;
-  padding: 12px 24px;
+  padding: 14px 24px;
   background: #E29A5C;
   color: #FFFFFF;
   border: none;
   border-radius: 8px;
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: 700;
   cursor: pointer;
   transition: all 200ms ease;
@@ -326,6 +356,7 @@
 .submitBtn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* ── Loading ─────────────────────────────────────────────── */
@@ -355,22 +386,24 @@
 
 /* ── Responsive ─────────────────────────────────────────── */
 @media (max-width: 1280px) {
-  .productsGrid {
-    grid-template-columns: repeat(4, 1fr);
+  .productsGrid,
+  .productsGridCompact {
+    grid-template-columns: repeat(5, 1fr);
+  }
+
+  .formRow {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 1024px) {
-  .layoutWithForm {
-    grid-template-columns: 1fr;
-  }
-
-  .formSection {
-    position: static;
-  }
-
-  .productsGrid {
+  .productsGrid,
+  .productsGridCompact {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .formRow {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -388,20 +421,30 @@
   }
 
   .content {
-    padding: 24px 16px;
+    padding: 20px 16px;
   }
 
-  .productsGrid {
+  .productsGrid,
+  .productsGridCompact {
     grid-template-columns: repeat(3, 1fr);
   }
 
+  .formInner {
+    padding: 20px 16px;
+  }
+
   .formRow {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 480px) {
-  .productsGrid {
+  .productsGrid,
+  .productsGridCompact {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .formRow {
     grid-template-columns: repeat(2, 1fr);
   }
 }
