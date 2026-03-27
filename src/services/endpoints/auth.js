@@ -18,6 +18,7 @@ export const authAPI = {
 
     if (response.data.token) {
       localStorage.setItem('authToken', response.data.token)
+      localStorage.setItem('ownerToken', response.data.token)
       localStorage.setItem('userData', JSON.stringify(response.data.user))
       localStorage.setItem('shopId', response.data.user?.shop_id)
     }
@@ -40,6 +41,7 @@ export const authAPI = {
 
     if (response.data.token) {
       localStorage.setItem('authToken', response.data.token)
+      localStorage.setItem('ownerToken', response.data.token)
       localStorage.setItem('userData', JSON.stringify(response.data.user))
       localStorage.setItem('shopId', response.data.user?.shop_id)
     }
@@ -102,6 +104,7 @@ export const authAPI = {
 
   logout: () => {
     localStorage.removeItem('authToken')
+    localStorage.removeItem('ownerToken')
     localStorage.removeItem('userData')
     localStorage.removeItem('shopId')
   },
@@ -130,6 +133,7 @@ export const authAPI = {
   });
   if (response.data.token) {
     localStorage.setItem('authToken', response.data.token);
+    localStorage.setItem('ownerToken', response.data.token);
     localStorage.setItem('userData', JSON.stringify(response.data.user));
     localStorage.setItem('shopId', response.data.user.shop_id);
   }

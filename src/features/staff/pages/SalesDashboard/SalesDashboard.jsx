@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import useAuthStore from '../../../../store/useAuthStore'
 import db from '../../../../services/db'
@@ -48,8 +48,22 @@ const saveStats = (staffId, revenue, count, lastSale) => {
 
 function SalesDashboard() {
   const navigate = useNavigate()
-  const staff = useAuthStore(state => state.user)
+  const storeUser = useAuthStore(state => state.user)
   const { isOnline, logout } = useAuthStore()
+
+  // staffData in localStorage is written by the staff login flow and never
+  // overwritten by the owner login, so it's the reliable source of staff identity.
+  const staff = (() => {
+    try {
+      const saved = localStorage.getItem('staffData')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        // Only use it if it belongs to a staff role (not the owner)
+        if (parsed.id && parsed.name) return parsed
+      }
+    } catch (_) { /* localStorage unavailable */ }
+    return storeUser
+  })()
   const [selectedItems, setSelectedItems] = useState({})
   const [sessionStart] = useState(new Date())
 
@@ -97,6 +111,7 @@ function SalesDashboard() {
 
     const cleanup = setupAutoSync(handleSyncComplete, () => setIsSyncing(true))
     return cleanup
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   useEffect(() => {
@@ -129,7 +144,7 @@ function SalesDashboard() {
     }
   }, [staff])
 
-  const refreshInventory = async () => {
+  const refreshInventory = useCallback(async () => {
     try {
       const response = await inventoryAPI.getInventorySummary()
       const inventory = response.inventory || response.data || response
@@ -158,7 +173,7 @@ function SalesDashboard() {
     } catch {
       // silently fail — products remain from last fetch
     }
-  }
+  }, [])
 
   // Tick every minute so shift time and last-sale age stay current
   useEffect(() => {
@@ -380,7 +395,7 @@ function SalesDashboard() {
       }
 
       await db.sales.add({
-        id: 'sale_' + Date.now(),
+        sale_id: 'sale_' + Date.now(),
         staff_id: staff.id,
         staff_name: staff.name,
         items: selectedItems,
@@ -422,7 +437,9 @@ function SalesDashboard() {
 
         if (productToCheck) {
           setQuickCountProduct(productToCheck)
-          setQuickCountExpected(triggerResult.sku.current_stock)
+          // Use the live frontend quantity — already reflects all optimistic
+          // decrements from this session, so it matches what's actually on the shelf
+          setQuickCountExpected(productToCheck.quantity)
           setShowQuickCount(true)
         } else {
           const statusMsg = syncSuccess ? 'Sale recorded and synced!' : 'Sale recorded offline — will sync when online'

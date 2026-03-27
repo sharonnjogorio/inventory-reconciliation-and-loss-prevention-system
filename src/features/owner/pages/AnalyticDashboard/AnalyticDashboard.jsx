@@ -1,132 +1,165 @@
-import React, { useState, useReducer, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Link } from 'react-router-dom'
 import styles from "./AnalyticDashboard.module.css";
 import AnalyticCard from "../../../../components/card/AnalyticCard/AnalyticCard";
 import { WeeklyLossTrendChart, LossByCategoryChart } from "../../../../components/card/AnalyticCard/Chart";
 import AnalyticProduct from "../../../../components/card/AnalyticCard/AnalyticProduct";
 import RecentStockActivitiesCard from "../../../../components/card/AnalyticCard/StockActivities";
-import { reportsAPI, dashboardAPI } from '../../../../services'
-
-
-const initialDashboardState = {
-  showRevenueTrend: true,
-  showLossTrend: true,
-};
-
-function dashboardReducer(state, action) {
-  switch (action.type) {
-    case "TOGGLE_REVENUE_TREND":
-      return { ...state, showRevenueTrend: !state.showRevenueTrend };
-    case "TOGGLE_LOSS_TREND":
-      return { ...state, showLossTrend: !state.showLossTrend };
-    default:
-      return state;
-  }
-}
+import { reportsAPI, dashboardAPI, alertsAPI } from '../../../../services'
 
 const AnalyticDashboard = () => {
   const [timeRange, setTimeRange] = useState("7d");
   const [loading, setLoading] = useState(true);
-  const [aiData, setAiData] = useState({
-    cards: {
-      todayRevenue: { value: "$0", subtitle: "Today's Revenue", trendLabel: "vs yesterday", trendValue: "+0%", trendPositive: true },
-      totalRevenue: { value: "$0", subtitle: "Total Revenue / Wk", trendLabel: "vs last week", trendValue: "+0%", trendPositive: true },
-      shrinkageRate: { value: "0%", subtitle: "Shrinkage Rate", trendLabel: "vs prev. period", trendValue: "+0%", trendPositive: false },
-      totalIncidents: { value: "0", subtitle: "Total Incidents", trendLabel: "0 resolved, 0 open", trendValue: "", trendPositive: true },
-      spotChecks: { value: "0", subtitle: "Spot Checks", trendLabel: "0% week‑on‑week", trendValue: "+0%", trendPositive: true },
-    },
-    weeklyLossTrend: [],
-    lossByCategory: [],
+  const [cards, setCards] = useState({
+    todayRevenue:   { value: "—", trendLabel: "vs yesterday",   trendValue: "",    trendPositive: true },
+    totalRevenue:   { value: "—", trendLabel: "vs last period", trendValue: "",    trendPositive: true },
+    shrinkageRate:  { value: "—", trendLabel: "vs prev. period",trendValue: "",    trendPositive: false },
+    totalIncidents: { value: "—", trendLabel: "0 resolved, 0 open", trendValue: "",trendPositive: true },
+    spotChecks:     { value: "—", trendLabel: "",               trendValue: "",    trendPositive: true },
   });
-  const [state, dispatch] = useReducer(dashboardReducer, initialDashboardState);
+  const [weeklyLossTrend, setWeeklyLossTrend] = useState([]);
+  const [lossByCategory, setLossByCategory]   = useState([]);
+  const [topProducts, setTopProducts]         = useState([]);
+  const [activities, setActivities]           = useState([]);
+
+  const formatCurrency = (n) =>
+    new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 2 }).format(n)
 
   const loadAnalyticsData = useCallback(async () => {
     setLoading(true)
     try {
-      const days = timeRange === '7d' ? 7 : 30
-      const endDate = new Date().toISOString()
+      const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90
+      const endDate   = new Date().toISOString()
       const startDate = new Date(Date.now() - days * 24 * 60 * 60 * 1000).toISOString()
 
-      const today = new Date()
-      const todayStart = new Date(today.setHours(0, 0, 0, 0)).toISOString()
-      const todayEnd = new Date(today.setHours(23, 59, 59, 999)).toISOString()
-      
-      const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000)
+      const today     = new Date()
+      const todayStart     = new Date(today.setHours(0, 0, 0, 0)).toISOString()
+      const todayEnd       = new Date(today.setHours(23, 59, 59, 999)).toISOString()
+      const yesterday      = new Date(Date.now() - 24 * 60 * 60 * 1000)
       const yesterdayStart = new Date(yesterday.setHours(0, 0, 0, 0)).toISOString()
-      const yesterdayEnd = new Date(yesterday.setHours(23, 59, 59, 999)).toISOString()
+      const yesterdayEnd   = new Date(yesterday.setHours(23, 59, 59, 999)).toISOString()
 
-      const [salesReport, deviationReport, dashData, todaySales, yesterdaySales] = await Promise.all([
+      const topPeriod = timeRange === '7d' ? 'week' : 'month'
+
+      const results = await Promise.allSettled([
         reportsAPI.getSalesTrendReport({ start_date: startDate, end_date: endDate, group_by: 'day' }),
         reportsAPI.getDeviationReport({ start_date: startDate, end_date: endDate, group_by: 'day' }),
-        dashboardAPI.getDashboardOverview(),
         reportsAPI.getSalesTrendReport({ start_date: todayStart, end_date: todayEnd, group_by: 'day' }),
-        reportsAPI.getSalesTrendReport({ start_date: yesterdayStart, end_date: yesterdayEnd, group_by: 'day' })
+        reportsAPI.getSalesTrendReport({ start_date: yesterdayStart, end_date: yesterdayEnd, group_by: 'day' }),
+        dashboardAPI.getTopSelling(topPeriod, 5),
+        alertsAPI.getAlerts({ limit: 20 }),
       ])
 
-      const todayRevenue = todaySales.summary?.total_revenue || 0
-      const yesterdayRevenue = yesterdaySales.summary?.total_revenue || 0
-      const todayTrend = yesterdayRevenue > 0 ? (((todayRevenue - yesterdayRevenue) / yesterdayRevenue) * 100).toFixed(1) : 0
+      const resolve = (i, fallback = {}) =>
+        results[i].status === 'fulfilled' ? results[i].value : (console.warn(`Analytics API [${i}] failed:`, results[i].reason), fallback)
 
-      const totalRevenue = salesReport.summary?.total_revenue || 0
-      const prevRevenue = salesReport.summary?.prev_period_revenue || totalRevenue
-      const revenueTrend = prevRevenue > 0 ? (((totalRevenue - prevRevenue) / prevRevenue) * 100).toFixed(1) : 0
+      const salesReport     = resolve(0)
+      const deviationReport = resolve(1)
+      const todaySales      = resolve(2)
+      const yesterdaySales  = resolve(3)
+      const topData         = resolve(4, { success: false, products: [] })
+      const alertsData      = resolve(5, { alerts: [] })
 
-      const totalLoss = deviationReport.summary?.total_estimated_loss || 0
+      // Today's revenue vs yesterday
+      const todayRev     = parseFloat(todaySales.summary?.total_revenue || 0)
+      const yesterdayRev = parseFloat(yesterdaySales.summary?.total_revenue || 0)
+      const todayTrend   = yesterdayRev > 0
+        ? (((todayRev - yesterdayRev) / yesterdayRev) * 100).toFixed(1)
+        : 0
+
+      // Period revenue
+      const totalRevenue  = parseFloat(salesReport.summary?.total_revenue || 0)
+      const prevRevenue   = parseFloat(salesReport.summary?.prev_period_revenue || totalRevenue)
+      const revenueTrend  = prevRevenue > 0
+        ? (((totalRevenue - prevRevenue) / prevRevenue) * 100).toFixed(1)
+        : 0
+
+      // Shrinkage
+      const totalLoss    = parseFloat(deviationReport.summary?.total_estimated_loss || 0)
       const shrinkageRate = totalRevenue > 0 ? ((totalLoss / totalRevenue) * 100).toFixed(1) : 0
 
-      const totalIncidents = deviationReport.summary?.total_incidents || 0
-      const resolvedIncidents = deviationReport.summary?.resolved_incidents || 0
-      const openIncidents = totalIncidents - resolvedIncidents
+      // Incidents
+      const totalIncidents    = parseInt(deviationReport.summary?.total_incidents || 0)
+      const resolvedIncidents = parseInt(deviationReport.summary?.resolved_incidents || 0)
+      const openIncidents     = totalIncidents - resolvedIncidents
 
-      const spotChecks = deviationReport.summary?.total_audits || 0
+      // Spot checks
+      const spotChecks = parseInt(deviationReport.summary?.total_audits || 0)
 
-      const weeklyLossTrend = salesReport.trend?.map(day => ({
-        label: new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
-        losses: parseFloat(day.cost || 0),
-        sales: parseFloat(day.revenue || 0)
-      })) || []
-
-      const lossByCategory = deviationReport.trend?.map(day => ({
-        label: new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
-        value: parseFloat(day.total_variance || 0)
-      })) || []
-
-      setAiData({
-        cards: {
-          totalRevenue: {
-            value: `$${totalRevenue.toFixed(2)}`,
-            subtitle: `Total Revenue / ${days}d`,
-            trendLabel: "vs last period",
-            trendValue: `${revenueTrend >= 0 ? '+' : ''}${revenueTrend}%`,
-            trendPositive: revenueTrend >= 0,
-          },
-          shrinkageRate: {
-            value: `${shrinkageRate}%`,
-            subtitle: "Shrinkage Rate",
-            trendLabel: "vs prev. period",
-            trendValue: `$${totalLoss.toFixed(2)} loss`,
-            trendPositive: false,
-          },
-          totalIncidents: {
-            value: totalIncidents.toString(),
-            subtitle: "Total Incidents",
-            trendLabel: `${resolvedIncidents} resolved, ${openIncidents} open`,
-            trendValue: "",
-            trendPositive: openIncidents === 0,
-          },
-          spotChecks: {
-            value: spotChecks.toString(),
-            subtitle: "Spot Checks",
-            trendLabel: `${days} day period`,
-            trendValue: "",
-            trendPositive: true,
-          },
+      setCards({
+        todayRevenue: {
+          value:        formatCurrency(todayRev),
+          trendLabel:   'vs yesterday',
+          trendValue:   `${todayTrend >= 0 ? '+' : ''}${todayTrend}%`,
+          trendPositive: todayTrend >= 0,
         },
-        weeklyLossTrend,
-        lossByCategory,
+        totalRevenue: {
+          value:        formatCurrency(totalRevenue),
+          trendLabel:   'vs last period',
+          trendValue:   `${revenueTrend >= 0 ? '+' : ''}${revenueTrend}%`,
+          trendPositive: revenueTrend >= 0,
+        },
+        shrinkageRate: {
+          value:        `${shrinkageRate}%`,
+          trendLabel:   'vs prev. period',
+          trendValue:   `${formatCurrency(totalLoss)} loss`,
+          trendPositive: false,
+        },
+        totalIncidents: {
+          value:        totalIncidents.toString(),
+          trendLabel:   `${resolvedIncidents} resolved, ${openIncidents} open`,
+          trendValue:   '',
+          trendPositive: openIncidents === 0,
+        },
+        spotChecks: {
+          value:        spotChecks.toString(),
+          trendLabel:   `${days}d period`,
+          trendValue:   '',
+          trendPositive: true,
+        },
       })
+
+      setWeeklyLossTrend(
+        (salesReport.trend || []).map(day => ({
+          label:  new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
+          losses: parseFloat(day.cost || 0),
+          sales:  parseFloat(day.revenue || 0),
+        }))
+      )
+
+      setLossByCategory(
+        (deviationReport.trend || []).map(day => ({
+          label: new Date(day.period).toLocaleDateString('en-US', { weekday: 'short' }),
+          value: parseFloat(day.total_variance || 0),
+        }))
+      )
+
+      // Top products
+      if (topData.success && topData.products?.length > 0) {
+        setTopProducts(topData.products.map(p => ({
+          id:        p.sku_id,
+          name:      p.product_name,
+          unitsSold: parseInt(p.units_sold || 0),
+          revenue:   parseFloat(p.revenue || p.total_revenue || 0),
+        })))
+      }
+
+      // Stock activities from alerts
+      if (alertsData.alerts?.length > 0) {
+        setActivities(alertsData.alerts.slice(0, 10).map(alert => ({
+          id:          alert.id,
+          type:        alert.severity === 'CRITICAL' ? 'Critical Variance' : 'Stock Variance',
+          typeKey:     'loss',
+          timeAgo:     formatTimeAgo(alert.created_at),
+          description: `${alert.brand || ''} ${alert.size || ''} — variance of ${Math.abs(alert.variance || 0)} units, est. loss ${formatCurrency(alert.estimated_loss || 0)}`,
+          user:        alert.staff_name || 'Quick Count',
+        })))
+      } else {
+        setActivities([])
+      }
+
     } catch (error) {
-      console.error('Failed to load analytics:', error)
+      console.error('Failed to load analytics (unexpected):', error)
     } finally {
       setLoading(false)
     }
@@ -136,95 +169,63 @@ const AnalyticDashboard = () => {
     loadAnalyticsData()
   }, [loadAnalyticsData])
 
-  const handleTimeRangeChange = (event) => {
-    setTimeRange(event.target.value);
-  };
+  const formatTimeAgo = (timestamp) => {
+    if (!timestamp) return 'Unknown'
+    const diffMin = Math.floor((Date.now() - new Date(timestamp)) / 60000)
+    if (diffMin < 60)  return `${diffMin}m ago`
+    const diffHrs = Math.floor(diffMin / 60)
+    if (diffHrs < 24)  return `${diffHrs}h ago`
+    return `${Math.floor(diffHrs / 24)}d ago`
+  }
 
   return (
     <div className={styles.page}>
-      {loading && (
-        <div className={styles.loading}>Loading analytics...</div>
-      )}
-      
+      {loading && <div className={styles.loading}>Loading analytics...</div>}
+
       <div className={styles.analyticLink}>
-        <Link to="/owner/dashboard" className={styles.breadcrumbLink}><div className={styles.breadcrumb}>{"< Back to Dashboard"}</div></Link>
+        <Link to="/owner/dashboard" className={styles.breadcrumbLink}>
+          <div className={styles.breadcrumb}>{"< Back to Dashboard"}</div>
+        </Link>
 
         <div className={styles.headerRow}>
           <div>
             <h1 className={styles.title}>Analytics Dashboard</h1>
-            <p className={styles.subtitle}>
-              Performance insights and trends
-            </p>
+            <p className={styles.subtitle}>Performance insights and trends</p>
           </div>
           <div className={styles.controls}>
             <select
               className={styles.rangeSelect}
               value={timeRange}
-              onChange={handleTimeRangeChange}
+              onChange={(e) => setTimeRange(e.target.value)}
             >
               <option value="7d">Last 7 Days</option>
               <option value="30d">Last 30 Days</option>
               <option value="90d">Last 90 Days</option>
             </select>
-            <button className={styles.primaryButton}>EXPORT REPORT</button>
+            <button className={styles.primaryButton} onClick={loadAnalyticsData} disabled={loading}>
+              {loading ? 'Loading...' : 'Refresh'}
+            </button>
           </div>
         </div>
-        </div>
-      <main className={styles.main}>
+      </div>
 
+      <main className={styles.main}>
         <section className={styles.cardsRow}>
-          <AnalyticCard
-            title="TODAY'S REVENUE"
-            value={aiData.cards.todayRevenue.value}
-            subtitle=""
-            trendLabel={aiData.cards.todayRevenue.trendLabel}
-            trendValue={aiData.cards.todayRevenue.trendValue}
-            trendPositive={aiData.cards.todayRevenue.trendPositive}
-          />
-          <AnalyticCard
-            title={`TOTAL REVENUE (${timeRange})`}
-            value={aiData.cards.totalRevenue.value}
-            subtitle=""
-            trendLabel={aiData.cards.totalRevenue.trendLabel}
-            trendValue={aiData.cards.totalRevenue.trendValue}
-            trendPositive={aiData.cards.totalRevenue.trendPositive}
-          />
-          <AnalyticCard
-            title="SHRINKAGE RATE"
-            value={aiData.cards.shrinkageRate.value}
-            subtitle=""
-            trendLabel={aiData.cards.shrinkageRate.trendLabel}
-            trendValue={aiData.cards.shrinkageRate.trendValue}
-            trendPositive={false}
-          />
-          <AnalyticCard
-            title="TOTAL VARIANCES"
-            value={aiData.cards.totalIncidents.value}
-            subtitle=""
-            trendLabel={aiData.cards.totalIncidents.trendLabel}
-            trendValue={aiData.cards.totalIncidents.trendValue}
-            trendPositive={true}
-          />
-          <AnalyticCard
-            title="SPOT CHECKS"
-            value={aiData.cards.spotChecks.value}
-            subtitle=""
-            trendLabel={aiData.cards.spotChecks.trendLabel}
-            trendValue={aiData.cards.spotChecks.trendValue}
-            trendPositive={true}
-          />
+          <AnalyticCard title="TODAY'S REVENUE"          {...cards.todayRevenue}   />
+          <AnalyticCard title={`TOTAL REVENUE (${timeRange})`} {...cards.totalRevenue}  />
+          <AnalyticCard title="SHRINKAGE RATE"           {...cards.shrinkageRate}  trendPositive={false} />
+          <AnalyticCard title="TOTAL VARIANCES"          {...cards.totalIncidents} />
+          <AnalyticCard title="SPOT CHECKS"              {...cards.spotChecks}     />
         </section>
 
         <section className={styles.chartsRow}>
-          {state.showLossTrend && (
-            <WeeklyLossTrendChart data={aiData.weeklyLossTrend} />
-          )}
-          <LossByCategoryChart data={aiData.lossByCategory} />
+          <WeeklyLossTrendChart data={weeklyLossTrend} />
+          <LossByCategoryChart  data={lossByCategory}  />
         </section>
 
         <section className={styles.bottomRow}>
-          <AnalyticProduct/>
-          <RecentStockActivitiesCard/>
+          <AnalyticProduct products={topProducts} loading={loading} />
+          <RecentStockActivitiesCard activities={activities} loading={loading} />
         </section>
       </main>
     </div>

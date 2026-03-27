@@ -42,9 +42,7 @@ function StaffQRCode() {
     setError('')
 
     try {
-      console.log('📤 Generating QR code...')
       const response = await authAPI.generateQRCode()
-      console.log('✅ QR code generated:', response)
 
       const token = response.qr_code.token
       setQrToken(token)
@@ -95,12 +93,6 @@ function StaffQRCode() {
           <h1 className={styles.title}>Manage Staff</h1>
           <p className={styles.subtitle}>Control who has access to your shop system</p>
         </div>
-        <button 
-          className={styles.addStaffBtn}
-          onClick={() => navigate('/owner/staff/qr-code')}
-        >
-          + ADD NEW STAFF
-        </button>
       </div>
 
       {/* Main Card */}

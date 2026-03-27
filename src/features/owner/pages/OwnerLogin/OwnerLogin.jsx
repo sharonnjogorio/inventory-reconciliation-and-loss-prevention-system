@@ -49,6 +49,7 @@ function OwnerLogin() {
 
       if (response.token) {
         localStorage.setItem('authToken', response.token)
+        localStorage.setItem('ownerToken', response.token)
         localStorage.setItem('userData', JSON.stringify(response.user))
         localStorage.setItem('shopId', response.user?.shop_id)
         localStorage.setItem('fullName', response.user?.full_name)

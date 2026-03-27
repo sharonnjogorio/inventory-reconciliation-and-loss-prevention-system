@@ -7,6 +7,14 @@
   transition: all 150ms ease;
 }
 
+.card.critical { border-left-color: #DC143C; }
+.card.warning  { border-left-color: #FFC107; }
+.card.minor    { border-left-color: #FF8C00; }
+
+.severityText.critical { color: #DC143C; }
+.severityText.warning  { color: #FFC107; }
+.severityText.minor    { color: #FF8C00; }
+
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
   transform: translateY(-1px);

@@ -64,25 +64,38 @@ function ManageStaff() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    fetchStaffList()
-  }, [])
-
   const fetchStaffList = async () => {
+    setError('')
     try {
       setLoading(true)
       const response = await shopsAPI.getStaffList()
-
-      if (response.success) {
-        setActiveStaff(response.staff.filter(s => s.is_active))
-        setRemovedStaff(response.staff.filter(s => !s.is_active))
-      }
+      const staffList = response.staff || response.data || []
+      const isActive = (s) =>
+        s.is_active === true ||
+        s.status === 'active' ||
+        s.active === true ||
+        (s.is_active !== false && s.status !== 'revoked' && s.status !== 'removed' && s.status !== 'inactive')
+      setActiveStaff(staffList.filter(s => isActive(s)))
+      setRemovedStaff(staffList.filter(s => !isActive(s)))
     } catch (err) {
+      console.error('❌ Failed to load staff list:', err)
       setError('Failed to load staff list')
     } finally {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    fetchStaffList()
+    const interval = setInterval(fetchStaffList, 10000)
+    // Re-fetch when owner switches back to this browser tab
+    const onVisible = () => { if (document.visibilityState === 'visible') fetchStaffList() }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      clearInterval(interval)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [])
 
   const handleRevokeAccess = async (staffId, staffName) => {
     if (!confirm(`Are you sure you want to remove access for ${staffName}?`)) return

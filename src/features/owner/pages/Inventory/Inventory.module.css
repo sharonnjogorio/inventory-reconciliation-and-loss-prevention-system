@@ -44,6 +44,28 @@
   transform: translateY(-2px);
 }
 
+.refreshBtn {
+  padding: 10px 20px;
+  background-color: #FFFFFF;
+  color: #E29A5C;
+  border: 1.5px solid #E29A5C;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.refreshBtn:hover:not(:disabled) {
+  background-color: #FFF8F0;
+  transform: translateY(-2px);
+}
+
+.refreshBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* ── Stats Grid ─────────────────────────────────────────── */
 .statsGrid {
   display: grid;

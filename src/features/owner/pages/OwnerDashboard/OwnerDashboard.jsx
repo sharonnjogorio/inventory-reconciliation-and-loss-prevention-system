@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './OwnerDashboard.module.css'
 import dashboardAPI from '../../../../services/endpoints/dashboard'
+import { inventoryAPI } from '../../../../services/endpoints/inventory'
 import mamadorImg from '../../../../assets/image/mamador.svg'
 import devonkingImg from '../../../../assets/image/devonking.svg'
 import goldenpennySvg from '../../../../assets/image/goldenpenny.svg'
@@ -69,6 +70,8 @@ function OwnerDashboard() {
 
   useEffect(() => {
     fetchDashboardData()
+    const interval = setInterval(fetchDashboardData, 30000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchDashboardData = async () => {
@@ -76,19 +79,37 @@ function OwnerDashboard() {
       setLoading(true)
       setError(null)
 
-      const data = await dashboardAPI.getDashboardOverview()
+      const [data, inventoryData] = await Promise.all([
+        dashboardAPI.getDashboardOverview(),
+        inventoryAPI.getInventorySummary()
+      ])
 
       if (data.success) {
-        const actualLowStockCount = data.low_stock_items.filter(item => item.quantity <= 10).length
+        console.log('📊 Dashboard response:', JSON.stringify(data, null, 2))
+
+        const inventory = inventoryData.inventory || inventoryData.data || []
+        const lowStockCount = Array.isArray(inventory)
+          ? inventory.filter(item => item.quantity > 0 && item.quantity <= (item.reorder_level || 10)).length
+          : data.low_stock_items?.length ?? 0
+
+        // Try all common field name patterns the backend might use
+        const rawScore =
+          data.health?.score ??
+          data.health?.health_score ??
+          data.health_score ??
+          data.shop?.health_score ??
+          data.score ??
+          null
+        const healthScore = rawScore !== null ? parseFloat(rawScore) || null : null
 
         setShopData(prev => ({
           ...prev,
           name: data.shop.shop_name || prev.name,
-          healthScore: data.health.score,
+          healthScore,
           totalSales: parseFloat(data.stats.today_units_sold),
           revenue: parseFloat(data.stats.today_revenue),
-          lowStockCount: actualLowStockCount,
-          lastSynced: '1 minute ago',
+          lowStockCount,
+          lastSynced: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
         }))
 
         const alerts = []
@@ -97,10 +118,7 @@ function OwnerDashboard() {
           data.low_stock_items.forEach(item => {
             if (item.quantity === 0) {
               alerts.push({ id: `out-of-stock-${item.product}`, type: 'error', severity: 'critical', title: `OUT OF STOCK: ${item.product}`, message: `Product is completely out of stock. Urgent restock needed!`, product: item })
-            }
-          })
-          data.low_stock_items.forEach(item => {
-            if (item.quantity > 0 && item.quantity <= 10) {
+            } else {
               alerts.push({ id: `low-stock-${item.product}`, type: 'warning', severity: 'medium', title: `Low Stock: ${item.product}`, message: `Only ${item.quantity} units remaining. Restock recommended.`, product: item })
             }
           })
@@ -108,7 +126,10 @@ function OwnerDashboard() {
 
         if (data.recent_alerts?.length > 0) {
           data.recent_alerts.forEach(alert => {
-            alerts.push({ id: alert.id, type: alert.status === 'CRITICAL' ? 'error' : 'warning', severity: alert.status === 'CRITICAL' ? 'critical' : 'medium', title: `${alert.product} Deviation`, message: `Deviation: ${alert.deviation} units, Loss: $${alert.estimated_loss}` })
+            const dev = Math.abs(alert.deviation || 0)
+            const type = dev > 20 ? 'error' : dev > 5 ? 'warning' : 'info'
+            const severity = dev > 20 ? 'critical' : dev > 5 ? 'medium' : 'low'
+            alerts.push({ id: alert.id, type, severity, title: `${alert.product} Deviation`, message: `Deviation: ${alert.deviation} units, Loss: $${alert.estimated_loss}` })
           })
         }
 
@@ -148,9 +169,9 @@ function OwnerDashboard() {
             <div className={styles.circleWrapper}>
               <svg className={styles.circle} viewBox="0 0 200 200">
                 <circle cx="100" cy="100" r="90" fill="none" stroke="#E5E5E5" strokeWidth="12" />
-                <circle cx="100" cy="100" r="90" fill="none" stroke="#00A63E" strokeWidth="12" strokeDasharray={`${(shopData.healthScore ?? 0) * 5.65} 565`} strokeLinecap="round" transform="rotate(-90 100 100)" />
+                <circle cx="100" cy="100" r="90" fill="none" stroke={shopData.healthScore >= 75 ? '#00A63E' : shopData.healthScore >= 50 ? '#F59E0B' : '#DC2626'} strokeWidth="12" strokeDasharray={`${(shopData.healthScore ?? 0) * 5.65} 565`} strokeLinecap="round" transform="rotate(-90 100 100)" />
               </svg>
-              <div className={styles.scoreValue}>{shopData.healthScore ?? '—'}</div>
+              <div className={styles.scoreValue} style={{ color: shopData.healthScore >= 75 ? '#00A63E' : shopData.healthScore >= 50 ? '#F59E0B' : '#DC2626' }}>{shopData.healthScore ?? '—'}</div>
             </div>
             <p className={styles.healthLabel}>HEALTH SCORE</p>
           </div>
@@ -175,7 +196,17 @@ function OwnerDashboard() {
             <div className={styles.alertsList}>
               {recentAlerts.map(alert => (
                 <div key={alert.id} className={`${styles.alertItem} ${styles[`alert${alert.type.charAt(0).toUpperCase() + alert.type.slice(1)}`]}`}>
-                  <div className={styles.alertIcon}>{alert.type === 'error' ? '🚨' : alert.type === 'warning' ? '⚠️' : '✓'}</div>
+                  <div className={styles.alertIcon}>
+                    {alert.type === 'error' ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7.86 2h8.28L22 7.86v8.28L16.14 22H7.86L2 16.14V7.86L7.86 2z"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    ) : alert.type === 'warning' ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    ) : alert.type === 'info' ? (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                    ) : (
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    )}
+                  </div>
                   <div className={styles.alertContent}><h4>{alert.title}</h4><p>{alert.message}</p></div>
                 </div>
               ))}

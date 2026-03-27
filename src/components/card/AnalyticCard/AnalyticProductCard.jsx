@@ -1,5 +1,5 @@
 // src/components/TopProductsCard/TopProductsCard.jsx
-import React, { useState, useReducer, useMemo } from "react";
+import React, { useReducer, useMemo } from "react";
 import styles from "./AnalyticProductCard.module.css";
 
 const fallbackProducts = [
@@ -36,22 +36,20 @@ function controlsReducer(state, action) {
  * - products?: array of { id, name, unitsSold, revenue }
  *   (Pass your API/AI data here; falls back to default when not provided.)
  */
-const AnalyticProductCard = ({ title = "Top Products (Revenue)", products }) => {
-  // If products prop is not provided or empty, fall back to default static data
-  const [localProducts] = useState(
-    Array.isArray(products) && products.length > 0
-      ? products
-      : fallbackProducts
-  );
-
+const AnalyticProductCard = ({ title = "Top Products (Revenue)", products, loading = false }) => {
   const [controls, dispatch] = useReducer(
     controlsReducer,
     initialControlState
   );
 
+  // Reacts to prop updates — never stale
+  const baseProducts = Array.isArray(products) && products.length > 0
+    ? products
+    : fallbackProducts
+
   // Derived list after sorting + filtering
   const visibleProducts = useMemo(() => {
-    let list = [...localProducts];
+    let list = [...baseProducts];
 
     // Filter: minimum units sold
     list = list.filter(
@@ -77,7 +75,7 @@ const AnalyticProductCard = ({ title = "Top Products (Revenue)", products }) => 
     }
 
     return list;
-  }, [localProducts, controls.sortBy, controls.minUnitsSold]);
+  }, [baseProducts, controls.sortBy, controls.minUnitsSold]);
 
   const handleSortChange = (event) => {
     dispatch({ type: "SET_SORT", payload: event.target.value });
@@ -91,6 +89,10 @@ const AnalyticProductCard = ({ title = "Top Products (Revenue)", products }) => 
   const handleReset = () => {
     dispatch({ type: "RESET" });
   };
+
+  if (loading) {
+    return <div className={styles.card} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: 200, color: '#999' }}>Loading top products...</div>
+  }
 
   return (
     <div className={styles.card}>

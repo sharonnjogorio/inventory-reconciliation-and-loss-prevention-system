@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
-import { alertsAPI } from '../../../../services'
+import { alertsAPI, inventoryAPI } from '../../../../services'
 import AlertCard from '../../components/AlertCard/AlertCard'
 import AlertDetailsModal from '../../components/AlertDetailsModal/AlertDetailsModal'
 import styles from './Alerts.module.css'
@@ -9,6 +9,7 @@ function Alerts() {
   const [loading, setLoading] = useState(true)
   const [selectedAlert, setSelectedAlert] = useState(null)
   const [showDetailsModal, setShowDetailsModal] = useState(false)
+  const [inventory, setInventory] = useState([])
   
   const [statusFilter, setStatusFilter] = useState('active')
   const [severityFilter, setSeverityFilter] = useState('all')
@@ -20,8 +21,18 @@ function Alerts() {
       if (statusFilter !== 'all') params.status = statusFilter
       if (severityFilter !== 'all') params.severity = severityFilter
 
-      const response = await alertsAPI.getAlerts(params)
-      setAlerts(response.alerts || [])
+      const [alertsResponse, inventoryResponse] = await Promise.allSettled([
+        alertsAPI.getAlerts(params),
+        inventoryAPI.getInventorySummary()
+      ])
+
+      if (alertsResponse.status === 'fulfilled') {
+        setAlerts(alertsResponse.value.alerts || [])
+      }
+      if (inventoryResponse.status === 'fulfilled') {
+        const data = inventoryResponse.value
+        setInventory(data.inventory || data.data || [])
+      }
     } catch (error) {
       console.error('Failed to fetch alerts:', error)
     } finally {
@@ -53,24 +64,6 @@ function Alerts() {
     } catch (error) {
       console.error('Failed to resolve alert:', error)
       alert('Failed to resolve alert')
-    }
-  }
-
-  const getSeverityColor = (severity) => {
-    switch (severity) {
-      case 'CRITICAL': return '#DC143C'
-      case 'WARNING': return '#FFC107'
-      case 'MINOR': return '#FF8C00'
-      default: return '#50C878'
-    }
-  }
-
-  const getSeverityIcon = (severity) => {
-    switch (severity) {
-      case 'CRITICAL': return '🚨'
-      case 'WARNING': return '⚠️'
-      case 'MINOR': return '🟠'
-      default: return '✅'
     }
   }
 
@@ -123,9 +116,9 @@ function Alerts() {
             className={styles.select}
           >
             <option value="all">All</option>
-            <option value="critical">Critical</option>
-            <option value="warning">Warning</option>
-            <option value="minor">Minor</option>
+            <option value="CRITICAL">Critical</option>
+            <option value="WARNING">Warning</option>
+            <option value="MINOR">Minor</option>
           </select>
         </div>
 
@@ -159,9 +152,8 @@ function Alerts() {
               <AlertCard
                 key={alert.id}
                 alert={alert}
+                inventory={inventory}
                 onViewDetails={() => handleViewDetails(alert.id)}
-                getSeverityColor={getSeverityColor}
-                getSeverityIcon={getSeverityIcon}
               />
             ))}
           </div>
@@ -171,10 +163,9 @@ function Alerts() {
       {showDetailsModal && selectedAlert && (
         <AlertDetailsModal
           alert={selectedAlert}
+          inventory={inventory}
           onClose={() => setShowDetailsModal(false)}
           onResolve={handleResolve}
-          getSeverityColor={getSeverityColor}
-          getSeverityIcon={getSeverityIcon}
         />
       )}
     </div>

@@ -82,16 +82,16 @@ define(['./workbox-c5fd805d'], (function (workbox) { 'use strict';
     "revision": "3ca0b8505b4bec776b69afdba2768812"
   }, {
     "url": "/index.html",
-    "revision": "0.17ejd9kpj38"
+    "revision": "0.puld5bcdlv"
   }], {});
   workbox.cleanupOutdatedCaches();
   workbox.registerRoute(new workbox.NavigationRoute(workbox.createHandlerBoundToURL("/index.html"), {
     allowlist: [/^\/$/],
     denylist: [/^\/api/]
   }));
-  workbox.registerRoute(/^https:\/\/api\.smartlosscontrol\.com\/.*/i, new workbox.NetworkFirst({
+  workbox.registerRoute(/^https:\/\/smart-loss-control-backend\.onrender\.com\/.*/i, new workbox.NetworkFirst({
     "cacheName": "api-cache",
-    "networkTimeoutSeconds": 10,
+    "networkTimeoutSeconds": 25,
     plugins: [new workbox.ExpirationPlugin({
       maxEntries: 100,
       maxAgeSeconds: 86400

@@ -231,6 +231,11 @@
   border-color: rgba(255, 165, 0, 0.3);
 }
 
+.alertItem.alertInfo {
+  background-color: #FFFBEB;
+  border-color: rgba(245, 158, 11, 0.3);
+}
+
 .alertItem.alertSuccess {
   background-color: #F0FDF4;
   border-color: rgba(20, 174, 92, 0.3);
@@ -248,8 +253,9 @@
   background-color: rgba(20, 174, 92, 0.1);
 }
 
-.alertError .alertIcon  { background-color: rgba(220, 20, 60, 0.1); }
+.alertError .alertIcon   { background-color: rgba(220, 20, 60, 0.1); }
 .alertWarning .alertIcon { background-color: rgba(255, 165, 0, 0.1); }
+.alertInfo .alertIcon    { background-color: rgba(245, 158, 11, 0.1); }
 .alertSuccess .alertIcon { background-color: rgba(20, 174, 92, 0.1); }
 
 .alertContent h4 {

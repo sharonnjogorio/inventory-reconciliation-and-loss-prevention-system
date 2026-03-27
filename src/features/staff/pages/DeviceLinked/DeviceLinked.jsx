@@ -75,7 +75,6 @@ function DeviceLinked() {
       const staffData = {
         id: staffId,
         name: staffName.trim(),
-        pin: pinString,
         device_id: response.staff.device_id,
         shop_id: response.staff.shop_id,
         session_token: response.token,
@@ -101,7 +100,6 @@ function DeviceLinked() {
 
       localStorage.setItem('deviceLinked', 'true')
       localStorage.setItem('authToken', response.token)
-      localStorage.setItem('userData', JSON.stringify(response.staff))
       localStorage.setItem('staffData', JSON.stringify({
         id: response.staff.id,
         name: response.staff.full_name,

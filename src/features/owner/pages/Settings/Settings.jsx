@@ -35,15 +35,11 @@ function Settings() {
 
   const loadShopData = async () => {
     try {
-      const userData = localStorage.getItem('userData')
-      if (userData) {
-        const user = JSON.parse(userData)
-        setShopInfo({
-          shopName: user.shop_name || 'My Shop',
-          ownerPhone: user.phone || '',
-          ownerName: user.full_name || ''
-        })
-      }
+      // Primary keys used across the app
+      const shopName = localStorage.getItem('shopName') || 'My Shop'
+      const ownerName = localStorage.getItem('fullName') || ''
+      const ownerPhone = localStorage.getItem('ownerPhone') || ''
+      setShopInfo({ shopName, ownerName, ownerPhone })
 
       const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://192.168.8.27:5000'}/dashboard/overview`, {
         headers: {
@@ -55,6 +51,7 @@ function Settings() {
         setShopInfo(prev => ({
           ...prev,
           shopName: data.shop.shop_name || prev.shopName,
+          ownerName: data.shop.owner_name || data.shop.full_name || prev.ownerName,
           ownerPhone: data.shop.owner_phone || prev.ownerPhone
         }))
       }
@@ -73,25 +70,24 @@ function Settings() {
 
   const handleEdit = (field) => {
     setEditMode(prev => ({ ...prev, [field]: true }))
-    setEditValues(prev => ({ ...prev, [field]: shopInfo[field] }))
+    // phone editValue maps to shopInfo.ownerPhone
+    const currentValue = field === 'phone' ? shopInfo.ownerPhone : shopInfo[field]
+    setEditValues(prev => ({ ...prev, [field]: currentValue }))
   }
 
   const handleCancel = (field) => {
     setEditMode(prev => ({ ...prev, [field]: false }))
-    setEditValues(prev => ({ ...prev, [field]: shopInfo[field] }))
+    const currentValue = field === 'phone' ? shopInfo.ownerPhone : shopInfo[field]
+    setEditValues(prev => ({ ...prev, [field]: currentValue }))
   }
 
   const handleSave = async (field) => {
     try {
-      const userData = JSON.parse(localStorage.getItem('userData') || '{}')
+      if (field === 'shopName') localStorage.setItem('shopName', editValues.shopName)
+      else if (field === 'ownerName') localStorage.setItem('fullName', editValues.ownerName)
+      else if (field === 'phone') localStorage.setItem('ownerPhone', editValues.phone)
 
-      if (field === 'shopName') userData.shop_name = editValues.shopName
-      else if (field === 'ownerName') userData.full_name = editValues.ownerName
-      else if (field === 'phone') userData.phone = editValues.phone
-
-      localStorage.setItem('userData', JSON.stringify(userData))
-
-      setShopInfo(prev => ({ ...prev, [field]: editValues[field] }))
+      setShopInfo(prev => ({ ...prev, [field === 'phone' ? 'ownerPhone' : field]: editValues[field] }))
       setEditMode(prev => ({ ...prev, [field]: false }))
     } catch (error) {
       alert('Failed to save changes')

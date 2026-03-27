@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { alertsAPI, shopsAPI } from '../../services'
+import useAuthStore from '../../store/useAuthStore'
 import logo from '../../assets/image/logo.png'
 import styles from './OwnerNavbar.module.css'
 
@@ -71,31 +72,19 @@ const LogoutIcon = () => (
 function OwnerNavbar({ collapsed, onToggle }) {
   const navigate = useNavigate()
   const location = useLocation()
+  const { logout } = useAuthStore()
 
   const [newAlertsCount, setNewAlertsCount] = useState(0)
   const [ownerName] = useState(() => {
-    try {
-      const userData = localStorage.getItem('userData')
-      if (userData) {
-        const user = JSON.parse(userData)
-        return user.full_name || 'Owner'
-      }
-    } catch { /* ignore invalid localStorage data */ }
-    return 'Owner'
+    return localStorage.getItem('fullName') || 'Owner'
   })
   const [shopName, setShopName] = useState(() => {
     const stored = localStorage.getItem('shopName')
     return stored && stored !== 'undefined' ? stored : ''
   })
   const [ownerInitial] = useState(() => {
-    try {
-      const userData = localStorage.getItem('userData')
-      if (userData) {
-        const user = JSON.parse(userData)
-        return user.full_name ? user.full_name.charAt(0).toUpperCase() : 'O'
-      }
-    } catch { /* ignore invalid localStorage data */ }
-    return 'O'
+    const name = localStorage.getItem('fullName')
+    return name ? name.charAt(0).toUpperCase() : 'O'
   })
 
   useEffect(() => {
@@ -196,8 +185,11 @@ function OwnerNavbar({ collapsed, onToggle }) {
           </div>
         )}
         <button className={styles.logoutBtn} onClick={() => {
+          logout()
           localStorage.removeItem('authToken')
+          localStorage.removeItem('ownerToken')
           localStorage.removeItem('userData')
+          localStorage.removeItem('staffData')
           navigate('/')
         }} title={collapsed ? 'Logout' : undefined}>
           <LogoutIcon />

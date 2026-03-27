@@ -38,7 +38,6 @@ function SalesActivity() {
           break
       }
 
-      const offset = (currentPage - 1) * 50
       const response = await salesAPI.getSalesHistory(start, end)
       
       if (response.success) {
@@ -50,10 +49,13 @@ function SalesActivity() {
     } finally {
       setLoading(false)
     }
-  }, [dateRange, startDate, endDate, currentPage])
+  }, [dateRange, startDate, endDate])
 
   useEffect(() => {
     loadSalesActivity()
+    // Poll every 30s so synced offline sales appear without manual refresh
+    const interval = setInterval(loadSalesActivity, 30000)
+    return () => clearInterval(interval)
   }, [loadSalesActivity])
 
   const formatDateTime = (dateString) => {
@@ -106,9 +108,14 @@ function SalesActivity() {
           <h1 className={styles.title}>Sales Activity Log</h1>
           <p className={styles.subtitle}>Detailed transaction history with staff and product information</p>
         </div>
-        <button onClick={exportToCSV} className={styles.exportBtn} disabled={sales.length === 0}>
-          Export CSV
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button onClick={loadSalesActivity} className={styles.exportBtn} disabled={loading}>
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button onClick={exportToCSV} className={styles.exportBtn} disabled={sales.length === 0}>
+            Export CSV
+          </button>
+        </div>
       </div>
 
       <div className={styles.content}>
@@ -177,13 +184,13 @@ function SalesActivity() {
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Total Units Sold</span>
           <span className={styles.statValue}>
-            {filteredSales.reduce((sum, sale) => sum + sale.quantity, 0)}
+            {filteredSales.reduce((sum, sale) => sum + (parseInt(sale.quantity) || 0), 0)}
           </span>
         </div>
         <div className={styles.statCard}>
           <span className={styles.statLabel}>Total Revenue</span>
           <span className={styles.statValue}>
-            {formatCurrency(filteredSales.reduce((sum, sale) => sum + sale.total_amount, 0))}
+            {formatCurrency(filteredSales.reduce((sum, sale) => sum + (parseFloat(sale.total_amount) || 0), 0))}
           </span>
         </div>
       </div>

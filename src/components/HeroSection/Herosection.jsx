@@ -11,7 +11,7 @@ export const HeroSection = () => {
           <h1>Prevent Inventory Losses Before They Happen</h1>
           <p>
             Smart Loss Control helps small retail businesses gain real-time visibility
-            into inventory movement, staff activities, and operational patterns
+            into inventory movement, staff activities and operational patterns
             to reduce preventable losses.
           </p>
         </div>

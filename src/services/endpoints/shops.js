@@ -15,7 +15,10 @@ export const shopsAPI = {
    * GET /shops/staff
    */
   getStaffList: async () => {
-    const response = await api.get('/shops/staff')
+    const token = localStorage.getItem('ownerToken') || localStorage.getItem('authToken')
+    const response = await api.get('/shops/staff', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     return response.data
   },
 

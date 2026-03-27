@@ -1,16 +1,23 @@
 import { useState } from 'react'
 import styles from './QuickCountOverlay.module.css'
 import { auditAPI } from '../../../../services'
-import useAuthStore from '../../../../store/useAuthStore'
+
+// Always read staff identity from staffData — never from owner-side Zustand store
+const getStaffFromStorage = () => {
+  try {
+    const saved = localStorage.getItem('staffData')
+    if (saved) return JSON.parse(saved)
+  } catch (_) { /* localStorage unavailable */ }
+  return null
+}
 
 function QuickCountOverlay({ product, expectedCount, onComplete, onClose }) {
-  const { getCurrentStaff } = useAuthStore()
   const [actualCount, setActualCount] = useState('')
   const [result, setResult] = useState(null)
   const [verificationData, setVerificationData] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [apiError, setApiError] = useState(null)
-  const staff = getCurrentStaff()
+  const staff = getStaffFromStorage()
 
   const handleSubmit = async () => {
     if (!actualCount || isSubmitting) return
@@ -29,12 +36,49 @@ function QuickCountOverlay({ product, expectedCount, onComplete, onClose }) {
       const response = await auditAPI.verifyPhysicalCount({
         skuId: product.id,
         physicalCount: actual,
+        expectedCount,
         countedAt: new Date().toISOString(),
         staffId: staff?.id
       })
 
       if (response.success) {
         const verification = response.verification
+
+        // The backend uses the initial stock count (from store creation) as
+        // expected_stock, ignoring all sales since then. Override with the
+        // frontend's current stock level, which already has all sales deducted.
+        if (expectedCount != null) {
+          const correctedVariance = actual - expectedCount
+          const correctedPct = expectedCount > 0
+            ? (correctedVariance / expectedCount) * 100
+            : 0
+          const absPct = Math.abs(correctedPct)
+
+          verification.expected_stock  = expectedCount
+          verification.variance        = correctedVariance
+          verification.variance_percent = correctedPct
+
+          // Recompute alert level from corrected percentage
+          if (absPct <= 10)       verification.alert_level = 'NORMAL'
+          else if (absPct <= 20)  verification.alert_level = 'MINOR'
+          else if (absPct <= 30)  verification.alert_level = 'WARNING'
+          else                    verification.alert_level = 'CRITICAL'
+
+          // Persist corrected data so the owner's alert modal can retrieve
+          // the stock level at the time of the count (inventory changes after)
+          try {
+            const date = new Date().toISOString().split('T')[0]
+            const key  = `qc_${product.id}_${date}`
+            localStorage.setItem(key, JSON.stringify({
+              expectedCount,
+              variance: correctedVariance,
+              variancePct: correctedPct,
+              physicalCount: actual,
+              ts: Date.now()
+            }))
+          } catch (_) { /* localStorage unavailable */ }
+        }
+
         setVerificationData(verification)
 
         if (verification.alert_level === 'NORMAL')         setResult('match')
@@ -140,11 +184,19 @@ function QuickCountOverlay({ product, expectedCount, onComplete, onClose }) {
               </svg>
             </div>
             <h2 className={`${styles.resultTitle} ${styles.titleSuccess}`}>Count Verified!</h2>
-            <p className={styles.resultText}>Stock matches system records</p>
+            <p className={styles.resultText}>Within acceptable range — no alert triggered</p>
             <div className={styles.resultDetails}>
               <div className={styles.detailRow}><span>Expected</span><strong>{verificationData.expected_stock}</strong></div>
               <div className={styles.detailRow}><span>Counted</span><strong>{verificationData.physical_count}</strong></div>
-              <div className={`${styles.detailRow} ${styles.match}`}><span>Variance</span><strong>None</strong></div>
+              <div className={`${styles.detailRow} ${styles.match}`}>
+                <span>Variance</span>
+                <strong>
+                  {verificationData.physical_count === verificationData.expected_stock
+                    ? 'None'
+                    : `${verificationData.physical_count < verificationData.expected_stock ? '-' : '+'}${Math.abs(verificationData.variance)} units (within 10%)`
+                  }
+                </strong>
+              </div>
             </div>
           </div>
         )}
@@ -182,7 +234,9 @@ function QuickCountOverlay({ product, expectedCount, onComplete, onClose }) {
               <div className={styles.detailRow}><span>Counted</span><strong>{verificationData.physical_count}</strong></div>
               <div className={`${styles.detailRow} ${result === 'critical' ? styles.critical : styles.warning}`}>
                 <span>Variance</span>
-                <strong>{verificationData.variance > 0 ? '+' : ''}{verificationData.variance} units ({verificationData.variance_percent?.toFixed(1)}%)</strong>
+                <strong>
+                {verificationData.physical_count < verificationData.expected_stock ? '-' : '+'}{Math.abs(verificationData.variance)} units ({Math.abs(verificationData.variance_percent)?.toFixed(1)}%)
+              </strong>
               </div>
               <div className={`${styles.detailRow} ${styles.loss}`}>
                 <span>Est. Loss</span>

@@ -15,6 +15,9 @@ function Inventory() {
 
   useEffect(() => {
     fetchInventory()
+    // Poll every 10s so synced offline sales are reflected quickly
+    const interval = setInterval(fetchInventory, 10000)
+    return () => clearInterval(interval)
   }, [])
 
   const fetchInventory = async () => {
@@ -39,22 +42,21 @@ function Inventory() {
     setEditingItem(null)
   }
 
-  const getStatusColor = (quantity) => {
-    if (quantity === 0) return styles.statusRed
-    if (quantity <= 10) return styles.statusYellow
+  const getStatusColor = (item) => {
+    if (item.quantity === 0) return styles.statusRed
+    if (item.quantity <= (item.reorder_level || 10)) return styles.statusYellow
     return styles.statusGreen
   }
 
-  const getStatusText = (quantity) => {
-    if (quantity === 0) return 'Out of Stock'
-    if (quantity <= 10) return 'Low Stock'
+  const getStatusText = (item) => {
+    if (item.quantity === 0) return 'Out of Stock'
+    if (item.quantity <= (item.reorder_level || 10)) return 'Low Stock'
     return 'In Stock'
   }
 
   const stats = {
-    lowItems: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
     inStock: inventory.filter(item => item.quantity > 0).length,
-    lowStock: inventory.filter(item => item.quantity > 0 && item.quantity <= 10).length,
+    lowStock: inventory.filter(item => item.quantity > 0 && item.quantity <= (item.reorder_level || 10)).length,
     outOfStock: inventory.filter(item => item.quantity === 0).length
   }
 
@@ -95,19 +97,20 @@ function Inventory() {
           <h1 className={styles.title}>Inventory Management</h1>
           <p className={styles.subtitle}>Track and manage your stock levels</p>
         </div>
-        <button
-          className={styles.addStockBtn}
-          onClick={() => navigate('/owner/inventory/add')}
-        >
-          + ADD NEW STOCK
-        </button>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button className={styles.refreshBtn} onClick={fetchInventory} disabled={loading}>
+            {loading ? 'Refreshing...' : 'Refresh'}
+          </button>
+          <button
+            className={styles.addStockBtn}
+            onClick={() => navigate('/owner/inventory/add')}
+          >
+            + ADD NEW STOCK
+          </button>
+        </div>
       </div>
 
       <div className={styles.statsGrid}>
-        <div className={styles.statCard}>
-          <h3>Low Items</h3>
-          <p className={styles.statValue}>{stats.lowItems}</p>
-        </div>
         <div className={styles.statCard}>
           <h3>In Stock</h3>
           <p className={styles.statValue}>{stats.inStock}</p>
@@ -179,8 +182,8 @@ function Inventory() {
                     </span>
                   </td>
                   <td>
-                    <span className={`${styles.statusBadge} ${getStatusColor(item.quantity)}`}>
-                      {getStatusText(item.quantity)}
+                    <span className={`${styles.statusBadge} ${getStatusColor(item)}`}>
+                      {getStatusText(item)}
                     </span>
                   </td>
                   <td className={styles.lastUpdated}>
